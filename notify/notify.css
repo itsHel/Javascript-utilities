@@ -1,0 +1,91 @@
+:root {
+  --notify-succ-color: #1fb9c0;
+  --notify-warn-color: #dc3545;
+  --notify-loading-color: #000000;
+}
+
+#z-notify {
+  position: fixed;
+  justify-content: center;
+  align-items: center;
+  display: flex;
+  z-index: 999999999;
+  opacity: 0;
+  bottom: 7.5%;
+  left: 50%;
+  transition: opacity 0.4s, transform 0.55s cubic-bezier(0.54, 1.5, 0.38, 1.02);
+  transform: translate(-50%, 80%) scaleX(0);
+  cursor: pointer;
+  min-width: 150px;
+  pointer-events: none;
+  flex-direction: column;
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  border: 1px solid rgba(0, 0, 0, 0.125);
+  font-size: 16px;
+  padding: 0.5rem 1rem 0.75rem 1rem;
+  box-shadow: 1px 7px 14px -5px rgba(0, 0, 0, 0.2);
+  border-radius: 8px;
+  background: white;
+}
+
+#z-notify .notify-icons {
+  width: 32px;
+  height: 32px;
+}
+
+#z-notify > div {
+  width: 100%;
+}
+
+#z-notify.notify-warn {
+  border-left: 4px solid var(--notify-warn-color);
+}
+
+#z-notify.notify-warn .notify-icons {
+  fill: var(--notify-warn-color);
+}
+
+#z-notify.notify-succ {
+  border-left: 4px solid var(--notify-succ-color);
+}
+
+#z-notify.notify-succ .notify-icons {
+  fill: var(--notify-succ-color);
+  margin-right: 5px;
+}
+
+#z-notify.notify-load {
+  border-left: 4px solid var(--notify-loading-color);
+}
+
+#z-notify.notify-load .notify-icons {
+  fill: var(--notify-loading-color);
+  margin-right: 5px;
+}
+
+.notify-header {
+  display: flex;
+  align-items: center;
+  margin-bottom: 0.75rem;
+  font-size: 20px;
+  justify-content: center;
+}
+
+#z-notify.notify-visible {
+  opacity: 1;
+  transform: translate(-50%, 0%) scaleX(1);
+  pointer-events: all;
+}
+
+.notify-text {
+  position: relative;
+  text-align: center;
+  color: rgba(0, 0, 0, 0.55);
+  font-weight: 500;
+  line-height: 30px;
+}
+
+.notify-text img {
+  position: absolute;
+  transform: translate(-50%, -3px);
+}
