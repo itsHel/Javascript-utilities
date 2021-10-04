@@ -45,7 +45,6 @@ class Modal{
         
             window.addEventListener("keydown", function(e){
                 if(modal.classList.contains("z-modal-show")){
-                    
                     if(e.key == "Escape"){
                         e.preventDefault();
                         modal.classList.remove("z-modal-show");
@@ -53,23 +52,27 @@ class Modal{
                     }
                     if(e.key == "Enter"){
                         e.preventDefault();
-                        document.querySelector("#modal-confirm").click();
+                        modal.querySelector("#modal-confirm").click();
                         sessionStorage["modalshown"] = 1;
                     }
                 }
             });
         } else {
             // Modal already exists
-            document.querySelector(".modal-text").innerHTML = text;
-            document.querySelector(".modal-heading-wrapper").innerHTML = heading;
+            document.querySelector("#z-modal-full .modal-text").innerHTML = text;
+            document.querySelector("#z-modal-full .modal-heading-wrapper").innerHTML = heading;
         }
 
         let modal = document.querySelector("#z-modal-full");
-
-        let confirm = document.querySelector("#modal-confirm");
+        let confirm = modal.querySelector("#modal-confirm");
+        
         if(callback){
+            confirm.outerHTML = confirm.outerHTML;
+            confirm = modal.querySelector("#modal-confirm");
+
             confirm.closest(".modal-buttons").style.flexDirection = "row-reverse";
             confirm.style.visibility = "visible";
+            
             confirm.addEventListener("click", callback, {once: true});
         } else {
             confirm.style.visibility = "hidden";
@@ -87,7 +90,7 @@ class Modal{
                         <div class=modal-text>${text}</div>
                         <div class=modal-buttons>
                             <button id=modal-confirm class="button">Ok</button>
-                            <button id=modal-dismiss class="button">Dismiss</button>
+                            <button id=modal-dismiss class="button">Zavřít</button>
                         </div>
                     </div>
                 </div>`;
