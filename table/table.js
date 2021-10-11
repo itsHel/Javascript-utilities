@@ -85,7 +85,7 @@ function Table(data, nav, parentDiv, createRows, options = {}){
         // Do only once
         if(firstRender){
             tableEl.querySelector("thead th").classList.add("th-active");
-            order.column = tableEl.querySelector("thead th");
+            order.column = tableEl.querySelector("thead th").dataset.column;
 
             self.addNavListeners();
 
