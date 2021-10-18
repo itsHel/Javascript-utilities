@@ -27,8 +27,12 @@ function Table(data, nav, parentDiv, createRows, options = {}){
     try{ order.column = nav.match(/<th\sdata\-column='(.*?)'/)[1] } catch(e){}
 
     if(options.saveFilters){
-        console.log();
         activeFilters = JSON.parse(localStorage["filters-" + options.id] ?? "[]");
+        
+        // In case of old localStorage record and empty filter - add it
+        if(activeFilters?.length && !options.filter?.filters?.length){
+            options.filter = { filters: [...activeFilters] };
+        }
     }
 
     this.render = function(renderData){
