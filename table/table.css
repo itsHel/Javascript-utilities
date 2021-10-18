@@ -129,6 +129,7 @@
     box-sizing: border-box;
     width: max-content;
     transition: all 0.3s;
+    margin-left: auto;
   }
   .table-search-wrapper .table-search {
     font-size: 1rem;
