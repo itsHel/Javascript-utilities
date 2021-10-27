@@ -1,0 +1,826 @@
+<title>TryIt Editor</title>
+<link rel=icon href="https://cdn.discordapp.com/emojis/474325997181730826.png?v=1">
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+
+<link href="https://cdnjs.cloudflare.com/ajax/libs/mdb-ui-kit/3.3.0/mdb.min.css" rel="stylesheet" />
+<!-- <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mdb-ui-kit/3.3.0/mdb.min.js" ></script> -->
+
+<link href="css/buttons.css" rel="stylesheet">
+
+<style> 
+    #wrapper, body > div{ 
+        font-family: unset; 
+        padding:2rem; 
+        border-radius:0.5rem; 
+        border: 1px solid #d3d8db; 
+        box-shadow: 0 1px 1px rgba(0,0,0,.05); 
+        background:white; 
+        margin-bottom:18px
+    } 
+    #wrapper{
+        height:650px; 
+        position:relative;
+    }
+    .highlight{
+        border:2px dashed red !important;
+    }
+    #movable{ 
+        height:100px; 
+        width:100px; 
+        background: orange; 
+        position:absolute;
+    }
+    label{
+        font-size: 16px;
+    }
+</style>
+
+<script>
+    window.addEventListener("load", function(){
+        document.querySelectorAll(".ripple-button, .ripple-hollow-button").forEach(button => {
+            addRipple(button);
+        });
+    });
+
+    function addRipple(button){
+        button.addEventListener("click", function(e){
+            let x, y;
+            if((e.originalEvent || e).isTrusted){
+                x = e.offsetX;
+                y = e.offsetY;
+            } else {
+                x = e.target.clientWidth / 2;
+                y = e.target.clientHeight / 2;
+            }
+
+            let html = "<span class='ripple' style='left:" + x + "px;top:" + y + "px;'></span>";
+
+            button.insertAdjacentHTML("beforeend", html);
+        
+            setTimeout(function(){
+                button.querySelector(".ripple").remove();
+            }, 1000);
+        });
+    }
+</script>
+
+<body style="font-family: 'Comic Sans MS', 'Comic Sans' !important;margin:111px auto;max-width:1100px;font-size:22px;background:rgba(0,0,0,0.05);">
+
+    <!-- *************************************************** Buttons *************************************************** -->
+    <div style="display:flex; justify-content:space-between;position: relative;">
+        <button class="button-gradient bg-lightblue ripple-button">Lightblue</button>
+        <button class="button-gradient bg-red ripple-button">Red</button>
+        <button class="button-gradient bg-green ripple-button">Green</button>
+        <button class="button-gradient bg-blue ripple-button">Blue</button>
+    </div>
+    <div style="display:flex; justify-content:space-between;position: relative;">
+        <button class="icon-button"><span class=icon-text>Icon button</span><span class="material-icons-outlined icon-icon">shuffle</span></button>
+        <button class="icon-button sm"><span class=icon-text>Icon button sm</span><span class="material-icons-outlined icon-icon">shuffle</span></button>
+        <button class="button ripple-button">Ripple</button>
+        <button class="button ripple-hollow-button">Hollow ripple</button>
+    </div>
+
+    <div>
+        <div class=fill-button>text</div>
+    </div>
+
+    <div>
+    <label class=custom-checkbox-label>
+        <input id=showtime class=custom-checkbox type="checkbox">
+        <span class=custom-checkbox-wrapper>
+            <span class=background></span>
+            <svg></svg>
+        </span>
+        Zobrazit cas
+    </label>
+
+    <label class=custom-checkbox-label>
+        <input id=showtime class=custom-checkbox type="checkbox">
+        <span class=custom-checkbox-wrapper>
+            <span class=background></span>
+            <svg></svg>
+        </span>
+        Zobrazit cas
+    </label>
+    </div>
+
+    <style>
+        /* .fill-button{
+            position: relative;
+            padding:0.75rem 1rem;
+            text-align:center;
+            background:black;
+            overflow:hidden;
+            border: 1px solid #d3d8db; 
+            box-shadow: 0 1px 1px rgba(0,0,0,.05); 
+            cursor:pointer;
+        }
+        .fill-button span{
+            background:white;
+            transition: width 0.7s, padding-top 0.7s;
+            width: 0;
+            padding-top:0;
+            position: absolute;
+            border-radius:100%;
+            transform: translate(-50%, -50%);
+            z-index: 0;
+        }
+        .fill-button text{
+            color:white;
+            position: relative;
+            z-index: 1;
+            transition: color 0.7s;
+        }
+        .fill-button:hover span{
+            width:calc(100% * 2);
+            padding-top:calc(100% * 2);
+        }
+        .fill-button:hover text{
+            color:black;
+        } */
+    </style>
+    <script>
+        // fillButtons(document.querySelectorAll(".fill-button"));
+
+        function fillButtons(buttons){
+            buttons.forEach(button => {
+                let fill = button.querySelector("span");
+
+                button.addEventListener("mouseover", function(e){
+                    fill.style.left = e.pageX - button.offsetLeft + "px";
+                    fill.style.top = e.pageY - button.offsetTop + "px";
+                });
+                button.addEventListener("mouseout", function(e){
+                    fill.style.left = e.pageX - button.offsetLeft + "px";
+                    fill.style.top = e.pageY - button.offsetTop + "px";
+                });
+            });
+        }
+
+        _fillButtons(document.querySelectorAll(".fill-button"));
+
+        function _fillButtons(buttons){
+            buttons.forEach(button => {
+                button.innerHTML = "<span></span><text>" + button.textContent + "</text>";
+                let fill = button.querySelector("span");
+
+                button.addEventListener("mouseover", function(e){
+                    fill.style.left = e.pageX - button.offsetLeft + "px";
+                    fill.style.top = e.pageY - button.offsetTop + "px";
+                });
+                button.addEventListener("mouseout", function(e){
+                    fill.style.left = e.pageX - button.offsetLeft + "px";
+                    fill.style.top = e.pageY - button.offsetTop + "px";
+                });
+            });
+
+            const style = `<style>.fill-button{ position: relative; padding:0.75rem 1rem; text-align:center; background:black; overflow:hidden; border: 1px solid #d3d8db; box-shadow: 0 1px 1px rgba(0,0,0,.05); cursor:pointer;} .fill-button span{ background:white; transition: width 0.7s, padding-top 0.7s; width: 0; padding-top:0; position: absolute; border-radius:100%; transform: translate(-50%, -50%); z-index: 0; } .fill-button text{ color:white; position: relative; z-index: 1; transition: color 0.7s; } .fill-button:hover span{ width:calc(100% * 2); padding-top:calc(100% * 2); } .fill-button:hover text{ color:black; }</style>`;
+
+            document.querySelector("html").insertAdjacentHTML("beforeend", style);
+        }
+    </script>
+
+    <div>
+        <div class="strike-container" style="margin-bottom:0;">
+            <ul style="list-style-type:none;padding:0;margin:0;">
+                <li><span>Home</span></li>
+                <li><span>About us</span></li>
+                <li><span>Contact</span></li>
+            </ul>
+        </div>
+
+        <style>
+            .strike-container li{
+                display:inline-block;
+            }
+            .strike-container span {
+                padding: 0 20px;
+                position: relative;
+                display: inline-block;
+                cursor: pointer;
+            }
+            .strike-container span:before {
+                content: '';
+                position: absolute;
+                width: 0%;
+                height: 2px;
+                top: 50%;
+                margin-top: -0.5px;
+                background: #000;
+                transition: width 0.35s cubic-bezier(0.22, 0.61, 0.36, 1);
+                right: -5px;
+            }
+            .strike-container span:hover:before {
+                left: -5px;
+                width: calc(100% + 10px);
+                transition: width 0.35s cubic-bezier(0.22, 0.61, 0.36, 1);
+            }
+        </style>
+    </div>
+
+    <div id=tooltip-wrapper>
+        <div id=tooltip>Tooltip something</div>
+    </div>
+
+    <style>
+        #tooltip{
+            transform: scale(0.7);
+            opacity:0;
+            transition: transform 325ms, opacity 325ms; 
+            transition-timing-function: cubic-bezier(.54,1.5,.38,1.11);
+            text-align: center;
+            border:1px solid rgba(0,0,0,0.15);
+            padding:8px;
+            border-radius: 10px;
+            /* transition: all cubic-bezier(.46,.1,.52,.98); */
+            /* transition-timing-function: cubic-bezier(.165,.84,.44,1); */
+        }
+        #tooltip-wrapper:hover #tooltip{
+            opacity:1;
+            transform: scale(1) translateY(-10px);
+        }
+    </style>
+
+
+    <div id=info-wrapper>
+        <div id=info>
+            <span class=ico>
+                i
+            </span>
+            <div class=text>
+                Sone info text<br>...and more
+            </div>
+        </div>
+    </div>
+
+    <style>
+        #info{
+            padding:2.5rem 2rem;
+            clip-path: circle(5% at 96% 14%);
+            transition: all ease-in-out .3s;
+            max-width: 500px;
+            background: black;
+            position: relative;
+            border-radius:20px;
+        }
+        #info .ico{
+            color:white;
+            position:absolute;
+            top:0px;
+            right:17px;
+            font-weight: bold;
+            font-size:1.5rem;
+            transition: all ease-in-out .3s;
+        }
+        #info .text{
+            color:white;
+            background: transparent;
+        }
+        #info:hover, #info:focus{
+            clip-path: circle(75%);
+            outline:none;
+        }
+        #info:hover .ico, #info:focus .ico{
+            opacity:0;
+        }
+    </style>
+
+
+    <div id=hover-close>
+        <div class=added-text>
+            <div class=text>Some texttttttttttt<br>...and more</div>
+            <div class=close-wrapper>
+                <span class=ico>X</span>
+            </div>
+        </div>
+    </div>
+
+    <style>
+        .added-text{
+            position: relative;
+            border: 2px solid black;
+            box-shadow: 2px 2px 6px 2px rgba(0, 0, 0, 0.23);
+            transition: box-shadow 0.2s;
+            display: inline-block;
+            transform-origin: top left;
+            /* backface-visibility: hidden;
+            -webkit-backface-visibility: hidden; */
+            -webkit-transform: translateZ(0) scale(1.0, 1.0);
+            transform: translateZ(0);
+        }
+        .added-text .text{
+            outline:none;
+            position: relative;
+            background-color:rgba(255,255,255,0.85);
+            padding:1rem 1rem;
+            white-space: pre-line;
+            z-index:1000;
+        }
+        .added-text:focus-within{
+            box-shadow: 0 0 12px #000000;
+        }
+        .added-text .ico{
+            position: absolute;
+            top:25%;
+            right:25%;
+            border-radius: 50%;
+            border:none;
+            cursor: pointer;
+            transition: all 0.25s;
+            color:black;
+            opacity:0;
+        }
+        .added-text:hover .close-wrapper, .added-text:focus-within .close-wrapper{
+            width: 10rem;
+            height: 10rem;
+        }
+        .added-text:hover .ico, .added-text:focus-within .ico{
+            opacity: 1;
+        }
+        .close-wrapper{
+            border:1px solid red;
+            position: absolute;
+            width:0;
+            height:0;
+            top:0;
+            right:0;
+            z-index:999;
+            transition: 0.25s cubic-bezier(0.25, 0, 0, 1);
+            transform: translate(50%, -50%) translateZ(0);
+            /* backface-visibility: hidden;
+            -webkit-backface-visibility: hidden; */
+        }
+    </style>
+
+
+    <div id=wrapper bgcolor=red>
+        <div id=movable draggable=true></div>
+    </div>
+
+
+    <div id=canvas-wrapper>
+        <canvas id=canvas style="border:2px dashed DeepSkyBlue"></canvas>
+     </div>
+ 
+     <div>
+         <img id=reflect-canvas>
+     </div>
+    
+    <script>        
+        // Text
+        $("#loading").on("click", function(e){
+            if(e.target.classList.contains("editable"))
+                return;
+            let x = e.offsetX;
+            let y = e.offsetY;
+            console.log(y);
+            $("<div class='editable b' contenteditable=true></div>").appendTo("#loading").css({backgroundColor:"rgba(255,255,255,0.666)", minWidth:"75px", padding:"0.5rem 1rem", width:"px",height:"px",border: "1px solid orange", position:"absolute", top:y+"px", left:x+"px"}).focus();
+        });
+
+        // Canvas
+        const canvas = document.getElementById("canvas");
+        
+        canvas.width = $(canvas.parentNode).width() - 4;        // - border
+        canvas.height = 440;
+        let coord = { x: 0, y: 0 };
+        var ctx = canvas.getContext("2d");
+
+        $(window).on("mousedown", start);
+        $(window).on("mouseup", stop);
+
+        function start(e){
+            $(window).on("mousemove", draw);
+            coord.x = e.offsetX;
+            coord.y = e.offsetY;
+        }
+        function stop(e){
+            $(window).off("mousemove");
+        }
+
+        function draw(e){
+            if(e.target.nodeName.toLowerCase() != "canvas"){
+                $(window).off("mousemove");
+                return;
+            }
+
+            ctx.beginPath();
+            ctx.lineWidth = 5;
+            ctx.lineCap = "round";
+            ctx.strokeStyle = "red";
+            ctx.moveTo(coord.x, coord.y);
+            ctx.lineTo(e.offsetX, e.offsetY);
+            ctx.stroke();
+            coord.x = e.offsetX;
+            coord.y = e.offsetY;
+            
+            $("#reflect-canvas").attr("src", document.getElementById("canvas").toDataURL());
+        }
+
+    </script>
+
+    <script>
+        // Dragging
+        var differenceX, differenceY;        // Position of mouseX/Y in object
+
+        $("#wrapper").each(function(index){
+            ['dragenter', 'dragover', 'dragleave', 'drop'].forEach(function(event){
+                $(this).on(event, preventDefaults);
+            });
+
+            ['dragenter', 'dragover'].forEach(eventName => {
+                $(this).on(eventName, () => {$(this).addClass("highlight");});
+            });
+ 
+            ['dragleave', 'drop'].forEach(eventName => {
+                $(this).on(eventName, () => {$(this).removeClass("highlight")});
+            });
+
+            $(this).on("drop", function(e){
+                let dropX, dropY;
+
+                if(e.target.id == "movable"){
+                    // Dropping object in itself has different offsetX/Y
+                    dropX = e.target.offsetLeft + e.offsetX;
+                    dropY = e.target.offsetTop + e.offsetY;
+                } else {
+                    dropX = e.offsetX;
+                    dropY = e.offsetY;
+                }
+
+                let newX = dropX - differenceX;
+                let newY = dropY - differenceY;
+                $("#movable").css({top: newY, left: newX});
+            });
+        });
+        
+        $("#movable").on("dragstart", function(e){
+            differenceX = e.offsetX;
+            differenceY = e.offsetY;
+            e.target.style.filter = "grayscale(0.8)";
+        });
+        
+        $("#movable").on("dragend", function(e){
+            e.target.style.filter = "grayscale(0)";
+        });
+
+        function preventDefaults(e){
+            e.preventDefault();
+            e.stopPropagation();
+        }
+    </script>
+
+    <script>
+        $(function(){
+            // Modal
+            // Show only once per session
+            if(true || sessionStorage["modalshown"])
+                return;
+
+            // Css
+            $("body").append(`<style>#z-modal-full{ top:0; left:0; position: fixed; height:100%; width:100%; display:flex; justify-content: center; align-items: center; background:rgba(0,0,0,0.5); cursor:pointer; } #z-wrapper{ padding:20px; background:white; cursor:default; height:auto; box-shadow: 0px 0px 30px 0px rgb(2 2 2); border-radius:5px; } #z-wrapper { max-width:80%; } #z-wrapper img{ width:100%; } @media (max-width: 850px) { #z-wrapper { max-width:95%; } }</style>`);
+            
+            // Modal html
+            $("<div id=z-modal-full><div id=z-wrapper><img src='https://image.freepik.com/free-photo/galaxy-system-millions-billions-stars-together-with-gas-dust_39386-369.jpg'></div></div>").hide().appendTo("body").fadeIn();
+            
+            $("#z-modal-full").on("click", function(e){
+                if(e.target.id == "z-modal-full"){
+                    $("#z-modal-full").fadeOut();
+                    sessionStorage["modalshown"] = 1;
+                }
+            });
+            $(window).on("keydown", function(e){
+                console.log(e);
+                if(e.key == "Escape"){
+                    $("#z-modal-full").fadeOut();
+                    sessionStorage["modalshown"] = 1;
+                }
+            });
+        });
+    </script>
+
+    <style>
+        #z-modal-full{
+            top:0;
+            left:0;
+            position: fixed;
+            height:100%;
+            width:100%;
+            display:flex;
+            justify-content: center;
+            align-items: center;
+            background:rgba(0,0,0,0.5);
+            cursor:pointer;
+        }
+        #z-wrapper{
+            padding:20px;
+            background:white;
+            cursor:default;
+            height:auto;
+            box-shadow: 0px 0px 30px 0px rgb(2 2 2);
+            border-radius:5px;
+        }
+        #z-wrapper {
+            max-width:80%;
+        }
+
+        #z-wrapper img{
+            width:100%;
+        }
+        #canvas{
+            cursor:crosshair;
+            width:100%;
+        }
+        @media (max-width: 850px) {
+            #z-wrapper {
+                max-width:95%;
+            } 
+        }
+    </style>
+
+<!-- <style id=buttons-style>
+    .button {
+        color: white;
+        background:black;
+        overflow: hidden;
+        border-radius: 8px;
+        display: inline-block;
+        padding: 0.5rem 1.5rem;
+        font-weight: 500;
+        position: relative;
+        transition: all 0.3s;
+        font-size: 20px;
+        border: none;
+        box-shadow: rgba(0, 0, 0, 0.16) 0px 3px 6px, rgba(0, 0, 0, 0.23) 0px 3px 6px;
+        cursor: pointer;
+        min-width: max-content;
+    }
+    .sm{
+        padding: 0.5rem 1rem;
+        font-size: 16px;
+        border-radius: 8px;
+    }
+    .lg{
+        padding: 1rem 2rem;
+        font-size: 20px;
+        border: none;
+        border-radius: 7px;
+    }
+    .disabled {
+        color: rgba(0, 0, 0, 0.25) !important;
+    }
+    .button-disabled {
+        pointer-events: none !important;
+        opacity: 0.5 !important;
+    }
+
+    .icon-button {
+        color: white;
+        background: black;
+        overflow: hidden;
+        border-radius: 8px;
+        display: inline-block;
+        padding: 0.5rem 1.5rem;
+        font-weight: 500;
+        position: relative;
+        transition: all 0.3s;
+        font-size: 20px;
+        border: none;
+        cursor: pointer;
+        min-width: max-content !important;
+        box-shadow: rgba(0, 0, 0, 0.16) 0px 3px 6px, rgba(0, 0, 0, 0.23) 0px 3px 6px;
+    }
+    .icon-button:hover .icon-text {
+        opacity: 0;
+        transform: translate(0, -150%);
+    }
+    .icon-button:hover .icon-icon {
+        top: 50%;
+        opacity: 1;
+    }
+    .icon-button:active {
+        box-shadow: inset 0 0 4px 3px #aaaaaa, 0 1px 0 #aaaaaa;
+        filter: grayscale(0.25);
+        transition: none;
+    }
+    .icon-button .icon-icon, .icon-button .icon-icon{
+        position: absolute;
+        top: 150%;
+        opacity: 0;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        transition: top 0.3s, opacity 0.3s ease-in;
+    }
+    .icon-button .icon-text {
+        transition: transform 0.3s, opacity 0.3s ease-in;
+        display: block;
+    }
+
+    .ib-lightblue{
+        background-image: linear-gradient(to bottom, #00d2ff 0%, #3a7bd5 100%);
+    }
+    .ib-lightblue:active {
+        box-shadow: inset 0 0 6px 4px #2056a0, 0 1px 0 #eeeeee;
+        background-image: -webkit-linear-gradient(top, #00acd3 0%, #255496 100%);
+    }
+    .ib-blue {
+        background-image: -webkit-linear-gradient(top, #2d78ee 0%, #376fe0 50%, #1a5ad9 50%, #4650bd 100%);
+    }
+    .ib-blue:active {
+        box-shadow: inset 0 0 6px 4px #1a4480, 0 1px 0 #eeeeee;
+        background-image: -webkit-linear-gradient(top, #5d89e8 0%, #2261e0 50%, #044bd9 50%, #0d53de 100%);
+    }
+
+    .ib-red {
+        background-image: -webkit-linear-gradient(top, #ee432e 0%, #c63929 50%, #b51700 50%, #891100 100%) !important;
+    }
+    .ib-red:active {
+        box-shadow: inset 0 0 8px 5px #7c1500, 0 1px 0 #eeeeee !important;
+        background: -webkit-linear-gradient(top, #d43c28 0%, #ad3224 50%, #9c1500 50%, #700d00 100%) !important;
+    }
+    .ib-green {
+        background: linear-gradient(180deg, #1DcD77, #1C8F93) !important;
+    }
+    .ib-green:active {
+        box-shadow: inset 0 0 4px 2px #1C8F93, 0 1px 0 #eeeeee !important;
+        background-image: -webkit-linear-gradient(to bottom, #17bb6b, #136c6e);
+    }
+
+    /* *************************************************** Hover gradient *************************************************** */
+    .button-gradient {
+        color: white;
+        overflow: hidden;
+        min-width: max-content;
+        font-size: 20px;
+        border-radius: 8px;
+        display: inline-block;
+        padding: 0.5rem 1.5rem;
+        font-weight: 500;
+        position: relative;
+        transition: all 0.3s;
+        border: none;
+        cursor: pointer;
+        z-index:1;
+        background:transparent;
+        box-shadow: rgba(0, 0, 0, 0.16) 0px 3px 6px, rgba(0, 0, 0, 0.23) 0px 3px 6px;
+    }
+    .button-gradient:after, .button-gradient:before{
+        content:"";
+        position:absolute;
+        z-index:-1;
+        top:0;
+        left:0;
+        width:100%;
+        height:100%;
+        transition: all 0.3s;
+    }
+    .button-gradient:hover:after{
+        opacity:0;
+    }
+
+    .bg-lightblue:after{        /* light */
+        background-image: linear-gradient(to bottom, #00d2ff 0%, #3a7bd5 100%);                     
+        background-image: -webkit-linear-gradient(to bottom, #00d2ff 0%, #3a7bd5 100%);         
+    }
+    .bg-lightblue:before{       /* dark */
+        background-image: linear-gradient(to bottom, #00acd3 0%, #255496 100%);                     
+        background-image: -webkit-linear-gradient(to bottom, #00acd3 0%, #255496 100%);     
+    }
+    
+    .bg-red:after{              /* light */
+        background-image: linear-gradient(to bottom, #ee432e 0%, #c63929 50%, #b51700 50%, #891100 100%);      
+        background-image: -webkit-linear-gradient(to bottom, #ee432e 0%, #c63929 50%, #b51700 50%, #891100 100%);
+        transition: all 0.2s;
+    }
+    .bg-red:before{             /* dark */
+        background-image: linear-gradient(to bottom, #cf3b28 0%, #a73123 50%, #951400 50%, #660c00 100%);     
+        background-image: -webkit-linear-gradient(to bottom, #cf3b28 0%, #a73123 50%, #951400 50%, #660c00 100%);
+    }
+
+    .bg-green:after{            /* light */
+        background-image: linear-gradient(to bottom, #1DcD77, #1C8F93);                         
+        background-image: -webkit-linear-gradient(to bottom, #1DcD77, #1C8F93);
+    }
+    .bg-green:before{           /* dark */
+        background-image: linear-gradient(to bottom, #17bb6b, #136c6e);
+        background-image: -webkit-linear-gradient(to bottom, #17bb6b, #136c6e);
+    }
+
+    .bg-blue:after{             /* light */
+        background-image: linear-gradient(to bottom, #2d78ee 0%, #376fe0 50%, #1a5ad9 50%, #4650bd 100%);               
+        background-image: -webkit-linear-gradient(to bottom, #2d78ee 0%, #376fe0 50%, #1a5ad9 50%, #4650bd 100%);   
+        transition: all 0.2s;
+    }
+    .bg-blue:before{            /* dark */
+        background-image: linear-gradient(to bottom, #2467d1 0%, #2257bf 50%, #1145af 50%, #333b8f 100%);             
+        background-image: -webkit-linear-gradient(to bottom, #2467d1 0%, #2257bf 50%, #1145af 50%, #333b8f 100%);
+    }
+
+    /* *************************************************** Ripple *************************************************** */
+    .ripple-button .ripple{
+        position: absolute;
+        border-radius: 50%;
+        background-color: rgba(255, 255, 255, 0.9);
+        width: calc(100% / 4);
+        padding-top: calc(100% / 4);
+        margin-top: calc(100% / -8);
+        margin-left: calc(100% / -8);
+        animation: ripple 0.7s;
+        animation-fill-mode: forwards;
+        pointer-events: none;
+        touch-action: none;
+    }
+    
+    @keyframes ripple {
+        from {
+            opacity: 1;
+            transform: scale(1);
+        }
+
+        to {
+            opacity: 0;
+            transform: scale(10);
+        }
+    }
+
+    /* Ripple without filled circle */
+    .ripple-hollow-button .ripple{
+        position: absolute;
+        background-image: radial-gradient(circle, rgba(255, 255, 255, 0.3) 0, rgba(255, 255, 255, 0.4) 40%, rgba(255, 255, 255, 0.5) 50%, rgba(255, 255, 255, 0.6) 60%, transparent 70%);
+        border-radius: 50%;
+        width: calc(100% / 4);
+        padding-top: calc(100% / 4);
+        margin-top: calc(100% / -8);
+        margin-left: calc(100% / -8);
+        z-index: 999;
+        animation: ripple-hollow 0.7s;
+        animation-fill-mode: forwards;
+        pointer-events: none;
+        touch-action: none;
+    }
+
+    @keyframes ripple-hollow {
+        from {
+            opacity: 1;
+            transform: scale(1);
+        }
+
+        to {
+            opacity: 0.25;
+            transform: scale(8);
+        }
+    }
+
+    /* *************************************************** Checkbox *************************************************** */
+    .custom-checkbox-label {
+        position: relative;
+        display: inline-flex;
+        align-items: center;
+        user-select: none;
+        cursor: pointer;
+    }
+    .custom-checkbox-label input {
+        visibility: hidden;
+        width: 20px;
+        margin-right: 4px;
+    }
+    .custom-checkbox-label .custom-checkbox-wrapper {
+        position: absolute;
+        width: 18px;
+        height: 18px;
+        left: 0;
+        padding: 2px;
+        border-radius: 4px;
+        overflow: hidden;
+        box-shadow: inset 0 0 0 1px #1DAE85;
+        transition: none !important;
+        background: transparent;
+    }
+    .custom-checkbox-label .custom-checkbox-wrapper svg {
+        width: 100%;
+        padding-bottom:100%;
+        height:0;
+        background: white;
+        transition: all 0.25s;
+        transform: scale(0);
+        margin-top:1px;
+        mask-image: url('data:image/svg+xml;charset=utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 2 24 24" aria-hidden="true" focusable="false"><path fill="none" stroke="currentColor" stroke-width="3" d="M1.73 12.91l6.37 6.37L22.79 4.59"/></svg>');
+        -webkit-mask-image: url('data:image/svg+xml;charset=utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 2 24 24" aria-hidden="true" focusable="false"><path fill="none" stroke="currentColor" stroke-width="3" d="M1.73 12.91l6.37 6.37L22.79 4.59"/></svg>');
+    }
+    .custom-checkbox-label input:checked + span svg {
+        transform: scale(1);
+    }
+    .custom-checkbox-wrapper .background {
+        background-image: linear-gradient(180deg, #1DcD77, #1C8F93) !important;
+        position: absolute;
+        transition: all 0.35s;
+        opacity: 0;
+        width: 100%;
+        height: 100%;
+        top: 0;
+        left: 0;
+    }
+    .custom-checkbox-label input:checked + span .background {
+        opacity: 1;
+    }
+</style> -->
