@@ -8,18 +8,42 @@
 
 	$start = microtime(true); 
 	$end = (microtime(true) - $start);
-	echo "elapsed time: $end";
+	echo "elapsed time: ".number_format($end, 15)." s";
 	
 	If you must store your configuration files in the document root, name the files with a .php extension
 		
 	create pepper in file for full security ?
+	
+	register_shutdown_function(function($delPath){ unlink($delPath); exit(); }, dirname(__FILE__)."/".$zipPath);
+	
+	$file = fopen("error_log_new.txt", "a+");
+    fwrite($file, "[".date('Y-m-d H:i:s')."]\n"."EXIT"."\n\n");
+	
+	while($fileExists = file_exists($path)){
+         $filename = "_".$filename;
+         $path = dirname(__FILE__)."/../pdf/".$filename;
+    }
+	
+	#streaming headers
+		header("Cache-Control: no-cache, must-revalidate");
+		header('X-Accel-Buffering: no');
+		header('X-Accel-Charset: no');
+		header('Content-type: text/event-stream');
+		header("Content-Encoding: identity");
+		header('Surrogate-Control: BigPipe/1.0');
+	
+	
+webflow?
 
+create an alternate (alias) email address to use for account. Example: "example@gmail.com", "example+tag@gmail.com"
 	
 $(window).on("click", "#myelement", function(){
     // Will work on dynamically added elements!
 });
 
 "keypress"	- not registering esc, enter, etc
+
+<text></text>
 
 #cors servers
 	- https://thingproxy.freeboard.io/fetch/https://
@@ -28,8 +52,7 @@ $(window).on("click", "#myelement", function(){
 	new Date().getTime()										! 1620732518800
 	new Date().toLocaleString("sv")								! "2021-05-26 15:46:09"
 	
-#for
-	for(const property in object)
+for(const property in object)
 	
 #JSON.parse(window.localStorage["buttons"] || "[]");
 
@@ -67,6 +90,7 @@ element.addEventListener( action, function name () {
 
 font-display: fallback;
  
+window.getComputedStyle( document.body).getPropertyValue('background-color');  
 
 element.style.left = left; // triggers reflow
 element.style.top = top; // triggers reflow
@@ -113,6 +137,13 @@ function createFormData(formData, key = "", data) {
     }
 }
 
+let formData = new FormData();
+page.forEach((el) => {
+	formData.append("canvasEdits[" + i + "][page]", page.dataset.pageNumber);     
+	formData.append("canvasEdits[" + i + "][content]", page.dataset.content);
+	i++;
+});
+
 Usage example:
 	var data = {a: '1', b: 2, c: {d: '3'}};
 	var formData = new FormData();
@@ -121,3 +152,21 @@ Usage example:
 https://ritwickdey.github.io/
 
 https://gist.github.com/niksumeiko/360164708c3b326bd1c8		disable autofill/autocomplete
+
+#scale
+    let newScale = this.pdfViewer.currentScale;
+
+    do {
+      newScale = (newScale * DEFAULT_SCALE_DELTA).toFixed(2);
+      newScale = Math.ceil(newScale * 10) / 10;
+      newScale = Math.min(_ui_utils.MAX_SCALE, newScale);
+    } while (--ticks > 0 && newScale < _ui_utils.MAX_SCALE);
+	
+#mail
+	<!--[if mso]>
+		<p>Something for Outlook only</p>
+	<![endif]-->
+	
+	<!--[if !mso]><!-->
+		<p>Something for everything but Outlook</p>                
+	<!--<![endif]-->
