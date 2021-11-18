@@ -1,0 +1,415 @@
+.button {
+  color: white;
+  background: black;
+  overflow: hidden;
+  border-radius: 8px;
+  display: inline-block;
+  padding: 0.5rem 1.5rem;
+  font-weight: 500;
+  position: relative;
+  transition: all 0.3s;
+  font-size: 20px;
+  border: none;
+  box-shadow: rgba(0, 0, 0, 0.16) 0px 3px 6px, rgba(0, 0, 0, 0.23) 0px 3px 6px;
+  cursor: pointer;
+  min-width: max-content;
+}
+
+.b-orange {
+  background: -webkit-gradient(linear, left top, left bottom, from(#FFB284), to(#FF5E3A));
+  background: linear-gradient(#FFB284, #FF5E3A);
+  transition: none;
+}
+.b-orange:hover {
+  background: #FF5F3B;
+}
+
+.b-red {
+  background: -webkit-gradient(linear, left top, left bottom, from(#FD8788), to(#DF2029));
+  background: linear-gradient(#FD8788, #DF2029);
+  transition: none;
+}
+.b-red:hover {
+  background: #EF585C;
+}
+
+.b-gray {
+  background: -webkit-gradient(linear, left top, left bottom, from(#cecece), to(#a7a7a7));
+  background: linear-gradient(#cecece, #a7a7a7);
+  transition: none;
+}
+.b-gray:hover {
+  background: #a7a7a7;
+}
+
+.b-purple {
+  background: -webkit-gradient(linear, left top, left bottom, from(#E15FA7), to(#cf0072));
+  background: linear-gradient(#E15FA7, #cf0072);
+  transition: none;
+}
+.b-purple:hover {
+  background: #DC4598;
+}
+
+.icon-button {
+  color: white;
+  background: black;
+  overflow: hidden;
+  border-radius: 8px;
+  display: inline-block;
+  padding: 0.5rem 1.5rem;
+  font-weight: 500;
+  position: relative;
+  font-size: 20px;
+  border: none;
+  cursor: pointer;
+  min-width: max-content !important;
+  box-shadow: rgba(0, 0, 0, 0.16) 0px 3px 6px, rgba(0, 0, 0, 0.23) 0px 3px 6px;
+}
+.icon-button:hover .icon-text {
+  opacity: 0;
+  transform: translate(0, -150%);
+}
+.icon-button:hover .icon-icon {
+  top: 50%;
+  opacity: 1;
+}
+.icon-button:active {
+  filter: grayscale(0.25);
+  transition: none;
+}
+.icon-button .icon-icon {
+  position: absolute;
+  top: 150%;
+  opacity: 0;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  transition: top 0.33s cubic-bezier(0.38, 0.33, 0.33, 1.37), opacity 0.22s ease-in;
+}
+.icon-button .icon-text {
+  transition: transform 0.33s cubic-bezier(0.38, 0.33, 0.33, 1.37), opacity 0.22s ease-in;
+  display: block;
+}
+
+.ib-lightblue {
+  background-image: linear-gradient(to bottom, #00d2ff 0%, #3a7bd5 100%);
+  background-image: -webkit-linear-gradient(to bottom, #00d2ff 0%, #3a7bd5 100%);
+}
+.ib-lightblue:active {
+  box-shadow: inset 0 0 6px 4px #2056a0, 0 1px 0 #eeeeee;
+  background-image: linear-gradient(to bottom, #00acd3 0%, #255496 100%);
+  background-image: -webkit-linear-gradient(to bottom, #00acd3 0%, #255496 100%);
+}
+
+.ib-blue {
+  background-image: linear-gradient(to bottom, #2d78ee 0%, #376fe0 50%, #1a5ad9 50%, #4650bd 100%);
+  background-image: -webkit-linear-gradient(to bottom, #2d78ee 0%, #376fe0 50%, #1a5ad9 50%, #4650bd 100%);
+}
+.ib-blue:active {
+  box-shadow: inset 0 0 6px 4px #1a4480, 0 1px 0 #eeeeee;
+  background-image: linear-gradient(to bottom, #5d89e8 0%, #2261e0 50%, #044bd9 50%, #0d53de 100%);
+  background-image: -webkit-linear-gradient(to bottom, #5d89e8 0%, #2261e0 50%, #044bd9 50%, #0d53de 100%);
+}
+
+.ib-red {
+  background-image: linear-gradient(to bottom, #ee432e 0%, #c63929 50%, #b51700 50%, #891100 100%);
+  background-image: -webkit-linear-gradient(to bottom, #ee432e 0%, #c63929 50%, #b51700 50%, #891100 100%);
+}
+.ib-red:active {
+  box-shadow: inset 0 0 8px 5px #7c1500, 0 1px 0 #eeeeee;
+  background: linear-gradient(to bottom, #d43c28 0%, #ad3224 50%, #9c1500 50%, #700d00 100%);
+  background: -webkit-linear-gradient(to bottom, #d43c28 0%, #ad3224 50%, #9c1500 50%, #700d00 100%);
+}
+
+.ib-green {
+  background: linear-gradient(to bottom, #1DcD77, #1C8F93);
+  background: -webkit-linear-gradient(to bottom, #1DcD77, #1C8F93);
+}
+.ib-green:active {
+  box-shadow: inset 0 0 6px 4px #1e542e, 0 1px 0 #eeeeee;
+  background-image: linear-gradient(to bottom, #17bb6b, #136c6e);
+  background-image: -webkit-linear-gradient(to bottom, #17bb6b, #136c6e);
+}
+
+.ib-black {
+  background-image: linear-gradient(0deg, black, #777 100%);
+  background-image: -webkit-gradient(0deg, black, #777 100%);
+  box-shadow: 3px 3px 7px rgba(0, 0, 0, 0.5), inset 1px 1px 0px rgba(255, 255, 255, 0.7);
+}
+.ib-black:active {
+  box-shadow: none;
+  transform: translateY(1px);
+  background: black;
+}
+
+.ib-yellow {
+  color: rgba(0, 0, 0, 0.8);
+  background: linear-gradient(linear, left top, left bottom, from(#ffea00), color-stop(0.85, #ffd000), to(#efa900));
+  background: -webkit-gradient(linear, left top, left bottom, from(#ffea00), color-stop(0.85, #ffd000), to(#efa900));
+}
+.ib-yellow:active {
+  box-shadow: inset 0 0 6px 4px #917100, 0 1px 0 #eeeeee !important;
+  filter: brightness(85%);
+}
+
+.ib-black-to-yellow {
+  color: rgba(0, 0, 0, 0.8);
+  background: linear-gradient(linear, left top, left bottom, from(#ffea00), color-stop(0.85, #ffd000), to(#efa900));
+  background: -webkit-gradient(linear, left top, left bottom, from(#ffea00), color-stop(0.85, #ffd000), to(#efa900));
+  box-shadow: 3px 3px 7px rgba(0, 0, 0, 0.5), inset 1px 1px 0px rgba(255, 255, 255, 0.7);
+}
+.ib-black-to-yellow:active {
+  box-shadow: inset 0 0 6px 4px #917100, 0 1px 0 #eeeeee !important;
+  background: linear-gradient(linear, left top, left bottom, from(#ffea00), color-stop(0.85, #ffd000), to(#efa900));
+  background: -webkit-gradient(linear, left top, left bottom, from(#ffea00), color-stop(0.85, #ffd000), to(#efa900));
+  transform: none;
+  filter: brightness(85%);
+}
+
+/* *************************************************** Hover gradient *************************************************** */
+.button-gradient {
+  color: white;
+  overflow: hidden;
+  min-width: max-content;
+  font-size: 20px;
+  border-radius: 8px;
+  display: inline-block;
+  padding: 0.5rem 1.5rem;
+  font-weight: 500;
+  position: relative;
+  transition: all 0.3s;
+  border: none;
+  cursor: pointer;
+  z-index: 1;
+  background: transparent;
+  box-shadow: rgba(0, 0, 0, 0.16) 0px 3px 6px, rgba(0, 0, 0, 0.23) 0px 3px 6px;
+}
+.button-gradient:after, .button-gradient:before {
+  content: "";
+  position: absolute;
+  z-index: -1;
+  top: -2%;
+  left: -2%;
+  width: 104%;
+  height: 104%;
+  transition: all 0.3s;
+}
+.button-gradient:hover:after {
+  opacity: 0;
+}
+
+.bg-lightblue:after {
+  /* light */
+  background-image: linear-gradient(to bottom, #00d2ff 0%, #3a7bd5 100%);
+  background-image: -webkit-linear-gradient(to bottom, #00d2ff 0%, #3a7bd5 100%);
+}
+.bg-lightblue:before {
+  /* dark */
+  background-image: linear-gradient(to bottom, #00acd3 0%, #255496 100%);
+  background-image: -webkit-linear-gradient(to bottom, #00acd3 0%, #255496 100%);
+}
+
+.bg-red:after {
+  /* light */
+  background-image: linear-gradient(to bottom, #ee432e 0%, #c63929 50%, #b51700 50%, #891100 100%);
+  background-image: -webkit-linear-gradient(to bottom, #ee432e 0%, #c63929 50%, #b51700 50%, #891100 100%);
+  transition: all 0.2s;
+}
+.bg-red:before {
+  /* dark */
+  background-image: linear-gradient(to bottom, #cf3b28 0%, #a73123 50%, #951400 50%, #660c00 100%);
+  background-image: -webkit-linear-gradient(to bottom, #cf3b28 0%, #a73123 50%, #951400 50%, #660c00 100%);
+}
+
+.bg-green:after {
+  /* light */
+  background-image: linear-gradient(to bottom, #1DcD77, #1C8F93);
+  background-image: -webkit-linear-gradient(to bottom, #1DcD77, #1C8F93);
+}
+.bg-green:before {
+  /* dark */
+  background-image: linear-gradient(to bottom, #16b869, #126668);
+  background-image: -webkit-linear-gradient(to bottom, #16b869, #126668);
+}
+
+.bg-blue:after {
+  /* light */
+  background-image: linear-gradient(to bottom, #2d78ee 0%, #376fe0 50%, #1958d4 50%, #4650bd 100%);
+  background-image: -webkit-linear-gradient(to bottom, #2d78ee 0%, #376fe0 50%, #1958d4 50%, #4650bd 100%);
+  transition: all 0.2s;
+}
+.bg-blue:before {
+  /* dark */
+  background-image: linear-gradient(to bottom, #2467d1 0%, #2257bf 50%, #1145af 50%, #333b8f 100%);
+  background-image: -webkit-linear-gradient(to bottom, #2467d1 0%, #2257bf 50%, #1145af 50%, #333b8f 100%);
+}
+
+.bg-yellow {
+  color: rgba(0, 0, 0, 0.8);
+}
+.bg-yellow:after {
+  /* light */
+  background: linear-gradient(linear, left top, left bottom, from(#ffea00), color-stop(0.85, #ffd000), to(#efa900));
+  background: -webkit-gradient(linear, left top, left bottom, from(#ffea00), color-stop(0.85, #ffd000), to(#efa900));
+  transition: all 0.2s;
+}
+.bg-yellow:before {
+  /* dark */
+  background: linear-gradient(linear, left top, left bottom, from(#f0dc00), color-stop(0.85, #ecc100), to(#b37d00));
+  background: -webkit-gradient(linear, left top, left bottom, from(#f0dc00), color-stop(0.5, #ecc100), to(#b37d00));
+}
+
+.bg-black {
+  transition: all 0.2s;
+  box-shadow: 2.3px 4.3px 4.3px rgba(0, 0, 0, 0.43);
+}
+.bg-black:hover {
+  box-shadow: 4.6px 9px 11px rgba(0, 0, 0, 0.33);
+}
+.bg-black:after {
+  /* light */
+  background-image: linear-gradient(0deg, black, #777 95%);
+}
+.bg-black:before {
+  /* dark */
+  background-image: linear-gradient(0deg, #777, black 95%);
+}
+
+.sm {
+  padding: 0.5rem 1.3rem !important;
+  font-size: 16px !important;
+  border-radius: 6px;
+}
+.sm .material-icons-outlined, .sm .material-icons {
+  font-size: 20px;
+}
+
+.lg {
+  padding: 0.75rem 1.75rem !important;
+  font-size: 22px !important;
+  border-radius: 10px;
+}
+
+/* *************************************************** Ripple *************************************************** */
+.ripple-button .ripple {
+  position: absolute;
+  border-radius: 50%;
+  background-color: white;
+  width: calc(100% / 4);
+  padding-top: calc(100% / 4);
+  margin-top: calc(100% / -8);
+  margin-left: calc(100% / -8);
+  animation: ripple 0.7s;
+  animation-fill-mode: forwards;
+  pointer-events: none;
+  touch-action: none;
+  opacity: 0.7;
+}
+
+@keyframes ripple {
+  from {
+    opacity: 0.7;
+    transform: scale(1);
+  }
+  to {
+    opacity: 0;
+    transform: scale(10);
+  }
+}
+/* Ripple without filled circle */
+.ripple-hollow-button .ripple {
+  position: absolute;
+  background-image: radial-gradient(circle, rgba(255, 255, 255, 0.3) 0, rgba(255, 255, 255, 0.4) 40%, rgba(255, 255, 255, 0.5) 50%, rgba(255, 255, 255, 0.6) 60%, transparent 70%);
+  border-radius: 50%;
+  width: calc(100% / 4);
+  padding-top: calc(100% / 4);
+  margin-top: calc(100% / -8);
+  margin-left: calc(100% / -8);
+  z-index: 999;
+  animation: ripple-hollow 0.7s;
+  animation-fill-mode: forwards;
+  pointer-events: none;
+  touch-action: none;
+}
+
+@keyframes ripple-hollow {
+  from {
+    opacity: 1;
+    transform: scale(1);
+  }
+  to {
+    opacity: 0.25;
+    transform: scale(8);
+  }
+}
+/* *************************************************** Checkbox *************************************************** */
+.custom-checkbox-label {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  user-select: none;
+  cursor: pointer;
+}
+.custom-checkbox-label input {
+  visibility: hidden;
+  width: 20px;
+  margin-right: 4px;
+}
+.custom-checkbox-label input:checked + span .background {
+  opacity: 1;
+}
+.custom-checkbox-label input:checked + span svg {
+  transform: scale(0.9);
+}
+.custom-checkbox-label .custom-checkbox-wrapper {
+  position: absolute;
+  width: 16px;
+  height: 16px;
+  left: 0;
+  padding: 2px;
+  border-radius: 30%;
+  overflow: hidden;
+  box-shadow: inset 0 0 0 1.5px black;
+  transition: none !important;
+  background: transparent;
+}
+.custom-checkbox-label .custom-checkbox-wrapper .background {
+  background-image: linear-gradient(180deg, black, #777 90%);
+  position: absolute;
+  transition: all 0.35s;
+  opacity: 0;
+  width: 100%;
+  height: 100%;
+  top: 0;
+  left: 0;
+}
+.custom-checkbox-label .custom-checkbox-wrapper svg {
+  width: 100%;
+  padding-bottom: 100%;
+  height: 0;
+  background: white;
+  transition: all 0.25s;
+  transform: scale(0);
+  margin-top: 1px;
+  mask-image: url('data:image/svg+xml;charset=utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 2 24 24" aria-hidden="true" focusable="false"><path fill="none" stroke="currentColor" stroke-width="3" d="M1.73 12.91l6.37 6.37L22.79 4.59"/></svg>');
+  -webkit-mask-image: url('data:image/svg+xml;charset=utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 2 24 24" aria-hidden="true" focusable="false"><path fill="none" stroke="currentColor" stroke-width="3" d="M1.73 12.91l6.37 6.37L22.79 4.59"/></svg>');
+}
+.custom-checkbox-label .checkbox-green {
+  box-shadow: inset 0 0 0 1px #1DAE85;
+}
+.custom-checkbox-label .checkbox-green .background {
+  background-image: linear-gradient(180deg, #1DcD77, #1C8F93) !important;
+}
+
+.disabled {
+  color: rgba(0, 0, 0, 0.25) !important;
+}
+
+.button-disabled {
+  pointer-events: none !important;
+  opacity: 0.5 !important;
+}
+
+.button-disabled.ib-black, .button-disabled.bg-black {
+  opacity: 0.35 !important;
+}
