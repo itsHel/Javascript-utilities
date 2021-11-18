@@ -13,13 +13,13 @@
   opacity: 0;
   bottom: 7.5%;
   left: 50%;
-  transition: opacity 0.4s, transform 0.55s cubic-bezier(0.54, 1.5, 0.38, 1.02);
+  transition: opacity 0.4s, transform 0.55s cubic-bezier(0.54, 1.5, 0.38, 1.025);
   transform: translate(-50%, 80%) scaleX(0);
   cursor: pointer;
   min-width: 150px;
   pointer-events: none;
   flex-direction: column;
-  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
   border: 1px solid rgba(0, 0, 0, 0.125);
   font-size: 16px;
   padding: 0.5rem 1rem 0.75rem 1rem;
@@ -40,7 +40,6 @@
 #z-notify.notify-warn {
   border-left: 4px solid var(--notify-warn-color);
 }
-
 #z-notify.notify-warn .notify-icons {
   fill: var(--notify-warn-color);
 }
@@ -48,7 +47,6 @@
 #z-notify.notify-succ {
   border-left: 4px solid var(--notify-succ-color);
 }
-
 #z-notify.notify-succ .notify-icons {
   fill: var(--notify-succ-color);
   margin-right: 5px;
@@ -57,7 +55,6 @@
 #z-notify.notify-load {
   border-left: 4px solid var(--notify-loading-color);
 }
-
 #z-notify.notify-load .notify-icons {
   fill: var(--notify-loading-color);
   margin-right: 5px;
@@ -73,7 +70,7 @@
 
 #z-notify.notify-visible {
   opacity: 1;
-  transform: translate(-50%, 0%) scaleX(1);
+  transform: translate(-50%, 0%) scaleX(1) rotate(0.05deg);
   pointer-events: all;
 }
 
