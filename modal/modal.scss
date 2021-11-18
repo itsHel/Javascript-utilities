@@ -1,6 +1,7 @@
 :root {
     --modal-succ-color: #1fb9c0;
     --modal-warn-color: #dc3545;
+    --modal-notify-color: #212529;
     --modal-dismiss-color: rgba(0,0,0,0.6);
 }
 
@@ -109,6 +110,17 @@
     align-items: center;
     .modal-icons{
         fill: var(--modal-warn-color);
+    }
+}
+.notify-modal{
+    color: var(--modal-notify-color);
+    display: flex;
+    align-items: center;
+    .modal-icons{
+        width: 1.75rem;
+        height: 1.75rem;
+        margin-right:5px;
+        fill: var(--modal-notify-color);
     }
 }
 #modal-dismiss{
