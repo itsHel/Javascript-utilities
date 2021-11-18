@@ -1,7 +1,6 @@
 :root {
-    --table-main-color: #{$primary-color};
-    // --table-link-hover-color: #{$primary-dark};
-    --table-nav-hover-color: #{$link-color};
+    --table-main-color: rgb(29, 183, 238);
+    --table-link-hover-color: rgb(29, 130, 177);
 }
 
 .z-table{
@@ -189,7 +188,7 @@
     }
 }
 
-@media screen and (max-width: $mobile-width){
+@media screen and (max-width: 760px){
     .table-search-wrapper{
         .table-search{
             font-size: 1.4rem;
