@@ -1,6 +1,7 @@
 :root {
   --modal-succ-color: #1fb9c0;
   --modal-warn-color: #dc3545;
+  --modal-notify-color: #212529;
   --modal-dismiss-color: rgba(0,0,0,0.6);
 }
 
@@ -8,7 +9,6 @@
   pointer-events: all !important;
   opacity: 1 !important;
 }
-
 .z-modal-show #z-modal-wrapper {
   top: 5%;
 }
@@ -49,7 +49,6 @@
 #z-modal-wrapper {
   max-width: 80%;
 }
-
 #z-modal-wrapper > div {
   padding: 1.25rem;
 }
@@ -66,14 +65,12 @@
   display: flex;
   justify-content: space-between;
 }
-
 .modal-buttons button {
   padding: 0.6rem 1.1rem;
   font-size: 1.1rem;
   min-width: 80px;
   border-radius: 4px;
 }
-
 .modal-buttons button .ripple {
   background-color: rgba(255, 255, 255, 0.66);
 }
@@ -88,13 +85,11 @@
   color: black;
   padding: 1.25rem;
 }
-
 .modal-heading .modal-icons {
   width: 2rem;
   height: 2rem;
   margin-left: -1rem;
 }
-
 .modal-heading .text {
   color: rgba(0, 0, 0, 0.7);
 }
@@ -108,7 +103,6 @@
   display: flex;
   align-items: center;
 }
-
 .succ-modal .modal-icons {
   margin-right: 6px;
   fill: var(--modal-succ-color);
@@ -119,9 +113,20 @@
   display: flex;
   align-items: center;
 }
-
 .warn-modal .modal-icons {
   fill: var(--modal-warn-color);
+}
+
+.notify-modal {
+  color: var(--modal-notify-color);
+  display: flex;
+  align-items: center;
+}
+.notify-modal .modal-icons {
+  width: 1.75rem;
+  height: 1.75rem;
+  margin-right: 5px;
+  fill: var(--modal-notify-color);
 }
 
 #modal-dismiss {
@@ -131,7 +136,6 @@
   box-shadow: none;
   transition: background 0.3s, color 0.3s;
 }
-
 #modal-dismiss:hover {
   filter: none;
   background: var(--modal-dismiss-color);
@@ -146,7 +150,6 @@
   visibility: hidden;
   transition: background 0.3s, color 0.3s;
 }
-
 #modal-confirm:hover {
   filter: none;
   background: white;
