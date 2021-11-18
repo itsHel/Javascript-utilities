@@ -1,15 +1,13 @@
 :root {
-    --table-main-color: rgb(29, 183, 238);
-    --table-link-hover-color: rgb(29, 130, 177);
+    --table-main-color: #{$primary-color};
+    // --table-link-hover-color: #{$primary-dark};
+    --table-nav-hover-color: #{$link-color};
 }
-
-$mobile-width: 760px;
 
 .z-table{
     font-family: "Open Sans";
     width: 100%;
     border-collapse: collapse;
-    margin-top: 0.5rem;
     th, td{
         transition: all 0.3s;
         white-space: nowrap;
@@ -25,7 +23,7 @@ $mobile-width: 760px;
         user-select: none;
         cursor: pointer;
         padding: 1rem 0.25rem;
-        z-index:1;
+        z-index:10;
         div{
             display:flex;
             justify-content: center;
@@ -37,7 +35,7 @@ $mobile-width: 760px;
         .table-chevron{
             width:24px;
             height:24px;
-            fill:var(--table-main-color);
+            fill:var(--table-nav-hover-color);
             transition: all 0.5s;
             opacity: 0;
             left:104%;
@@ -45,12 +43,12 @@ $mobile-width: 760px;
             transition: all 0.5s ease-out;
         }
         &:hover{
-            color:var(--table-main-color);
+            color:var(--table-nav-hover-color);
         }
     }
     .th-active{
-        z-index:10;
-        color: var(--table-main-color);
+        z-index:11;
+        color: var(--table-nav-hover-color);
         .table-chevron{
             opacity: 1;
         }
@@ -66,15 +64,15 @@ $mobile-width: 760px;
         a{
             padding:0.6rem 0rem;
             display: inline-block;
-            color:var(--table-main-color);
+            // color:var(--table-main-color);
             cursor: alias;
             text-overflow: ellipsis;
             overflow: hidden;
             width: 100%;
             text-underline-offset: 3px;
-            &:hover{
-                color:var(--table-link-hover-color);
-            }
+            // &:hover{
+            //     color:var(--table-link-hover-color);
+            // }
         }
     }
     tbody tr{
@@ -128,7 +126,6 @@ $mobile-width: 760px;
 }
 
 .table-search-wrapper{
-    margin-left: auto;
     font-family: "Open Sans";
     border: 1px solid rgba(0, 0, 0, 0.1);
     justify-content: center;
@@ -181,7 +178,7 @@ $mobile-width: 760px;
         box-shadow: 0px 5px 15px -5px rgba(0, 0, 0, 0.3);
         border-color: rgba(0, 0, 0, 0.25);
         .table-search{
-            width:260px;
+            width:300px;
             &::placeholder{
                 color:rgba(0,0,0,.6);
             }
@@ -195,15 +192,15 @@ $mobile-width: 760px;
 @media screen and (max-width: $mobile-width){
     .table-search-wrapper{
         .table-search{
-            // font-size: 1.4rem;
-            // height: 1.5rem;
-            // padding: 14px 14px 14px 0;
+            font-size: 1.4rem;
+            height: 1.5rem;
+            padding: 14px 14px 14px 0;
         }
         .btn-search{
-            // padding:14px;
+            padding:14px;
             svg{
-                // width: 1.4rem;
-                // height: 1.4rem;
+                width: 1.4rem;
+                height: 1.4rem;
             }
         }
     }
