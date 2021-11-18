@@ -13,7 +13,7 @@
   opacity: 0;
   bottom: 7.5%;
   left: 50%;
-  transition: opacity 0.4s, transform 0.55s cubic-bezier(.54, 1.5, .38, 1.02);
+  transition: opacity 0.4s, transform 0.55s cubic-bezier(.54,1.5,.38,1.025);
   transform: translate(-50%, 80%) scaleX(0);
   cursor: pointer;
   min-width: 150px;
@@ -70,7 +70,7 @@
 
 #z-notify.notify-visible {
   opacity: 1;
-  transform: translate(-50%, 0%) scaleX(1);
+  transform: translate(-50%, 0%) scaleX(1) rotate(0.05deg);     // Rotate stops pixel-shift on scale
   pointer-events: all;
 }
 
