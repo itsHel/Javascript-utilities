@@ -2,6 +2,7 @@
 <link rel=icon href="https://cdn.discordapp.com/emojis/474325997181730826.png?v=1">
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+<link href="https://fonts.googleapis.com/icon?family=Material+Icons+Outlined" rel="stylesheet">
 
 <link href="_buttons.css" rel="stylesheet">
 
@@ -54,6 +55,9 @@
     }
     #inputs > *{
         margin-right:6px;
+    }
+    .material-icons-outlined{
+        font-size:32px;
     }
 </style>
 
@@ -109,9 +113,44 @@
     <div style="display:flex; justify-content:space-between;position: relative;">
         <button class="button ripple-button b-orange">Button</button>
         <button class="button ripple-button b-red">Button</button>
+        <button class="button ripple-button b-red include-icon-button">Button</button>
         <button class="button ripple-button b-purple">Button</button>
         <button class="button ripple-button b-gray">Button</button>
     </div>
+
+    <script>
+        let but = $(".include-icon-button");
+        but.on("click", function(e){
+            if(e.offsetX > but[0].offsetWidth){
+                // :after click
+                let yesterday = new Date(Date.now() - 86_400_000); 
+            } else {
+                // button click
+
+            }
+        });
+    </script>
+
+    <style>
+        .include-icon-button{
+            position: relative;
+            overflow: visible;
+        }
+        .include-icon-button:after{
+            content: "";
+            position: absolute;
+            height: 48px;
+            width:48px;
+            left:110%;
+            top:0;
+            border:1px solid rgba(0,0,0,0.15);
+            border-radius: 50%;
+
+            background-position: center;
+            background-repeat: no-repeat;
+            background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' height='32px' viewBox='0 0 24 24' width='32px' fill='rgb(33,33,33)'><path d='M0 0h24v24H0V0z' fill='none'/><path d='M13 3c-4.97 0-9 4.03-9 9H1l3.89 3.89.07.14L9 12H6c0-3.87 3.13-7 7-7s7 3.13 7 7-3.13 7-7 7c-1.93 0-3.68-.79-4.94-2.06l-1.42 1.42C8.27 19.99 10.51 21 13 21c4.97 0 9-4.03 9-9s-4.03-9-9-9zm-1 5v5l4.25 2.52.77-1.28-3.52-2.09V8z'/></svg>");
+        }
+    </style>
 
     <!-- *************************************************** Inputs *************************************************** -->
     <div id=inputs>
@@ -424,7 +463,9 @@
                 });
             });
 
-            const style = `<style>.fill-button{ position: relative; padding:0.75rem 1rem; text-align:center; background:black; overflow:hidden; border: 1px solid #d3d8db; box-shadow: 0 1px 1px rgba(0,0,0,.05); cursor:pointer;} .fill-button span{ background:white; transition: width 0.7s, padding-top 0.7s; width: 0; padding-top:0; position: absolute; border-radius:100%; transform: translate(-50%, -50%); z-index: 0; } .fill-button text{ color:white; position: relative; z-index: 1; transition: color 0.7s; } .fill-button:hover span{ width:calc(105% * 2); padding-top:calc(105% * 2); } .fill-button:hover text{ color:black; }</style>`;
+            const style = `<style>.fill-button{ position: relative; padding:0.75rem 1rem; text-align:center; background:black; overflow:hidden; border: 1px solid #d3d8db; box-shadow: 0 1px 1px rgba(0,0,0,.05); cursor:pointer;} 
+                            .fill-button span{ background:white; transition: width 0.7s, padding-top 0.7s; width: 0; padding-top:0; position: absolute; border-radius:100%; transform: translate(-50%, -50%); z-index: 0; } 
+                            .fill-button text{ color:white; position: relative; z-index: 1; transition: color 0.7s; } .fill-button:hover span{ width:calc(105% * 2); padding-top:calc(105% * 2); } .fill-button:hover text{ color:black; }</style>`;
 
             document.querySelector("html").insertAdjacentHTML("beforeend", style);
         }
@@ -496,6 +537,131 @@
         }
         #tooltip2{
             transition-timing-function: cubic-bezier(.38,.33,.37,1.67);
+        }
+    </style>
+
+    <!-- *************************************************** icons *************************************************** -->
+    <!-- <style>
+
+    </style>
+
+    <div>
+        <ul id=glowing>
+            <li>
+                <i class="material-icons-outlined">mood</i>
+            </li>
+            <li>
+                <i class="material-icons-outlined">hot_tub</i>
+            </li>
+            <li>
+                <i class="material-icons-outlined">bathtub</i>
+            </li>
+        </ul>
+    </div> -->
+
+    <!-- *************************************************** Animated svg *************************************************** -->
+    
+    <!-- pathLength=1 must be set, otherwise base stroke-dashoffset & stroke-dasharray on path.getTotalLength(); -->
+    <style>
+        #svg{
+            width:50px;
+            color:crimson;
+            cursor:pointer;
+        }
+        #svg path{
+            transition: all 0.8s;
+            stroke-dashoffset: 0;
+            stroke-dasharray: 1;
+        }
+    </style>
+
+    <div style="display: flex; justify-content:space-around;">
+        <svg id=svg viewBox="0 2 24 24" aria-hidden="true" focusable="false"><path pathLength=1 fill="none" stroke="currentColor" stroke-width="3" d="M1.73 12.91l6.37 6.37L22.79 4.59"/></svg>
+        
+        <div class="trapdoor" style="position:relative;">
+            <div class="top door"></div>
+            <div class="bottom door"></div>
+            <div class="door-inside">Hi</div>
+        </div>
+    </div>
+
+    <script>
+        document.querySelector("#svg").addEventListener("click", function(){
+            let path = this.querySelector("path");
+
+            path.style.strokeDashoffset = Number(!Number(path.style.strokeDashoffset));
+        });
+
+    </script>
+    
+    <!-- *************************************************** Trapdoor *************************************************** -->
+    <style>
+        :root{
+            --door-font-size: 30px;
+        }
+        .trapdoor {
+            transform: translateZ(0px);
+            -webkit-font-smoothing: antialiased;
+            width: 200px;
+            height: 50px;
+            box-shadow: inset -7px 0px 12px -8px rgba(0, 0, 0, 0.3), inset 7px 0px 12px -8px rgba(0, 0, 0, 0.3);
+            background: rgba(0, 0, 0, 0.25);
+            transition: background 400ms ease-in-out;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        .door-inside{
+            font-size: var(--door-font-size);
+        }
+        .trapdoor:hover {
+            background: #fff;
+        }
+        .trapdoor:hover .door {
+            box-shadow: 0px 0px 10px -2px rgba(0, 0, 0, 0.4);
+            transform: scale(1.08);
+        }
+        .trapdoor:hover .top {
+            top: -50%;
+        }
+        .trapdoor:hover .bottom {
+            top: 100%;
+        }
+        .top {
+            top: 0%;
+            left: 0px;
+        }
+        .top:before {
+            top: -5px;
+            top: calc(-1 * var(--door-font-size) + 27px);
+        }
+        .bottom {
+            top: 50%;
+            left: 0px;
+        }
+        .bottom:before {
+            top: -30px;
+            top: calc(-1 * var(--door-font-size) + 2px);
+        }
+        .door {
+            transition: top 400ms, box-shadow 200ms, transform 300ms;
+            transition-timing-function: ease-in-out;
+            background-color: #fff;
+            position: absolute;
+            overflow: hidden;
+            width: 100%;
+            z-index: 2;
+            height: 50%;
+        }
+        .door:before {
+            position: absolute;
+            font-size: var(--door-font-size);
+            display: block;
+            color: #4099FF;
+            content: "Door";
+            width: 100%;
+            height: 20px;
+            text-align:center;
         }
     </style>
 
@@ -612,7 +778,6 @@
     <div id=drop-wrapper>
         <div id=movable draggable=true></div>
     </div>
-
 
     <div id=canvas-wrapper>
         <canvas id=canvas style="border:2px dashed DeepSkyBlue"></canvas>
