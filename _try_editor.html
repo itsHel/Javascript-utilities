@@ -92,6 +92,299 @@
 </script>
 
 <body>
+    <!-- *************************************************** Db *************************************************** -->
+    <div style="display:flex; justify-content: space-around;">
+        <button id=db-add class="button-gradient bg-lightblue ripple-button">Test</button>
+        <div id=db-result>_</div>
+        <button id=db-add-time class="button-gradient bg-yellow ripple-button">Add</button>
+        <div id=db-time-result>_</div>
+        <button id=db-show-time class="button-gradient bg-red ripple-button">Show</button>
+    </div>
+
+    <script>
+        // *************************************************** Google notes ***************************************************
+        const style = "position:absolute; left:115%; top:0; padding-left:3px; color:#4d5156; max-width:250px; white-space: nowrap; text-overflow:ellipsis; border-left:3px solid #42464a;";
+        let links = document.querySelectorAll(".yuRUbf");
+        // fsf search
+        let data = {
+            "www.root.cz": "THIS IS ROOT",
+            "twitter.com": "TWITTER -----",
+            "something": "somethhhhhh"
+        };
+        
+        // Add icons
+        const svgStyle = 'style="width:9px;height:9px;margin-bottom:1px;"';
+        const svgPac = '<svg id=mysvg viewBox="0 0 541.6 571.11" ' + svgStyle + '><path style="fill:#70757a" d="M535.441,412.339A280.868,280.868 0 1,1 536.186,161.733L284.493,286.29Z"/></svg>';
+        
+        document.querySelectorAll(".eFM0qc > span").forEach(linkNav => {
+            let div = "<div class='link-add-note' style='display: inline-block; visibility:visible; margin-right:6px;'>" + svgPac + "</div>";
+
+            linkNav.insertAdjacentHTML('afterend', div);
+            linkNav.parentNode.querySelector(".link-add-note").addEventListener("click", addNote);
+
+            function addNote(){
+                // Copy from page notes ?
+            }
+        });
+
+        // Add data
+        links.forEach(link => {
+            let href = link.querySelector("a").href;
+            let match = href.match(/\/\/(.+?)(\/|$)/);
+            if(!match)
+                return;
+            
+            let url = match[1];
+
+            if(!data.hasOwnProperty(url))
+                return;
+
+            console.log(href);
+            console.log(url);
+
+            link.style.position = "relative";
+
+            let text = data[url];
+            let div = "<div title='" + text + "' style='" + style + "'>" + text + "</div>";
+
+            link.insertAdjacentHTML('beforeend', div);
+        });
+
+        // *************************************************** indexedDB ***************************************************
+        // indexedDB.deleteDatabase("store");
+
+        let openRequest = indexedDB.open("store", 5);
+
+        openRequest.onupgradeneeded = function() {
+            console.log("onUpdageEnded");
+
+            let db = openRequest.result;
+
+            let books = this.transaction.objectStore("books");
+            let index = books.createIndex('price_idx', 'price');
+
+            if (!db.objectStoreNames.contains('books')) {                                   // if there's no "books" store
+                db.createObjectStore('books', {keyPath: 'id', autoIncrement: true});        // create it
+            }
+        }
+
+        openRequest.onerror = function() {
+            console.error("onError", openRequest.error);
+        };
+
+        openRequest.onsuccess = function() {
+            console.log("onSuccess");
+            let db = openRequest.result;
+
+            // db.createObjectStore("books", {keyPath: "id", autoIncrement: true});
+        };
+
+        openRequest.onblocked = function() {
+            console.log("onBlocked");
+            // this event shouldn't trigger if we handle onversionchange correctly
+
+            // it means that there's another open connection to the same database
+            // and it wasn't closed after db.onversionchange triggered for it
+        };
+
+        document.querySelector("#db-add").addEventListener("click", function(){
+            let db = openRequest.result;
+
+            let transaction = db.transaction("books", "readwrite");
+            let books = transaction.objectStore("books");
+
+            let book = {price: 11, created: new Date()};
+            let book2 = {price: 11, created: new Date()};
+
+            let request = books.add(book);
+            let request2 = books.add(book2);
+
+            let priceIndex = books.index("price_idx");
+            // let request3 = books.get(2);
+            let request3 = books.getAll(IDBKeyRange.only(2));
+            let request4 = priceIndex.getAll(IDBKeyRange.upperBound(20));
+            // console.log(mybook);
+
+            request.onsuccess = function() { 
+                console.log("onSuccess Book added to the store", this.result);
+            };
+            request.onerror = function() {
+                console.log("onError", this.error);
+            };
+
+            request2.onsuccess = function() { 
+                console.log("onSuccess Book added to the store", this.result);
+            };
+            request2.onerror = function() {
+                console.log("onError", this.error);
+            };
+
+            request3.onsuccess = function() { 
+                console.log("search 3 result:");
+                console.log(this.result);
+            };
+            request3.onerror = function() {
+                console.log("search 3 error: ", this.error);
+            };
+
+            request4.onsuccess = function() { 
+                console.log("search 4 result:");
+                console.log(this.result);
+            };
+            request4.onerror = function() {
+                console.log("search 4 error: ", this.error);
+            };
+
+            // Short syntax
+            db.transaction("books").objectStore("books").get(4).onsuccess = function(event) {
+                console.log(event);
+                console.log(this.result);
+                console.log("Id 4 result price:  " + event.target.result.price);
+
+                let data = this.result;
+                data.price += 100;
+
+                let objectStore = db.transaction("books", "readwrite").objectStore("books");
+                let requestUpdate = objectStore.put(data);
+            };
+        });
+
+
+        let cols = ['darkred', 'lightblue'];
+        let x = {
+            darkred: ['2021-12-02 08:46:40', '2021-12-02 08:49:40', '2021-12-02 09:40:40', '2021-12-02 09:48:40'],
+            lightblue: ['2021-12-03 08:06:40', '2021-12-03 08:46:40']
+        };
+        let show = document.querySelector("#db-time-result");
+
+        document.querySelector("#db-add-time").addEventListener("click", function(){
+            addD(this.textContent);
+        });
+
+        
+        document.querySelector("#db-show-time").addEventListener("click", function(){
+            let db = _openRequest.result;
+            let colors = db.transaction("colors", "readwrite").objectStore("colors");
+
+            colors.getAll().onsuccess = function(){
+                console.warn("getAll:");
+                console.log(this.result);
+            }
+        });
+
+        // async function setCount(type){
+        //     let db = _openRequest.result;
+        //     let transaction = db.transaction("colors", "readwrite");
+        //     let colors = transaction.objectStore("colors");
+
+        //     let typeIndex = colors.index("type");
+
+        //     typeIndex.getAll(IDBKeyRange.only(type)).onsuccess = function(){
+        //         console.log(this.result.length);
+                
+        //         let target = document.querySelector("#target");
+        //         target.textContent = this.result.length;
+        //     };
+        // }
+
+        // function getCount(type){
+        //     let db = _openRequest.result;
+        //     let transaction = db.transaction("colors", "readwrite");
+        //     let colors = transaction.objectStore("colors");
+
+        //     let typeIndex = colors.index("type");
+            
+        //     return new Promise(resolve => {
+        //         typeIndex.getAll(IDBKeyRange.only(type)).onsuccess = function(){
+        //             resolve(this.result.length);
+        //             console.log("success");
+        //         };
+        //     })
+        // }
+
+
+        // *************************************************** Inks ***************************************************
+        
+        // time, created, colors
+        let _openRequest = indexedDB.open("time", 1);
+
+        function init(){
+            _openRequest.onupgradeneeded = function() {
+                let db = _openRequest.result;
+
+                if (!db.objectStoreNames.contains('colors')) {                                  // if there's no "books" store
+                    db.createObjectStore('colors', {keyPath: 'id', autoIncrement: true});       // create it
+                }
+
+                this.transaction.objectStore("colors").createIndex('type', 'type');
+                this.transaction.objectStore("colors").createIndex('created', 'created');
+            }
+
+            _openRequest.onerror = function() {
+                console.error("onError", this.error);
+            };
+
+            _openRequest.onsuccess = function() {
+                console.log("INIT");
+
+                let db = this.result;
+                let colors = db.transaction("colors", "readwrite").objectStore("colors");
+
+                colors.getAll().onsuccess = function(){
+                    console.warn("getAll:");
+                    console.log(this.result);
+
+                    let data = this.result;
+
+                    let unique = {};
+                    data.forEach(record => {
+                        if(unique.hasOwnProperty(record.type)){
+                            ++unique[record.type];
+                        } else {
+                            unique[record.type] = 1;
+                        }
+                    });
+
+                    // Parse data ?
+                    let realData = {};
+                    data.forEach(record => {
+                        if(!realData.hasOwnProperty(record.type)){
+                            realData[record.type] = [];
+                        }
+
+                        realData[record.type].push(record.created);
+                    });
+                    //
+
+                    console.log(unique);
+                    console.log(realData);
+
+                    // Do stuff
+                    
+                }
+            };
+        }
+
+        function addD(type){
+            let now = new Date().toLocaleString("sv");
+
+            let db = _openRequest.result;
+            let colors = db.transaction("colors", "readwrite").objectStore("colors");
+
+            let col = {type: type, created: now};
+
+            // colors.add(col).onsuccess = function() { 
+            //     console.log("onSuccess col added to the store", this.result);
+            // };
+
+            colors.add(col);
+        }
+
+        init();
+
+        // https://gist.github.com/inexorabletash/704e9688f99ac12dd336
+    </script>
+
     <!-- *************************************************** Buttons *************************************************** -->
     <div style="display:flex; justify-content:space-between;position: relative;">
         <button class="button-gradient bg-lightblue ripple-button">Lightblue</button>
@@ -102,10 +395,10 @@
         <button class="button-gradient bg-black ripple-button">Black</button>
     </div>
     <div style="display:flex; justify-content:space-between;position: relative;">
-        <button class="icon-button ib-red"><span class=icon-text>Icon button</span><span class="material-icons-outlined icon-icon">shuffle</span></button>
+        <button class="icon-button ib-red"><span class=icon-text>Ib Red</span><span class="material-icons-outlined icon-icon">shuffle</span></button>
         <button class="icon-button ib-yellow"><span class=icon-text>Ib Yellow</span><span class="material-icons-outlined icon-icon">shuffle</span></button>
         <button class="icon-button ib-blue sm"><span class=icon-text>Ib Blue sm</span><span class="material-icons-outlined icon-icon">shuffle</span></button>
-        <button class="icon-button ib-lightblue"><span class=icon-text>Ib Lightblue</span><span class="material-icons-outlined icon-icon">shuffle</span></button>
+        <button class="icon-button ib-lightblue"><span class=icon-text>Ib Lblue</span><span class="material-icons-outlined icon-icon">shuffle</span></button>
         <button class="icon-button ib-black"><span class=icon-text>Ib Black</span><span class="material-icons-outlined icon-icon">shuffle</span></button>
         <button class="button ripple-button">Ripple</button>
         <button class="button ripple-hollow-button">Hollow</button>
@@ -118,6 +411,7 @@
         <button class="button ripple-button b-gray">Button</button>
     </div>
 
+    <!-- *************************************************** Yesterday *************************************************** -->
     <script>
         let but = $(".include-icon-button");
         but.on("click", function(e){
@@ -474,14 +768,20 @@
     <!-- *************************************************** Strike shift *************************************************** -->
     <div>
         <div class="strike-container" style="margin-bottom:0;">
-            <ul style="list-style-type:none;padding:0;margin:0;">
+            <ul style="list-style-type:none;padding:0;margin:0;display:inline;">
                 <li><span>Home</span></li>
                 <li><span>About us</span></li>
                 <li><span>Contact</span></li>
             </ul>
+            <svg id=mysvg viewBox="0 0 541.6 571.11"> <path style="fill:black" d="M535.441,412.339A280.868,280.868 0 1,1 536.186,161.733L284.493,286.29Z"/> </svg>
         </div>
 
         <style>
+            #mysvg{
+                width:20px;
+                height:20px;
+            }
+
             .strike-container li{
                 display:inline-block;
             }
