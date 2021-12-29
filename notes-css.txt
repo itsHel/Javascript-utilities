@@ -18,12 +18,29 @@ box-shadow:         inset 1px 1px 10px #333;
 box-shadow: 		inset 1px 2px 5px #777;
 
     box-shadow: 3px 3px 7px rgb(0 0 0 / 50%), inset 1px 1px 0px rgb(255 255 255 / 70%);
+	
+	& > div + div{
+        margin-top:2rem;
+    }
+	
+#footer
+html, body { height: 100%;}
+body > footer {
+  position: sticky;
+  top: 100vh;
+}
+	
+#svg
+	background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' height='32px' viewBox='0 0 24 24' width='32px' fill='rgb(33,33,33)'><path d='M0 0h24v24H0V0z' fill='none'/><path d='M13 3c-4.97 0-9 4.03-9 9H1l3.89 3.89.07.14L9 12H6c0-3.87 3.13-7 7-7s7 3.13 7 7-3.13 7-7 7c-1.93 0-3.68-.79-4.94-2.06l-1.42 1.42C8.27 19.99 10.51 21 13 21c4.97 0 9-4.03 9-9s-4.03-9-9-9zm-1 5v5l4.25 2.52.77-1.28-3.52-2.09V8z'/></svg>");
 
 # transition bug		- on element that is being transformed
 	backface-visibility: hidden;
 	-webkit-backface-visibility: hidden;
 	-webkit-font-smoothing: antialiased !important;
 	transform: perspective(1px) translateZ(0);
+	transform: rotate(0.05deg) !important;
+	-webkit-filter: blur(0);
+	 display: table; ?
 	
 # // Icon from bottom on hover
 	.logout{
@@ -109,3 +126,41 @@ box-shadow: 		inset 1px 2px 5px #777;
 		//   left:calc(100% - 25px);
 		}
 	}
+	
+#dialog okno se zobackem
+// .more-dropdown{
+//     position: absolute;
+//     left:1px;
+//     top:111%;
+//     transform: translateX(-34%) scale(0.85);
+//     background: white;
+//     border-radius: 8px;
+//     padding:0.5rem 0;
+//     border:1px solid rgba(0,0,0,.15);
+//     box-shadow: 2px 2px 4px rgba(0,0,0,.25);
+//     transition: all 0.33s;
+//     visibility: hidden;
+//     opacity: 0;
+//     z-index:9;
+//     > div{
+//         padding:0.2rem 0.85rem;
+//         transition: background-color 0.15s, color 0.15s;
+//         cursor: pointer;
+//         color: rgba(0,0,0,0.8);
+//         &:hover{
+//             background-color: $primary-color;
+//             color:white;
+//         }
+//     }
+//     .arrow{
+//         position: absolute;
+//         transform: translateX(-50%)rotate(45deg);
+//         left: 50%;
+//         border-left: 1px solid rgba(0, 0, 0, 0.15);
+//         border-top: 1px solid rgba(0, 0, 0, 0.15);
+//         top: -6px;
+//         width: 10px;
+//         height: 10px;
+//         background: white;
+//     }
+// }
