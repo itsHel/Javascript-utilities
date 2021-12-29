@@ -1,4 +1,4 @@
-    function Table(data, nav, parentDiv, createRows, options = {}){
+function Table(data, nav, parentDiv, createRows, options = {}){
         // TH data-column = name of sort property for row       Example: <th data-column='date'...      = Sorted by row.date, Should be in ''   Leave empty to ignore for sort
         // TH must have <span class="table-chevron"></span>     - replaced by chevron
         // TD with class .search-ignore will be ignored on search
@@ -9,10 +9,10 @@
         const chevron = '<svg viewBox="2 2 20 20"><path d="M24 24H0V0h24v24z" fill="none" opacity=".87"/><path d="M16.59 8.59L12 13.17 7.41 8.59 6 10l6 6 6-6-1.41-1.41z"/></svg>';
     
         options.id = options.id ?? getUniqueId();
-        options.tableListeners = options.tableListeners ?? false;       // Callback, receives table element as parameter
+        options.tableListeners = options.tableListeners ?? false;               // Callback, receives table element as parameter
         options.filter = options.filter ?? false;
         options.search = options.search ?? false;
-        options.saveFilters = options.saveFilters ?? true;                       // false = active filters are saved to localStorage 
+        options.saveFilters = options.saveFilters ?? true;                      // false = active filters are saved to localStorage 
         options.orderCaseSensitive = options.orderCaseSensitive ?? false;
     
         var self = this;
@@ -52,10 +52,10 @@
                     return keep;
                 });
             }
-    
+
             if(order.column){
                 renderData.sort((a, b) => {
-                    if(isNaN(a[order.column])){
+                    if(isNaN(a[order.column]) || a[order.column] == ""){
                         // String sorting
                         if(options.orderCaseSensitive){
                             if(!order.reverse){
@@ -92,7 +92,7 @@
     
             if(firstRender){
                 nav = nav.replaceAll('<ico>', '<span class="table-chevron">' + chevron + '</span>');
-                parentDiv.insertAdjacentHTML("beforeend", "<table id='" + options.id + "' class='z-table'>" + "<thead><tr>" + nav + "</tr></thead><tbody>" + tableBody + "<tbody>");
+                parentDiv.insertAdjacentHTML("beforeend", "<table id='" + options.id + "' class='z-table'>" + "<thead><tr>" + nav + "</tr></thead><tbody>" + tableBody + "</tbody></div>");
                 tableEl = parentDiv.querySelector("#" + options.id);
             } else {
                 parentDiv.querySelector("#" + options.id + " tbody").innerHTML = tableBody;
@@ -208,7 +208,7 @@
             let searchButton = ((options.search.icon === false) ? "" : "<div class=btn-search>" + searchIcon + "</div>");
     
             let searchHtml = "<div class=table-search-wrapper>" + searchButton + "<input id='search-" + options.id + "' type=search class=table-search autocomplete=off placeholder='" + placeholder + "'></div>";
-    
+
             if(options.search.id){
                 document.querySelector("#" + options.search.id).innerHTML = searchHtml;
             } else {
