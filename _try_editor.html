@@ -92,6 +92,15 @@
 </script>
 
 <body>
+    <div id=x11 style="transform:scale(0.9); transition: all 0.3s">
+<table><thead><th style="position: sticky;font-size: 1.1rem;top:0;">dddddddddddd</th></thead></table>
+    </div>
+    <style>
+        #x11 th:hover{
+            color:red;
+        }
+    </style>
+
     <!-- *************************************************** Db *************************************************** -->
     <div style="display:flex; justify-content: space-around;">
         <button id=db-add class="button-gradient bg-lightblue ripple-button">Test</button>
@@ -106,6 +115,7 @@
         const style = "position:absolute; left:115%; top:0; padding-left:3px; color:#4d5156; max-width:250px; white-space: nowrap; text-overflow:ellipsis; border-left:3px solid #42464a;";
         let links = document.querySelectorAll(".yuRUbf");
         // fsf search
+        // Get from idb or Localstorage
         let data = {
             "www.root.cz": "THIS IS ROOT",
             "twitter.com": "TWITTER -----",
@@ -123,7 +133,7 @@
             linkNav.parentNode.querySelector(".link-add-note").addEventListener("click", addNote);
 
             function addNote(){
-                // Copy from page notes ?
+                // Localstorage or idb ?
             }
         });
 
@@ -139,9 +149,6 @@
             if(!data.hasOwnProperty(url))
                 return;
 
-            console.log(href);
-            console.log(url);
-
             link.style.position = "relative";
 
             let text = data[url];
@@ -151,7 +158,9 @@
         });
 
         // *************************************************** indexedDB ***************************************************
+        // https://javascript.info/indexeddb
         // indexedDB.deleteDatabase("store");
+        // Gets deleted by cookie deletion
 
         let openRequest = indexedDB.open("store", 5);
 
@@ -249,21 +258,8 @@
             };
         });
 
-
-        let cols = ['darkred', 'lightblue'];
-        let x = {
-            darkred: ['2021-12-02 08:46:40', '2021-12-02 08:49:40', '2021-12-02 09:40:40', '2021-12-02 09:48:40'],
-            lightblue: ['2021-12-03 08:06:40', '2021-12-03 08:46:40']
-        };
-        let show = document.querySelector("#db-time-result");
-
-        document.querySelector("#db-add-time").addEventListener("click", function(){
-            addD(this.textContent);
-        });
-
-        
         document.querySelector("#db-show-time").addEventListener("click", function(){
-            let db = _openRequest.result;
+            let db = openRequest.result;
             let colors = db.transaction("colors", "readwrite").objectStore("colors");
 
             colors.getAll().onsuccess = function(){
@@ -305,19 +301,26 @@
 
         // *************************************************** Inks ***************************************************
         
-        // time, created, colors
-        let _openRequest = indexedDB.open("time", 1);
+        // replace - inkss, inks, types
+        
+        let mydata = {
+            darkred: ['2021-12-02 08:46:40', '2021-12-02 08:49:40', '2021-12-02 09:40:40', '2021-12-02 09:48:40'],
+            lightblue: ['2021-12-03 08:06:40', '2021-12-03 08:46:40']
+        };
+
+        var realData = {};
+        var _openRequest = indexedDB.open("types", 2);
 
         function init(){
             _openRequest.onupgradeneeded = function() {
-                let db = _openRequest.result;
+                let db = this.result;
 
-                if (!db.objectStoreNames.contains('colors')) {                                  // if there's no "books" store
-                    db.createObjectStore('colors', {keyPath: 'id', autoIncrement: true});       // create it
+                if (!db.objectStoreNames.contains("inkss")) {
+                    db.createObjectStore("inkss", {keyPath: 'id', autoIncrement: true});
+                
+                    this.transaction.objectStore("inkss").createIndex('type', 'type');
+                    this.transaction.objectStore("inkss").createIndex('created', 'created');
                 }
-
-                this.transaction.objectStore("colors").createIndex('type', 'type');
-                this.transaction.objectStore("colors").createIndex('created', 'created');
             }
 
             _openRequest.onerror = function() {
@@ -328,57 +331,69 @@
                 console.log("INIT");
 
                 let db = this.result;
-                let colors = db.transaction("colors", "readwrite").objectStore("colors");
+                let inkss = db.transaction("inkss", "readwrite").objectStore("inkss");
 
-                colors.getAll().onsuccess = function(){
+            if(!false)
+                for(const property in mydata){
+                    let type = property;
+                    let dates = mydata[property];
+
+                    for(let i = 0; i < dates.length; i++){
+                        let inks = {type: type, created: dates[i]};
+
+                        inkss.add(inks);
+                    }
+                    
+                    // inkss.add(col).onsuccess = function() { 
+                    //     console.log("onSuccess col added to the store", this.result);
+                    // };
+                }
+
+                inkss.getAll().onsuccess = function(){
                     console.warn("getAll:");
-                    console.log(this.result);
+                    // console.log(this.result);
 
                     let data = this.result;
 
-                    let unique = {};
+                    let uniqueCounts = {};
                     data.forEach(record => {
-                        if(unique.hasOwnProperty(record.type)){
-                            ++unique[record.type];
+                        if(uniqueCounts.hasOwnProperty(record.type)){
+                            ++uniqueCounts[record.type];
                         } else {
-                            unique[record.type] = 1;
-                        }
-                    });
-
-                    // Parse data ?
-                    let realData = {};
-                    data.forEach(record => {
-                        if(!realData.hasOwnProperty(record.type)){
+                            uniqueCounts[record.type] = 1;
                             realData[record.type] = [];
                         }
 
                         realData[record.type].push(record.created);
                     });
-                    //
 
-                    console.log(unique);
+                    console.log(uniqueCounts);
                     console.log(realData);
 
-                    // Do stuff
-                    
+                    // Do stuff on init
                 }
             };
         }
 
         function addD(type){
-            let now = new Date().toLocaleString("sv");
+            let now = new Date().toLocaleString("sv").slice(0,3);
 
             let db = _openRequest.result;
-            let colors = db.transaction("colors", "readwrite").objectStore("colors");
+            let inkss = db.transaction("inkss", "readwrite").objectStore("inkss");
 
             let col = {type: type, created: now};
+            inkss.add(col);
 
-            // colors.add(col).onsuccess = function() { 
-            //     console.log("onSuccess col added to the store", this.result);
-            // };
+            if(!realData.hasOwnProperty(type)){
+                realData[type] = [];
+            }
 
-            colors.add(col);
+            realData[type].push(now);
         }
+
+        document.querySelector("#db-add-time").addEventListener("click", function(){
+            addD(this.textContent);
+        });
 
         init();
 
@@ -563,7 +578,7 @@
         </label>
     </div>
 
-    <!-- *************************************************** Radio-line *************************************************** -->
+    <!-- *************************************************** Radio-line + Arrow hover *************************************************** -->
     <div>
         <div id=radios>
             <label>
@@ -579,6 +594,21 @@
                 <span>Third</span>
             </label>
             <div class=radio-line></div>
+        </div>
+
+        <div id=link-hover-arrow>
+            <a href=#>
+                First link
+                <span class=ico>
+                    <svg viewBox="0 0 24 24" fill="#000000"><path d="M0 0h24v24H0z" fill="none"/><path d="M12 4l-1.41 1.41L16.17 11H4v2h12.17l-5.58 5.59L12 20l8-8z"/></svg>
+                </span>
+            </a>
+            <a href=#>
+                Second link
+                <span class=ico>
+                    <svg viewBox="0 0 24 24" fill="#000000"><path d="M0 0h24v24H0z" fill="none"/><path d="M12 4l-1.41 1.41L16.17 11H4v2h12.17l-5.58 5.59L12 20l8-8z"/></svg>
+                </span>
+            </a>
         </div>
     </div>
 
@@ -616,6 +646,32 @@
             top:115%;
             width:0;
         }
+
+        #link-hover-arrow{
+            display: inline-flex;
+        }
+        #link-hover-arrow a{
+            transition: 0.3s;
+            color: #000;
+            text-decoration: none;
+        }
+        #link-hover-arrow a:hover{
+            color: crimson;
+        }
+        #link-hover-arrow a:hover svg{
+            opacity: 1;
+            fill:crimson;
+            transform: translateX(0px);
+            transition: color 0.3s, opacity 0.6s, transform 0.35s;
+        }
+        #link-hover-arrow a svg{
+            opacity: 0;
+            transition: color 0.3s, opacity 0.25s, transform 0.35s;
+            vertical-align: middle;
+            width: 22px;
+            transform: translateX(-20px);
+        }
+        
     </style>
 
     <script>
