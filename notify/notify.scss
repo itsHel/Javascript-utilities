@@ -59,6 +59,14 @@
     margin-right:5px;
   }
 }
+#z-notify.notify-info{
+  border-left: 4px solid var(--notify-info-color);
+  .notify-icons{
+    transform:translateY(2px);
+    fill: var(--notify-info-color);
+    margin-right:8px;
+  }
+}
 
 .notify-header {
   display: flex;
