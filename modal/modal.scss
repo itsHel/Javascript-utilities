@@ -4,7 +4,6 @@
     --modal-notify-color: #212529;
     --modal-dismiss-color: rgba(0,0,0,0.6);
 }
-
 .z-modal-show{
     pointer-events: all !important;
     opacity:1 !important;
@@ -119,7 +118,7 @@
     .modal-icons{
         width: 1.75rem;
         height: 1.75rem;
-        margin-right:5px;
+        margin-right:6px;
         fill: var(--modal-notify-color);
     }
 }
