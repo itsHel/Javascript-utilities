@@ -31,6 +31,23 @@
 		header('Content-type: text/event-stream');
 		header("Content-Encoding: identity");
 		header('Surrogate-Control: BigPipe/1.0');
+		
+	- email buttons - https://buttons.cm/
+	
+#mail
+	<!--[if mso]>
+		<p>Something for Outlook only</p>
+	<![endif]-->
+	
+	<!--[if !mso]><!-->
+		<p>Something for everything but Outlook</p>                
+	<!--<![endif]-->
+	
+#html
+	<input id="" type="datetime-local" style="color:rgba(0,0,0,0.4);" autocomplete="off" onfocus="this.style.color='#212529'" onblur="if(this.value!=='') this.style.color='#212529'; else this.style.color='rgba(0,0,0,0.4)'">
+	<input id="" placeholder="Expiration" type="search" autocomplete="off">
+	
+	<span class="material-icons-outlined">cruelty_free</span>
 	
 	
 webflow?
@@ -43,7 +60,6 @@ $(window).on("click", "#myelement", function(){
 
 "keypress"	- not registering esc, enter, etc
 
-<text></text>
 
 #cors servers
 	- https://thingproxy.freeboard.io/fetch/https://
@@ -85,8 +101,7 @@ element.addEventListener( action, function name () {
     element.removeEventListener( action, name, capture );
 }, capture );
 
-<input id=link-expiration placeholder="Expiration" type="search" autocomplete="off">
-<span class="material-icons-outlined">cruelty_free</span>
+document.styleSheets[1].cssRules[0].style.getPropertyValue('--modal-warn-color');
 
 font-display: fallback;
  
@@ -144,6 +159,15 @@ page.forEach((el) => {
 	i++;
 });
 
+#return promise
+function promiseForTransaction(tx) {
+  return new Promise((resolve, reject) => {
+    tx.oncomplete = e => resolve();
+    tx.onabort = e => reject(tx.error);
+  });
+}
+await promiseForTransaction(r.tx);
+
 Usage example:
 	var data = {a: '1', b: 2, c: {d: '3'}};
 	var formData = new FormData();
@@ -153,20 +177,34 @@ https://ritwickdey.github.io/
 
 https://gist.github.com/niksumeiko/360164708c3b326bd1c8		disable autofill/autocomplete
 
-#scale
-    let newScale = this.pdfViewer.currentScale;
+#async callback
+	foo(function(result) {
+		// Code that depends on 'result'
+	});
+	Here we defined the function "inline" but you can pass any function reference:
 
-    do {
+	function myCallback(result) {
+		// Code that depends on 'result'
+	}
+
+	foo(myCallback);
+	foo itself is defined as follows:
+
+	function foo(callback) {
+		$.ajax({
+			// ...
+			success: callback
+		});
+	}
+
+
+#scale
+    let newScale = oldScale;
+	// zoomIn
       newScale = (newScale * DEFAULT_SCALE_DELTA).toFixed(2);
       newScale = Math.ceil(newScale * 10) / 10;
       newScale = Math.min(_ui_utils.MAX_SCALE, newScale);
-    } while (--ticks > 0 && newScale < _ui_utils.MAX_SCALE);
-	
-#mail
-	<!--[if mso]>
-		<p>Something for Outlook only</p>
-	<![endif]-->
-	
-	<!--[if !mso]><!-->
-		<p>Something for everything but Outlook</p>                
-	<!--<![endif]-->
+	// zoomOut
+      newScale = (newScale / DEFAULT_SCALE_DELTA).toFixed(2);
+      newScale = Math.floor(newScale * 10) / 10;
+      newScale = Math.max(_ui_utils.MAX_SCALE, newScale);
