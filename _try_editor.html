@@ -31,9 +31,9 @@
         box-shadow: 0 1px 1px rgba(0,0,0,.05);
         background:white;
         margin-bottom:18px;
-    } 
+    }
     #drop-wrapper{
-        height:650px;
+        height:250px;
         position:relative;
     }
     .highlight{
@@ -60,6 +60,116 @@
         font-size:32px;
     }
 </style>
+
+<script>
+    (function scrollHold(){
+        return;
+        "use strict";
+        const delay = 500;
+        const triggerMove = window.innerHeight;
+        const triggerTimeThreshold = 500;
+        // const triggerMove = 100;
+
+        let oldPos = window.scrollY, newPos;
+        let triggered = false;
+        let triggeredAt = 0;
+        let oldTime = 0;
+        let delta = 0;
+        let Timeout;
+        let holdX = 0, holdY = 0;
+        let highestDiff = 0;
+        
+
+        // Plus debounce ?
+        // Nesmi brzdit po tom co se pdf stranka nacetla?
+        // only large pdf
+        // ignore On home/end buttons + when directly paging?
+        //* Dont hold if scrolling is slow!          /s ?
+        // Hold scrollTo triggeruje myscroll        - check if e.timeStamp is too close to the last one?
+
+        window.addEventListener("scroll", detectScroll, {passive: true, once: true});
+
+        function detectScroll(e){
+            newPos = window.scrollY;
+            console.error("WINDOW Y: " + window.scrollY);
+            let now = Date.now();
+            
+            if(!triggered){
+                triggered = true;
+                oldTime = now;
+                triggeredAt = now;
+                window.addEventListener("scroll", detectScroll, {passive: true, once: true});
+                Timeout = setTimeout(function(){
+                    detectScroll();
+                }, delay + 50);
+                return;
+            }
+
+            if(oldTime > now - delay){
+                // Keep counting
+                let newDiff = newPos - oldPos;
+                
+                console.log("NEWPOS  " + newPos);
+                console.log("OLDPOS  " + oldPos);
+                console.log("-------------------------");
+                console.log("POS difference: " + newDiff);
+                console.log("-------------------------");
+                console.log("DELTA BEFORE " + delta);
+                // ONLY WORKS DOWNSCROLL
+                if(Math.abs(highestDiff) > Math.abs(newDiff)){
+                    console.log("highestDiff YES: " + highestDiff);
+                    delta += (highestDiff);
+                }
+
+                oldTime = now;
+                console.log("DELTA AFTER " + delta);
+                
+                highestDiff = newDiff;
+                
+                if(Math.abs(delta) > triggerMove){
+                    // Surpress scroll
+                    if(holdX || holdY){
+                        console.log("BEFORE:" + window.scrollY);
+                        window.scrollTo(holdX, holdY);
+                        console.log("AFTER: " + window.scrollY);
+                        // READD ONCE?
+                    } else {
+                        if(triggeredAt > now - triggerTimeThreshold){
+                            holdX = window.scrollX;
+                            holdY = window.scrollY;
+                        } else {
+                            console.warn("ELSEeeeeeeee");
+                            resetScroll();
+                        }
+                    }
+                }
+
+                window.addEventListener("scroll", detectScroll, {passive: true, once: true});
+                clearTimeout(Timeout);
+                Timeout = setTimeout(function(){
+                    detectScroll();
+                }, delay + 100);
+            } else {
+                resetScroll();
+            }
+
+            if(!(Math.abs(delta) > triggerMove))
+                oldPos = newPos;
+            else
+                oldPos = holdY;
+        }
+
+        function resetScroll(){
+            console.log("delta---------------------------------------------- " + delta);
+            delta = 0;
+            holdX = 0;
+            holdY = 0;
+            clearTimeout(Timeout);
+            triggered = false;
+            window.addEventListener("scroll", detectScroll, {passive: true, once: true});   
+        }
+    })();
+</script>
 
 <script>
     window.addEventListener("load", function(){
@@ -92,15 +202,6 @@
 </script>
 
 <body>
-    <div id=x11 style="transform:scale(0.9); transition: all 0.3s">
-<table><thead><th style="position: sticky;font-size: 1.1rem;top:0;">dddddddddddd</th></thead></table>
-    </div>
-    <style>
-        #x11 th:hover{
-            color:red;
-        }
-    </style>
-
     <!-- *************************************************** Db *************************************************** -->
     <div style="display:flex; justify-content: space-around;">
         <button id=db-add class="button-gradient bg-lightblue ripple-button">Test</button>
@@ -112,10 +213,11 @@
 
     <script>
         // *************************************************** Google notes ***************************************************
+        // TODO - Get and save data from idb or Localstorage
         const style = "position:absolute; left:115%; top:0; padding-left:3px; color:#4d5156; max-width:250px; white-space: nowrap; text-overflow:ellipsis; border-left:3px solid #42464a;";
         let links = document.querySelectorAll(".yuRUbf");
+        
         // fsf search
-        // Get from idb or Localstorage
         let data = {
             "www.root.cz": "THIS IS ROOT",
             "twitter.com": "TWITTER -----",
@@ -133,7 +235,7 @@
             linkNav.parentNode.querySelector(".link-add-note").addEventListener("click", addNote);
 
             function addNote(){
-                // Localstorage or idb ?
+                // TODO - localstorage or idb ?
             }
         });
 
@@ -161,243 +263,243 @@
         // https://javascript.info/indexeddb
         // indexedDB.deleteDatabase("store");
         // Gets deleted by cookie deletion
+        try {
+            let openRequest = indexedDB.open("store", 8);
 
-        let openRequest = indexedDB.open("store", 5);
+            openRequest.onupgradeneeded = function() {
+                console.log("onUpdageEnded");
 
-        openRequest.onupgradeneeded = function() {
-            console.log("onUpdageEnded");
+                let db = openRequest.result;
 
-            let db = openRequest.result;
-
-            let books = this.transaction.objectStore("books");
-            let index = books.createIndex('price_idx', 'price');
-
-            if (!db.objectStoreNames.contains('books')) {                                   // if there's no "books" store
-                db.createObjectStore('books', {keyPath: 'id', autoIncrement: true});        // create it
-            }
-        }
-
-        openRequest.onerror = function() {
-            console.error("onError", openRequest.error);
-        };
-
-        openRequest.onsuccess = function() {
-            console.log("onSuccess");
-            let db = openRequest.result;
-
-            // db.createObjectStore("books", {keyPath: "id", autoIncrement: true});
-        };
-
-        openRequest.onblocked = function() {
-            console.log("onBlocked");
-            // this event shouldn't trigger if we handle onversionchange correctly
-
-            // it means that there's another open connection to the same database
-            // and it wasn't closed after db.onversionchange triggered for it
-        };
-
-        document.querySelector("#db-add").addEventListener("click", function(){
-            let db = openRequest.result;
-
-            let transaction = db.transaction("books", "readwrite");
-            let books = transaction.objectStore("books");
-
-            let book = {price: 11, created: new Date()};
-            let book2 = {price: 11, created: new Date()};
-
-            let request = books.add(book);
-            let request2 = books.add(book2);
-
-            let priceIndex = books.index("price_idx");
-            // let request3 = books.get(2);
-            let request3 = books.getAll(IDBKeyRange.only(2));
-            let request4 = priceIndex.getAll(IDBKeyRange.upperBound(20));
-            // console.log(mybook);
-
-            request.onsuccess = function() { 
-                console.log("onSuccess Book added to the store", this.result);
-            };
-            request.onerror = function() {
-                console.log("onError", this.error);
-            };
-
-            request2.onsuccess = function() { 
-                console.log("onSuccess Book added to the store", this.result);
-            };
-            request2.onerror = function() {
-                console.log("onError", this.error);
-            };
-
-            request3.onsuccess = function() { 
-                console.log("search 3 result:");
-                console.log(this.result);
-            };
-            request3.onerror = function() {
-                console.log("search 3 error: ", this.error);
-            };
-
-            request4.onsuccess = function() { 
-                console.log("search 4 result:");
-                console.log(this.result);
-            };
-            request4.onerror = function() {
-                console.log("search 4 error: ", this.error);
-            };
-
-            // Short syntax
-            db.transaction("books").objectStore("books").get(4).onsuccess = function(event) {
-                console.log(event);
-                console.log(this.result);
-                console.log("Id 4 result price:  " + event.target.result.price);
-
-                let data = this.result;
-                data.price += 100;
-
-                let objectStore = db.transaction("books", "readwrite").objectStore("books");
-                let requestUpdate = objectStore.put(data);
-            };
-        });
-
-        document.querySelector("#db-show-time").addEventListener("click", function(){
-            let db = openRequest.result;
-            let colors = db.transaction("colors", "readwrite").objectStore("colors");
-
-            colors.getAll().onsuccess = function(){
-                console.warn("getAll:");
-                console.log(this.result);
-            }
-        });
-
-        // async function setCount(type){
-        //     let db = _openRequest.result;
-        //     let transaction = db.transaction("colors", "readwrite");
-        //     let colors = transaction.objectStore("colors");
-
-        //     let typeIndex = colors.index("type");
-
-        //     typeIndex.getAll(IDBKeyRange.only(type)).onsuccess = function(){
-        //         console.log(this.result.length);
-                
-        //         let target = document.querySelector("#target");
-        //         target.textContent = this.result.length;
-        //     };
-        // }
-
-        // function getCount(type){
-        //     let db = _openRequest.result;
-        //     let transaction = db.transaction("colors", "readwrite");
-        //     let colors = transaction.objectStore("colors");
-
-        //     let typeIndex = colors.index("type");
-            
-        //     return new Promise(resolve => {
-        //         typeIndex.getAll(IDBKeyRange.only(type)).onsuccess = function(){
-        //             resolve(this.result.length);
-        //             console.log("success");
-        //         };
-        //     })
-        // }
-
-
-        // *************************************************** Inks ***************************************************
-        
-        // replace - inkss, inks, types
-        
-        let mydata = {
-            darkred: ['2021-12-02 08:46:40', '2021-12-02 08:49:40', '2021-12-02 09:40:40', '2021-12-02 09:48:40'],
-            lightblue: ['2021-12-03 08:06:40', '2021-12-03 08:46:40']
-        };
-
-        var realData = {};
-        var _openRequest = indexedDB.open("types", 2);
-
-        function init(){
-            _openRequest.onupgradeneeded = function() {
-                let db = this.result;
-
-                if (!db.objectStoreNames.contains("inkss")) {
-                    db.createObjectStore("inkss", {keyPath: 'id', autoIncrement: true});
-                
-                    this.transaction.objectStore("inkss").createIndex('type', 'type');
-                    this.transaction.objectStore("inkss").createIndex('created', 'created');
-                }
-            }
-
-            _openRequest.onerror = function() {
-                console.error("onError", this.error);
-            };
-
-            _openRequest.onsuccess = function() {
-                console.log("INIT");
-
-                let db = this.result;
-                let inkss = db.transaction("inkss", "readwrite").objectStore("inkss");
-
-            if(!false)
-                for(const property in mydata){
-                    let type = property;
-                    let dates = mydata[property];
-
-                    for(let i = 0; i < dates.length; i++){
-                        let inks = {type: type, created: dates[i]};
-
-                        inkss.add(inks);
-                    }
-                    
-                    // inkss.add(col).onsuccess = function() { 
-                    //     console.log("onSuccess col added to the store", this.result);
-                    // };
+                if(!db.objectStoreNames.contains('books')){                                     // if there's no "books" store
+                    db.createObjectStore('books', {keyPath: 'id', autoIncrement: true});        // create it
                 }
 
-                inkss.getAll().onsuccess = function(){
-                    console.warn("getAll:");
-                    // console.log(this.result);
+                let books = this.transaction.objectStore("books");
+                let index = books.createIndex('price_idx', 'price');
+            }
+
+            openRequest.onerror = function() {
+                console.warn("onError", openRequest.error);
+            };
+
+            openRequest.onsuccess = function() {
+                console.log("onSuccess");
+                let db = openRequest.result;
+
+                // db.createObjectStore("books", {keyPath: "id", autoIncrement: true});
+            };
+
+            openRequest.onblocked = function() {
+                console.log("onBlocked");
+                // this event shouldn't trigger if we handle onversionchange correctly
+
+                // it means that there's another open connection to the same database
+                // and it wasn't closed after db.onversionchange triggered for it
+            };
+
+            document.querySelector("#db-add").addEventListener("click", function(){
+                let db = openRequest.result;
+
+                let transaction = db.transaction("books", "readwrite");
+                let books = transaction.objectStore("books");
+
+                let book = {price: 11, created: new Date()};
+                let book2 = {price: 11, created: new Date()};
+
+                let request = books.add(book);
+                let request2 = books.add(book2);
+
+                let priceIndex = books.index("price_idx");
+                // let request3 = books.get(2);
+                let request3 = books.getAll(IDBKeyRange.only(2));
+                let request4 = priceIndex.getAll(IDBKeyRange.upperBound(20));
+                // console.log(mybook);
+
+                request.onsuccess = function() { 
+                    console.log("onSuccess Book added to the store", this.result);
+                };
+                request.onerror = function() {
+                    console.log("onError", this.error);
+                };
+
+                request2.onsuccess = function() { 
+                    console.log("onSuccess Book added to the store", this.result);
+                };
+                request2.onerror = function() {
+                    console.log("onError", this.error);
+                };
+
+                request3.onsuccess = function() { 
+                    console.log("search 3 result:");
+                    console.log(this.result);
+                };
+                request3.onerror = function() {
+                    console.log("search 3 error: ", this.error);
+                };
+
+                request4.onsuccess = function() { 
+                    console.log("search 4 result:");
+                    console.log(this.result);
+                };
+                request4.onerror = function() {
+                    console.log("search 4 error: ", this.error);
+                };
+
+                // Short syntax
+                db.transaction("books").objectStore("books").get(4).onsuccess = function(event) {
+                    console.log(event);
+                    console.log(this.result);
+                    console.log("Id 4 result price:  " + event.target.result.price);
 
                     let data = this.result;
+                    data.price += 100;
 
-                    let uniqueCounts = {};
-                    data.forEach(record => {
-                        if(uniqueCounts.hasOwnProperty(record.type)){
-                            ++uniqueCounts[record.type];
-                        } else {
-                            uniqueCounts[record.type] = 1;
-                            realData[record.type] = [];
-                        }
+                    let objectStore = db.transaction("books", "readwrite").objectStore("books");
+                    let requestUpdate = objectStore.put(data);
+                };
+            });
 
-                        realData[record.type].push(record.created);
-                    });
+            document.querySelector("#db-show-time").addEventListener("click", function(){
+                let db = openRequest.result;
+                let colors = db.transaction("colors", "readwrite").objectStore("colors");
 
-                    console.log(uniqueCounts);
-                    console.log(realData);
-
-                    // Do stuff on init
+                colors.getAll().onsuccess = function(){
+                    console.warn("getAll:");
+                    console.log(this.result);
                 }
-            };
-        }
+            });
 
-        function addD(type){
-            let now = new Date().toLocaleString("sv").slice(0,3);
+            async function setCount(type){
+                let db = _openRequest.result;
+                let transaction = db.transaction("colors", "readwrite");
+                let colors = transaction.objectStore("colors");
 
-            let db = _openRequest.result;
-            let inkss = db.transaction("inkss", "readwrite").objectStore("inkss");
+                let typeIndex = colors.index("type");
 
-            let col = {type: type, created: now};
-            inkss.add(col);
-
-            if(!realData.hasOwnProperty(type)){
-                realData[type] = [];
+                typeIndex.getAll(IDBKeyRange.only(type)).onsuccess = function(){
+                    console.log(this.result.length);
+                    
+                    let target = document.querySelector("#target");
+                    target.textContent = this.result.length;
+                };
             }
 
-            realData[type].push(now);
-        }
+            function getCount(type){
+                let db = _openRequest.result;
+                let transaction = db.transaction("colors", "readwrite");
+                let colors = transaction.objectStore("colors");
 
-        document.querySelector("#db-add-time").addEventListener("click", function(){
-            addD(this.textContent);
-        });
+                let typeIndex = colors.index("type");
+                
+                return new Promise(resolve => {
+                    typeIndex.getAll(IDBKeyRange.only(type)).onsuccess = function(){
+                        resolve(this.result.length);
+                        console.log("success");
+                    };
+                })
+            }
 
-        init();
 
-        // https://gist.github.com/inexorabletash/704e9688f99ac12dd336
+            // *************************************************** Inks ***************************************************
+            
+            // replace - inkss, inks, types
+            
+            let mydata = {
+                darkred: ['2021-12-02 08:46:40', '2021-12-02 08:49:40', '2021-12-02 09:40:40', '2021-12-02 09:48:40'],
+                lightblue: ['2021-12-03 08:06:40', '2021-12-03 08:46:40']
+            };
+
+            var realData = {};
+            var _openRequest = indexedDB.open("types", 2);
+
+            function init(){
+                _openRequest.onupgradeneeded = function() {
+                    let db = this.result;
+
+                    if (!db.objectStoreNames.contains("inkss")) {
+                        db.createObjectStore("inkss", {keyPath: 'id', autoIncrement: true});
+                    
+                        this.transaction.objectStore("inkss").createIndex('type', 'type');
+                        this.transaction.objectStore("inkss").createIndex('created', 'created');
+                    }
+                }
+
+                _openRequest.onerror = function() {
+                    console.warn("onError", this.error);
+                };
+
+                _openRequest.onsuccess = function() {
+                    console.log("INIT");
+
+                    let db = this.result;
+                    let inkss = db.transaction("inkss", "readwrite").objectStore("inkss");
+
+                if(!false)
+                    for(const property in mydata){
+                        let type = property;
+                        let dates = mydata[property];
+
+                        for(let i = 0; i < dates.length; i++){
+                            let inks = {type: type, created: dates[i]};
+
+                            inkss.add(inks);
+                        }
+                        
+                        // inkss.add(col).onsuccess = function() { 
+                        //     console.log("onSuccess col added to the store", this.result);
+                        // };
+                    }
+
+                    inkss.getAll().onsuccess = function(){
+                        // console.warn("getAll:");
+                        // console.log(this.result);
+
+                        let data = this.result;
+
+                        let uniqueCounts = {};
+                        data.forEach(record => {
+                            if(uniqueCounts.hasOwnProperty(record.type)){
+                                ++uniqueCounts[record.type];
+                            } else {
+                                uniqueCounts[record.type] = 1;
+                                realData[record.type] = [];
+                            }
+
+                            realData[record.type].push(record.created);
+                        });
+
+                        // console.log(uniqueCounts);
+                        // console.log(realData);
+
+                        // Do stuff on init
+                    }
+                };
+            }
+
+            function addD(type){
+                let now = new Date().toLocaleString("sv").slice(0,3);
+
+                let db = _openRequest.result;
+                let inkss = db.transaction("inkss", "readwrite").objectStore("inkss");
+
+                let col = {type: type, created: now};
+                inkss.add(col);
+
+                if(!realData.hasOwnProperty(type)){
+                    realData[type] = [];
+                }
+
+                realData[type].push(now);
+            }
+
+            document.querySelector("#db-add-time").addEventListener("click", function(){
+                addD(this.textContent);
+            });
+
+            init();
+        } catch(e){}
+        // https://gist.github.com/inexorabletash/704e9688f99ac12dd336         - Data selection
     </script>
 
     <!-- *************************************************** Buttons *************************************************** -->
@@ -433,6 +535,7 @@
             if(e.offsetX > but[0].offsetWidth){
                 // :after click
                 let yesterday = new Date(Date.now() - 86_400_000); 
+                console.log(yesterday);
             } else {
                 // button click
 
@@ -666,12 +769,11 @@
         }
         #link-hover-arrow a svg{
             opacity: 0;
-            transition: color 0.3s, opacity 0.25s, transform 0.35s;
             vertical-align: middle;
             width: 22px;
             transform: translateX(-20px);
+            transition: color 0.3s, opacity 0.25s, transform 0.35s;
         }
-        
     </style>
 
     <script>
@@ -947,7 +1049,6 @@
 
             path.style.strokeDashoffset = Number(!Number(path.style.strokeDashoffset));
         });
-
     </script>
     
     <!-- *************************************************** Trapdoor *************************************************** -->
@@ -1013,7 +1114,7 @@
             position: absolute;
             font-size: var(--door-font-size);
             display: block;
-            color: #4099FF;
+            color: #3e5875;
             content: "Door";
             width: 100%;
             height: 20px;
@@ -1021,12 +1122,20 @@
         }
     </style>
 
-    <!-- *************************************************** Info clip-path *************************************************** -->
-    <div id=info-wrapper>
+    <!-- *************************************************** Info clip-path, Counter *************************************************** -->
+    <div style="display:flex; justify-content:space-between;">
         <div id=info>
             <span class=ico>i</span>
             <div class=text>
-                Sone info text<br>...and more
+                Some info text<br>...and more
+            </div>
+        </div>
+
+        <div style="display:flex; justify-content:center; align-items:center; flex:1;">
+            <div class="counter">
+                <span class="arrow arrow-top"><svg viewBox="0 0 24 24"><path d="M0 0h24v24H0V0z" fill="none"/><path d="M12 8l-6 6 1.41 1.41L12 10.83l4.59 4.58L18 14l-6-6z"/></svg></span>
+                <span class=count>1</span>
+                <span class="arrow arrow-bottom"><svg viewBox="0 0 24 24"><path d="M24 24H0V0h24v24z" fill="none" opacity=".87"/><path d="M16.59 8.59L12 13.17 7.41 8.59 6 10l6 6 6-6-1.41-1.41z"/></svg></span>
             </div>
         </div>
     </div>
@@ -1040,6 +1149,7 @@
             background: black;
             position: relative;
             border-radius:20px;
+            flex:1;
         }
         #info .ico{
             color:white;
@@ -1060,6 +1170,500 @@
         }
         #info:hover .ico, #info:focus .ico{
             opacity:0;
+        }
+
+        .counter{
+            position: relative;
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            border:2px solid crimson;
+            user-select: none;
+            font-weight: bold;
+            vertical-align:center;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size:14px;
+            cursor: pointer;
+            transition: background 0.2s;
+            background: rgba(0,0,0,0.0);
+        }
+        .counter:hover{
+            background: rgba(220, 20, 60, 0.075);
+        }
+        .counter:focus{
+            box-shadow: 0 0 6px 2px rgb(0 0 0 / 75%);
+            background: rgba(0,0,0,0.1);
+            outline:none;
+        }
+        .counter .arrow{
+            position: absolute;
+            line-height: 1px;
+            width:48px;
+            height: 0px;
+            text-align: center;
+            opacity: 0;
+            z-index:1;
+            transition: 0.25s;
+        }
+        .counter svg{
+            width:24px;
+            fill: rgba(0,0,0,0.4);
+            transition: 0.2s;
+        }
+        .counter .arrow-top{
+            bottom: calc(70% + 24px);
+        }
+        .counter .arrow-bottom{
+            top:calc(70% + 1px);
+        }
+        .counter:hover .arrow{
+            height: 24px;
+            opacity: 1;
+        }
+        .counter:hover .arrow-top{
+            bottom:100%;
+        }
+        .counter:hover .arrow-bottom{
+            top:calc(100% + 1px);
+        }
+        .counter .arrow:hover svg{
+            fill: rgba(0,0,0,0.8);
+        }
+    </style>
+    <!-- *************************************************** Multi select - jQuery *************************************************** -->
+    <div>
+        <div id=link-XX>
+            <ul id=link-XX-items-wrapper>
+                <li class=link-XX-item-input><input id=link-XX-input autocomplete=off spellcheck=false placeholder="Something"></li>
+            </ul>
+            <div id=XX-autocomplete-items></div>
+        </div>
+    </div>
+
+    <script>
+        // Validate mails split by , OR ;
+        function validateMails(mail){
+            let mails = mail.split(/;|,/);
+
+            let atLeastOne = false;
+            for(let i = 0; i < mails.length; i++){
+                if(mails[i] && !mails[i].match(/.+@.+/)){
+                    return false;
+                } else {
+                    if(mails[i]){
+                        atLeastOne = true;
+                    }
+                }
+            }
+
+            if(atLeastOne){
+                return true;
+            } else {
+                return false;
+            }
+        }
+
+        jQuery.fn.extend({
+            myFadeIn: function(time = 400){
+                this.css({
+                    transition: "opacity " + time + "ms ease-in, transform " + time/2 + "ms ease-out", 
+                    overflow: "visible",
+                    height: "auto",
+                    padding: "",
+                    margin: "",
+                    // transition: "opacity " + time + "ms", 
+                    pointerEvents: "all",
+                    transform: "",
+                    opacity:1
+                });
+                return this;
+            },
+            myFadeOut: function(time = 400){
+                this.css({
+                    transition: "opacity " + time + "ms ease-in, transform " + time/2 + "ms ease-out", 
+                    overflow: "hidden",
+                    height: 0,
+                    padding:0,
+                    margin:0,
+                    // transition: "opacity " + time + "ms",
+                    pointerEvents: "none",
+                    transform: "scale(0.9)",
+                    opacity:0
+                });
+                return this;
+            }
+        });
+
+        myAutocomplete(true);
+        function myAutocomplete(first = false){
+            let $searchInput = $("#link-XX-input");
+            let $wrapper = $("#XX-autocomplete-items");
+
+            // $.ajax({
+            //     method: "POST",
+            //     url: "ajax/get-mails_ajax.php",
+            //     success: function(data){
+            //         let result = JSON.parse(data);
+
+            //         if(result.total == 0)
+            //             return;
+                    
+            //         result = result.data;
+
+            //         // Reset
+            //         $(".autocomplete-item").remove();
+            //         $(".link-XX-item").remove();
+            //         $searchInput.val("");
+            //         $wrapper.myFadeOut(0);
+
+            //         result = result.sort((a, b) => b.times_used - a.times_used);
+
+            //         // Create dropdown
+            //         for(let i = 0; i < result.length; i++){
+            //             addAutocompleteItem(result[i].email, $wrapper);
+            //         }
+            //     },
+            //     error: function(request, status, error){}
+            // });
+
+            $(".autocomplete-item").remove();
+            $(".link-XX-item").remove();
+            $searchInput.val("");
+            $wrapper.myFadeOut(0);
+
+            // *************************************************** Test ***************************************************
+            let result = [{email:"SOMETHING"}, {email:"SOMEMAIL"}, {email:"SOMEOTHERMAIL"}, {email:"nomail"}];
+            // Create dropdown
+            for(let i = 0; i < result.length; i++){
+                addAutocompleteItem(result[i].email, $wrapper);
+            }
+
+            if(first){
+                $(window).on("click", function(e){
+                    if(!e.target.closest("#link-XX") && e.target.className != "link-XX-item"){
+                        $wrapper.myFadeOut(0);
+                    }
+                });
+
+                $searchInput.on("focus", function(){
+                    $wrapper.myFadeIn();
+                });
+
+                // Alter dropdown
+                $searchInput.on("keyup focus", function(e){
+                    if(e.key?.toLowerCase() == "enter")
+                        return;
+
+                    let search = $(this).val().trim();
+                    let show = false;
+                    
+                    $(".autocomplete-item").each(function(){
+                        let origText = $(this).data("text");
+
+                        if(origText.toLowerCase().match(search.toLowerCase())){
+                            let pos = origText.toLowerCase().indexOf(search.toLowerCase());
+
+                            let newText = origText.slice(0, pos) + "<b>" + search + "</b>" + origText.slice(pos + search.length);
+
+                            $(this).html(newText);
+                            $(this).css({display: "block"});
+                            show = true;
+                        } else {
+                            $(this).css({display: "none"});
+                            $(this).html(origText);
+                        }
+                    });
+
+                    if(!show){
+                        $wrapper.myFadeOut(0);
+                    } else {
+                        if($wrapper.css("opacity") == 0)
+                            $wrapper.myFadeIn();
+                    }
+                });
+
+                // Create new mail box
+                $searchInput.on("keyup", function(e){
+                    if(e.key.toLowerCase() == "enter"){
+                        let mail = $(this).val().trim();
+
+                        if(mail){
+                            let mails = mail.split(/;|,/);
+                            mails.forEach(newMail => {
+                                $(".autocomplete-item").each(function(){
+                                    if($(this).text() == newMail){
+                                        $(this).addClass("item-checked");
+                                    }
+                                });
+
+                                createMyBox(newMail, true);               // Box created on enter
+                            });
+                        }
+                    }
+                });
+
+                $("#link-XX-items-wrapper").on("click", function(e){
+                    if(e.target.classList != "link-XX-item")
+                        $searchInput.focus();
+                });
+            }
+        }
+
+        function addAutocompleteItem(mail, $wrapper, checked = false){
+            let row = "<div class='autocomplete-item " + ((checked) ? "item-checked" : "") + "' data-text='" + mail + "' tabindex=-1>" + mail + "</div>";        // Tabindex to make it focusable
+
+            $wrapper.append(row);
+
+            $(".autocomplete-item:last-of-type").on("click", function(){
+                let text = $(this).text();
+
+                if(!$(this).hasClass("item-checked")){
+                    createMyBox(text);                                    // Box created on item click
+                    $(this).addClass("item-checked");
+                } else {
+                    $(this).removeClass("item-checked");
+                    
+                    $(".link-XX-item").each(function(){
+                        if($(this).text() == text){
+                            $(this).remove();
+                        }
+                    });
+                }
+            });
+        }
+
+        // After server responded
+        function addAutocompleteItemsAfterConfirm(){
+            let $wrapper = $("#XX-autocomplete-items");
+
+            let inputMail = $("#link-XX-input").val().trim();
+            if(inputMail){
+                createMyBox(inputMail, true);                             // Box created on mail send
+            }
+
+            $(".link-XX-item.newest").each(function(){
+                addAutocompleteItem($(this).text(), $wrapper, true);
+            });
+        }
+
+        function myAutocompleteReset(){
+            $(".link-XX-item").remove();
+            $("#link-XX-input").val("");
+            $(".item-checked").removeClass("item-checked");
+        }
+
+        function createMyBox(text, newest = false){
+            let div = "<li class='link-XX-item " + ((newest) ? "newest" : "") + "'>" + text + "</li>";
+            $(".link-XX-item-input").before(div);
+            $("#link-XX-input").val("");
+            let $addedDiv = $(".link-XX-item");
+            $addedDiv = $addedDiv.eq($addedDiv.length - 1);
+
+            $addedDiv.on("click", function(){
+                let text = $(this).text();
+
+                $(".autocomplete-item").each(function(){
+                    if(text == $(this).data("text")){
+                        $(this).removeClass("item-checked");
+                    }
+                });
+
+                $(this).remove();
+            });
+        }
+    </script>
+
+    <style>
+        #link-XX-input::-webkit-search-cancel-button {
+            font-size: 1.2rem !important;
+            transform: translateY(-1px);
+            margin-right: 5px;
+            cursor: pointer;
+        }
+
+        #create-link-options {
+            padding: 0.75rem 0 0.5rem 0;
+        }
+
+        #user-select + div:before {
+            content: "Uživatel";
+        }
+
+        #link-XX-input, #modal-XX {
+            font-size: 1rem;
+            padding-left: 7px;
+            box-shadow: 2px 2px 4px 0 rgba(0, 0, 0, 0.15);
+            border: 1px solid #b1b1b1;
+            height: 40px;
+            box-sizing: border-box;
+            width: 100%;
+        }
+        #link-XX-input::placeholder, #modal-XX::placeholder {
+            color: rgba(0, 0, 0, 0.4);
+        }
+        #link-XX-input:focus, #modal-XX:focus {
+            outline: 1px solid black;
+            border-radius: 4px;
+        }
+
+        #user-list {
+            padding: 1rem 0;
+        }
+
+        .link-blank {
+            cursor: alias;
+        }
+
+        #link-XX {
+            font-size: 1rem;
+            box-sizing: border-box;
+            width: 100%;
+            box-sizing: border-box;
+            position: relative;
+            border: 1px solid #c7d6db;
+        }
+        #link-XX:before {
+            content: "Poslat na:";
+            position: absolute;
+            top: -25px;
+            color: #888888;
+            font-weight: 600;
+        }
+        #link-XX:focus-within {
+            border-color: #2dccba;
+            box-shadow: 0 0 2px 1px rgba(45, 204, 186, 0.5);
+        }
+
+        #link-XX-items-wrapper {
+            min-height: 46px;
+            gap: 6px;
+            list-style-type: none;
+            padding: 7px 10px;
+            margin: 0;
+            display: flex;
+            align-items: center;
+            flex-wrap: wrap;
+            cursor: text;
+            box-sizing: border-box;
+            background-color: #f5f8f9;
+        }
+
+        .link-XX-item, .link-XX-item-input {
+            cursor: pointer;
+            height: 100%;
+            display: inline-block;
+            padding: 5px;
+            box-sizing: border-box;
+            outline: 1px solid #2dccba;
+            background-color: #e2fffc;
+        }
+
+        .link-XX-item:hover:after {
+            color: #212529;
+        }
+
+        .link-XX-item:after {
+            content: "\00d7";
+            font-weight: bold;
+            transition: 0.1s;
+            padding-left: 6px;
+            padding-right: 1px;
+            line-height: 1;
+            color: rgba(0, 0, 0, 0.3);
+            font-size: 1.5rem;
+            vertical-align: text-top;
+        }
+
+        .link-XX-item-input {
+            padding: 0;
+            flex-grow: 1;
+            cursor: text;
+            position: relative;
+            outline: 0 !important;
+            background-color: #f5f8f9;
+        }
+
+        #link-XX-input {
+            all: unset;
+            padding: 5px;
+            border-radius: 0 !important;
+            line-height: 26px;
+            width: 100%;
+            box-sizing: border-box;
+        }
+        #link-XX-input:focus {
+            outline: 0 !important;
+        }
+
+        #XX-picked-items {
+            position: absolute;
+            top: 0;
+            left: 0;
+            height: 100%;
+            box-sizing: border-box;
+        }
+        #XX-picked-items div {
+            box-sizing: border-box;
+            display: inline-block;
+            cursor: pointer;
+            border-radius: 5px;
+            height: 28px;
+            margin: 6px 5px 6px 0;
+            padding: 4px 6px;
+            color: white;
+            background-color: #212529;
+        }
+        #XX-picked-items div:first-of-type {
+            margin-left: 7px;
+        }
+
+        #XX-autocomplete-items {
+            box-sizing: border-box;
+            position: absolute;
+            border: 1px solid #212529;
+            border-top: none;
+            z-index: 999;
+            width: 100%;
+            top: calc(100% + 1px);
+            box-shadow: 0px 6px 16px 0px rgba(0, 0, 0, 0.2);
+            max-height: 300px;
+            overflow: auto !important;
+            scrollbar-width: thin;
+        }
+
+        .autocomplete-item {
+            box-sizing: border-box;
+            width: 100%;
+            padding: 7px;
+            padding-left: 8px;
+            cursor: pointer;
+            background-color: #f6f6f6;
+            border-bottom: 1px solid #d4d4d4;
+            transition: background-color 0.1s;
+        }
+        .autocomplete-item:hover {
+            background-color: #e9e9e9;
+        }
+        .autocomplete-item:before {
+            content: "";
+            display: inline-block;
+            width: 18px;
+            vertical-align: sub;
+            margin-right: 5px;
+            height: 18px;
+            transition: 0.3s;
+            border: 1px solid rgba(0, 0, 0, 0.4);
+        }
+
+        .autocomplete-item.item-checked {
+            background: #e2fffc !important;
+            border-bottom: 1px solid #2dccba !important;
+        }
+        .autocomplete-item.item-checked:before {
+            background-color: #2dccba;
+            background-image: url('data:image/svg+xml;charset=utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="-1 -2 28 28" aria-hidden="true" focusable="false"><path fill="none" stroke="rgb(255, 255, 255)" stroke-width="3" d="M1.73 12.91l6.37 6.37L22.79 4.59"/></svg>');
         }
     </style>
 
@@ -1155,11 +1759,12 @@
         });
 
         // Canvas
-        const canvas = document.getElementById("canvas");
+        const canvas = document.querySelector("canvas");
         
         canvas.width = $(canvas.parentNode).width() - 4;        // - border
-        canvas.height = 440;
+        canvas.height = 240;
         let coord = { x: 0, y: 0 };
+        let outOfCanvas = false;
         var ctx = canvas.getContext("2d");
 
         $(window).on("mousedown", start);
@@ -1176,8 +1781,18 @@
 
         function draw(e){
             if(e.target.nodeName.toLowerCase() != "canvas"){
-                $(window).off("mousemove");
+                // $(window).off("mousemove");
+                outOfCanvas = true;
+                coord.x = e.offsetX;
+                coord.y = e.offsetY;
                 return;
+            }
+
+            if(outOfCanvas){
+                // Target was out and now is back to canvas
+                outOfCanvas = false;
+                coord.x = e.offsetX;
+                coord.y = e.offsetY;
             }
 
             ctx.beginPath();
@@ -1190,9 +1805,8 @@
             coord.x = e.offsetX;
             coord.y = e.offsetY;
             
-            $("#reflect-canvas").attr("src", document.getElementById("canvas").toDataURL());
+            $("#reflect-canvas").attr("src", document.querySelector("canvas").toDataURL());
         }
-
     </script>
 
     <script>
@@ -1248,7 +1862,7 @@
     <script>
         $(function(){
             // Modal
-            // Show only once per session
+            // Show only once per session ?
             if(true || sessionStorage["modalshown"])
                 return;
 
@@ -1265,7 +1879,6 @@
                 }
             });
             $(window).on("keydown", function(e){
-                console.log(e);
                 if(e.key == "Escape"){
                     $("#z-modal-full").fadeOut();
                     sessionStorage["modalshown"] = 1;
@@ -1310,5 +1923,210 @@
             #z-wrapper {
                 max-width:95%;
             } 
+        }
+    </style>
+
+    <!-- *************************************************** IntersectionObserver *************************************************** -->
+    <div id=test1>
+        <div id=target></div>
+    </div>
+
+    <script>
+        (function setGotop(){
+            if(!('IntersectionObserver' in window))
+                return;
+                
+            let target = document.querySelector("#target");
+
+            let options = {root: null, rootMargin: "-100px", threshold: 0};
+
+            let observer = new IntersectionObserver(function(entries){
+                if(entries[0].isIntersecting){
+                    console.log(entries[0]);
+                    target.style.backgroundColor = "orange";                
+                } else {
+                    console.log(entries[0]);
+                    target.style.backgroundColor = "crimson";                
+                }
+            }, options);
+
+            observer.observe(target);
+        })();
+    </script>
+
+    <style>
+        #test1{
+            display: flex;
+            height:400px;
+            color:red;
+        }
+        #target{
+            height:200px;
+            width:200px;
+            background-color: crimson;
+            transition: 0.5s;
+        }
+    </style>
+
+    <!-- *************************************************** Paging idk, idc *************************************************** -->
+    <script>
+        this.createPaging = function(){
+            let pagingId = tableEl.id + "-paging";
+            let wrapper = document.querySelector("#" + pagingId);
+            
+            if(!self.perPage){
+                if(wrapper){
+                    wrapper.innerHTML = "";
+                }
+                return;
+            }
+
+            let pagesCount = Math.ceil(totalResults/self.perPage);
+            
+            if(pagesCount == 0 || pagesCount == 1){
+                if(wrapper){
+                    wrapper.innerHTML = "";
+                }
+                return;
+            }
+
+            if(!wrapper){
+                let wrapperHtml = "<div id='" + pagingId + "' class=paging-wrapper></div>";
+
+                tableEl.insertAdjacentHTML('beforebegin', wrapperHtml);
+            } else {
+                wrapper.innerHTML = "";
+            }
+
+            let html = "<div class='paging prev " + ((self.pagePos == 1) ? "icon-disabled" : "paging-enabled") + "'><span class='material-icons'>arrow_back_ios_new</span></div>";
+            
+            let dotsInserted = false;
+            for(let i = 1; i < pagesCount + 1; i++){
+                // Always render all if 5 or less pages
+                if(pagesCount > 5){
+                    // Always render first and last
+                    if(i != 1 && i != pagesCount){
+                        // Always render before pos, pos and after pos
+                        if(i + 1 != self.pagePos && i != self.pagePos && i - 1 != self.pagePos){
+                            // If first or last pos render at least 2 siblings
+                            if(!((self.pagePos == 1 && i - 2 == self.pagePos) || (self.pagePos == pagesCount && i + 2 == self.pagePos))){   
+                                if(!dotsInserted){
+                                    dotsInserted = true;
+                                    html += "<div class='paging-page paging paging-dots'>...</div>"; 
+                                }
+
+                                continue;
+                            }
+                        }
+                    }
+                }
+
+                let active = (self.pagePos == i) ? "page-active" : "paging-enabled";
+                html += "<div class='paging-page paging " + active + "' data-index=" + i + ">" + i + "</div>"; 
+                dotsInserted = false;
+            }
+
+            html += "<div class='paging next " + ((self.pagePos == pagesCount) ? "icon-disabled" : "paging-enabled") + "'><span class='material-icons'>arrow_forward_ios</span></div>";
+
+            // GoTo
+            html += "<label class=paging-goto><input type=number class=myinput placeholder='" + self.pagePos + "' value='" + self.pagePos + "'></label>";
+
+            // Total
+            let shownFrom = (self.pagePos - 1) * self.perPage;
+            let shownTo = (shownFrom + self.perPage > totalResults) ? totalResults : (shownFrom + self.perPage);
+            html += "<div class=paging-info><span class=mobile-hide>Zobrazeno </span><b>" + (shownFrom + 1) + "</b> - <b>" + shownTo + "</b> ze <b>" + totalResults + "</b></div>";
+
+            document.querySelector("#" + pagingId).insertAdjacentHTML('afterbegin', html);
+
+            document.querySelector("#" + pagingId + " .paging-goto input").addEventListener("keydown", function(e){
+                if(e.key.toLowerCase() == "enter"){
+                    let gotoPage = this.value;
+                    if(gotoPage < 1 || gotoPage == self.pagePos || gotoPage > pagesCount)
+                        return;
+
+                        self.pagePos = gotoPage;
+
+                    let loadfunction = parentDiv.dataset.loadFunction;
+                    loadTableFunctions[loadfunction]();
+                }
+            });
+
+            document.querySelectorAll("#" + pagingId + " .paging-enabled").forEach(function(el){
+                el.addEventListener("click", function(){
+                    if(this.classList.contains("prev")){
+                        --self.pagePos;
+                    } else if(this.classList.contains("next")){
+                        ++self.pagePos;
+                    } else {
+                        self.pagePos = this.dataset.index;
+                    }
+                    
+                    let loadfunction = parentDiv.dataset.loadFunction;
+                    loadTableFunctions[loadfunction]();
+                });
+            });
+        }
+    </script>
+
+    <style>
+        .paging-wrapper {
+            display: flex;
+            margin: 2rem 0 2rem 0;
+            flex-wrap: wrap;
+        }
+        .paging-wrapper:empty {
+            margin: 0;
+        }
+        .paging-wrapper .next, .paging-wrapper .prev {
+            height: 18px;
+            padding: 6px 4px;
+            margin: 2px 2px;
+            color: rgba(0, 0, 0, 0.54);
+        }
+        .paging-wrapper .next span, .paging-wrapper .prev span {
+            font-size: 18px;
+        }
+        .paging {
+            transition: 0.2s;
+            cursor: pointer;
+            padding: 6px 10px;
+            border-radius: 4px;
+            margin: 0 1px;
+            align-self: flex-start;
+        }
+        .paging:hover {
+            background-color: #2dccba;
+            color: white;
+        }
+        .page-active {
+            cursor: default;
+            background-color: #2dccba;
+            color: white;
+        }
+        .paging-dots {
+            cursor: default;
+            margin: 0;
+            padding: 6px 9px !important;
+            background-color: revert !important;
+            color: revert !important;
+        }
+        .paging-info {
+            margin-left: auto;
+            font-style: italic;
+            padding: 6px 0;
+            white-space: nowrap;
+        }
+        .paging-goto {
+            color: #888888;
+            margin-left: 2rem;
+        }
+        .paging-goto input {
+            margin-left: 0.5rem;
+            padding: 0;
+            text-align: right;
+            width: 50px;
+            border-radius: 4px;
+            height: 34px;
+            padding-right: 1px;
         }
     </style>
