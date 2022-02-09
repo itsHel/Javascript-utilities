@@ -49,10 +49,16 @@
 	
 	<span class="material-icons-outlined">cruelty_free</span>
 	
+😎😥
+#debug
+	$0 - $4
+	debug(), dir(), monitor, getEventListeners
+	function trace - console.log((new Error()).stack);
 	
-webflow?
 
 create an alternate (alias) email address to use for account. Example: "example@gmail.com", "example+tag@gmail.com"
+	
+let type = m.match(/\b(first|second)\b/);
 	
 $(window).on("click", "#myelement", function(){
     // Will work on dynamically added elements!
@@ -60,6 +66,18 @@ $(window).on("click", "#myelement", function(){
 
 "keypress"	- not registering esc, enter, etc
 
+// data to formData 
+function buildFormData(formData, data, parentKey) {
+  if (data && typeof data === 'object' && !(data instanceof Date) && !(data instanceof File)) {
+    Object.keys(data).forEach(key => {
+      buildFormData(formData, data[key], parentKey ? `${parentKey}[${key}]` : key);
+    });
+  } else {
+    const value = data == null ? '' : data;
+
+    formData.append(parentKey, value);
+  }
+}
 
 #cors servers
 	- https://thingproxy.freeboard.io/fetch/https://
@@ -141,6 +159,7 @@ const blob = await new Promise(resolve => el.toBlob(resolve));
 
 [1, 2, 3].map(x => x <= 2);
 
+document.designMode = "on"
 
 function createFormData(formData, key = "", data) {
     if (data === Object(data) || Array.isArray(data)) {
@@ -198,13 +217,137 @@ https://gist.github.com/niksumeiko/360164708c3b326bd1c8		disable autofill/autoco
 	}
 
 
-#scale
-    let newScale = oldScale;
-	// zoomIn
-      newScale = (newScale * DEFAULT_SCALE_DELTA).toFixed(2);
-      newScale = Math.ceil(newScale * 10) / 10;
-      newScale = Math.min(_ui_utils.MAX_SCALE, newScale);
-	// zoomOut
-      newScale = (newScale / DEFAULT_SCALE_DELTA).toFixed(2);
-      newScale = Math.floor(newScale * 10) / 10;
-      newScale = Math.max(_ui_utils.MAX_SCALE, newScale);
+
+// #Hold scroll and then release calculated move
+scrollControl: function(){
+	const deltaMultiple = 1;
+
+	const container = $("#viewerContainer")[0];
+	container.addEventListener("scroll", detectScroll, {passive: true, once: true});
+
+	const delay = 2222;
+	const triggerMove = container.offsetHeight / 2;
+
+	let oldPos = container.scrollTop, newPos;
+	let triggered = false;
+	let oldTime = 0;
+	let delta = 0;
+	let Timeout;
+	let holdX = 0, holdY = 0;
+	let highestDiff = 0;
+	let scrollDirection = "";
+
+	function detectScroll(){
+		newPos = container.scrollTop;
+		let now = Date.now();
+
+		if(!triggered){
+			// On scroll start
+			triggered = true;
+			oldTime = now;
+			oldPos = newPos;
+			container.addEventListener("scroll", detectScroll, {passive: true, once: true});
+
+			clearTimeout(Timeout);
+			Timeout = setTimeout(detectScroll, delay + 50);
+			return;
+		}
+
+		if(oldTime > now - delay){
+			// Keep counting
+			let newDiff = newPos - oldPos;
+			
+			let newScrollDirection = (newDiff > 0) ? "bot" : "top";
+			if(newDiff == 0){
+				newScrollDirection = scrollDirection;
+			}
+
+			if(newScrollDirection != scrollDirection){
+				finishScroll();
+				scrollDirection = newScrollDirection;
+				return;
+			}
+			scrollDirection = newScrollDirection;
+
+			// var RenderingStates = { INITIAL: 0, RUNNING: 1, PAUSED: 2, FINISHED: 3 };
+			if(newScrollDirection == "bot"){
+				// Scrolling bottom
+				var lastPagesRendering = (
+					PDFViewerApplication.pdfViewer._pages[PDFViewerApplication.pdfViewer._currentPageNumber - 1].renderingState != 3
+					&& (PDFViewerApplication.pdfViewer._pages[PDFViewerApplication.pdfViewer._currentPageNumber - 2]?.renderingState != 3)
+					&& (PDFViewerApplication.pdfViewer._pages[PDFViewerApplication.pdfViewer._currentPageNumber]?.renderingState != 3)
+				);
+			} else {
+				// Scrolling top
+				var lastPagesRendering = (
+					PDFViewerApplication.pdfViewer._pages[PDFViewerApplication.pdfViewer._currentPageNumber - 1].renderingState != 3
+					&& PDFViewerApplication.pdfViewer._pages[PDFViewerApplication.pdfViewer._currentPageNumber]?.renderingState != 3
+					&& PDFViewerApplication.pdfViewer._pages[PDFViewerApplication.pdfViewer._currentPageNumber - 2]?.renderingState != 3
+				);
+			}
+			
+			console.log("lastPagesRendering: " + lastPagesRendering);
+
+			if(lastPagesRendering){
+				
+				if(Math.abs(highestDiff) > Math.abs(newDiff)){
+					delta += highestDiff;
+				}
+
+				oldTime = now;
+				
+				highestDiff = newDiff;
+				// console.log("scrolldelta: " + delta);
+				if(Math.abs(delta) > triggerMove){
+					// Surpress scroll
+					if(holdX || holdY){
+						console.log("DELATA:   " + delta);
+						container.scrollTo(holdX, holdY);
+					} else {
+						holdX = container.scrollLeft;
+						holdY = container.scrollTop;
+						console.log("stay at: " + holdY);
+					}
+				}
+			} else {
+				// If lastPagesRendering went from true to false
+				if(holdX || holdY){
+					holdX = 0;
+					holdY = 0;
+				}
+			}
+
+			container.addEventListener("scroll", detectScroll, {passive: true, once: true});
+
+			clearTimeout(Timeout);
+			Timeout = setTimeout(detectScroll, delay + 50);
+		} else {
+			console.log("second reset");
+			finishScroll(true);
+			return;
+		}
+
+		if(!(Math.abs(delta) > triggerMove))
+			oldPos = newPos;
+		else
+			oldPos = holdY;
+	}
+
+	function finishScroll(move = false){
+		clearTimeout(Timeout);
+		
+		if(move && (holdX || holdY)){
+			 container.removeEventListener("scroll", detectScroll);
+			 container.scrollTo(holdX, holdY + (delta * deltaMultiple));
+		}
+		
+		holdX = 0;
+		holdY = 0;
+		oldTime = 0;
+		highestDiff = 0;
+		oldPos = holdY;
+		triggered = false;
+		
+		container.addEventListener("scroll", detectScroll, {passive: true, once: true});   
+	}
+},
