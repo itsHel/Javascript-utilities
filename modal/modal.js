@@ -54,6 +54,8 @@ class Modal{
                     let input = modal.querySelector("input");
                     if(input){
                         input.focus();
+                    } else {
+                        modal.querySelector("button").focus();
                     }
                 }
             });
@@ -63,11 +65,6 @@ class Modal{
                     if(e.key == "Escape"){
                         e.preventDefault();
                         modal.classList.remove("z-modal-show");
-                        sessionStorage["modalshown"] = 1;
-                    }
-                    if(e.key == "Enter"){
-                        e.preventDefault();
-                        modal.querySelector("#modal-confirm").click();
                         sessionStorage["modalshown"] = 1;
                     }
                 }
@@ -108,6 +105,7 @@ class Modal{
                             <button id=modal-confirm class="button">Ok</button>
                             <button id=modal-dismiss class="button">Zavřít</button>
                         </div>
+                        <button id=dummy style="position:absolute;pointer-events:none;opacity:0;" onfocus="document.querySelector('#z-modal-full button').focus();"></button>
                     </div>
                 </div>`;
     }
