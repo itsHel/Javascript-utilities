@@ -4,6 +4,7 @@
     --modal-notify-color: #212529;
     --modal-dismiss-color: rgba(0,0,0,0.6);
 }
+
 .z-modal-show{
     pointer-events: all !important;
     opacity:1 !important;
@@ -22,7 +23,6 @@
     display:flex;
     justify-content: center;
     align-items:flex-start;
-    // padding-top:4rem;
     background:rgba(0, 0, 0, 0.33);
     cursor:pointer;
     transition: opacity 0.33s;
@@ -40,14 +40,12 @@
     background:white;
     cursor:default;
     height:auto;
-    // border-radius:7px;
     font-size:1.5rem;
     min-width:350px;
-    // min-height:250px;
     box-shadow: 0px 6px 16px 0px rgba(0,0,0, .2);
 }
 #z-modal-wrapper{
-    max-width:80%;
+    max-width:600px;
     > div{
         padding:1.25rem;
     }
@@ -55,7 +53,8 @@
 .modal-text{
     font-size:1rem;
     color:rgba(0,0,0,0.7);
-    padding: 2rem !important;
+    padding: 2.5rem !important;
+    overflow-wrap: break-word;
 }
 
 .modal-buttons{
@@ -68,8 +67,8 @@
         font-size: 1.1rem;
         min-width: 80px;
         border-radius: 4px;
-        .ripple{
-            background-color: rgba(255, 255, 255, 0.66);
+        &:focus{
+            box-shadow: 0 0 5px 2px rgba(0,0,0,0.75) !important;
         }
     }
 }
@@ -78,10 +77,9 @@
     align-items: center;
     font-size:1.75rem;
     display: inline-flex;
-    padding:0.8rem 0;
     border-bottom: 1px solid rgba(0,0,0,0.1);
     color: black;
-    padding: 1.25rem;
+    padding: 1.25rem 3rem;
     .modal-icons{
         width:2rem;
         height:2rem;
@@ -147,8 +145,8 @@
         color: var(--modal-warn-color);
     }
 }
-@media (max-width: 850px) {
+@media (max-width: 600px) {
     #z-modal-wrapper {
-        max-width:85%;
+        max-width: 90%;
     } 
 }
