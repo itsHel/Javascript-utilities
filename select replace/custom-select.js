@@ -3,9 +3,8 @@
 // Replaces already existing select
 // Accepts element or nodeList
 function customSelect(elements, optionsPicked = {}){
-    // Todo:    - add backgroud to scrolled element on keypress?
-    //          - redo without jquery, without replacing base select, with clip-path ?
-
+    // Todo:    - 
+    
     // Set base select display:none; in css
     // Alternative chevron: ›   ˆ   ∟   ❯
     // Use "vertical-align: top;" to stop vertical center
@@ -15,20 +14,20 @@ function customSelect(elements, optionsPicked = {}){
         maxHeight: optionsPicked.maxHeight ?? 400,
         maxWidth: optionsPicked.maxWidth ?? 600,
         scrollOnKey: optionsPicked.scrollOnKey ?? false,
-        theme: optionsPicked.theme ?? "",
+        theme: optionsPicked.theme ?? "",                       // Themes: "light", "dark"
         // Callback function which stops select from being slided up if clicked on item (allows to click on multiple items without closing)
-        // dontCloseCallback returning true = dont close
+        // dontCloseCallback must return true, returning flse resets select
         dontCloseCallback: optionsPicked.dontCloseCallback ?? false,
         // Boolean, otherwise same as above
         dontClose: optionsPicked.dontClose ?? false
     }
 
+    let originalSelectChangedByThis = false;
+
     if(options.theme){
         document.documentElement.style.setProperty("--select-light", "var(--OFF)");
         document.documentElement.style.setProperty("--select-" + options.theme, "var(--ON)");
     }
-
-    let originalSelectChangedByThis = false;
     
     if(elements instanceof Element){
         elements = [elements];
@@ -75,13 +74,11 @@ function customSelect(elements, optionsPicked = {}){
         selectFullWrapper.querySelector("span:first-of-type").style.width = width;
 
         selectWrapper.style.maxHeight = "0px";
-        // selectWrapper.style.minWidth = "100%";
         selectWrapper.style.maxWidth = options.maxWidth + "px";
         selectFullWrapper.style.maxWidth = options.maxWidth + "px";
 
         selectWrapper.querySelectorAll(".custom-select-item").forEach(function(item, index){
             item.addEventListener("click", function(){
-                // let index = Array.from(item.parentNode.children).indexOf(item);
                 if(options.dontClose || (options.dontCloseCallback && options.dontCloseCallback())){
                     if(item.classList.contains("custom-selected-multi")){
                         item.classList.remove("custom-selected-multi");
@@ -93,10 +90,8 @@ function customSelect(elements, optionsPicked = {}){
                     item.classList.add("custom-selected");
 
                     originalSelectChangedByThis = true;
-                    // selectOriginal.nextElementSibling.querySelector("span:first-of-type").text($(this).text());
                     selectOriginal.nextElementSibling.querySelector("span").textContent = this.textContent;
-                    // selectOriginal.find("option").eq(index).prop("selected", true);
-                    // selectOriginal.querySelector("option:nth-of-type(" + (index + 1) + ")").setAttribute("selected", true);
+
                     [...selectOriginal.children].forEach(function(el, _index){
                         if(index == _index){
                             el.setAttribute("selected", true);
@@ -117,7 +112,7 @@ function customSelect(elements, optionsPicked = {}){
                 return;
 
             if(options.dontClose || (options.dontCloseCallback && options.dontCloseCallback())){
-                selectWrapper.querySelector(".custom-selected").classList.remove("custom-selected");
+                selectWrapper.querySelector(".custom-selected")?.classList.remove("custom-selected");
             } else {
                 selectWrapper.querySelectorAll(".custom-selected-multi").forEach(item => item.classList.remove("custom-selected-multi"));
             }
