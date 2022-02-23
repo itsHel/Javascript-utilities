@@ -1,7 +1,8 @@
 'use strict';
 
 // Replaces already existing select
-function customSelect(selector, optionsPicked = {}){
+// Accepts element or nodeList
+function customSelect(elements, optionsPicked = {}){
     // Todo:    - add backgroud to scrolled element on keypress?
     //          - redo without jquery, without replacing base select, with clip-path ?
 
@@ -11,163 +12,196 @@ function customSelect(selector, optionsPicked = {}){
 
     // Set defaults
     let options = {
-      maxHeight: optionsPicked.maxHeight ?? 400,
-      maxWidth: optionsPicked.maxWidth ?? 999,
-      scrollOnKey: optionsPicked.scrollOnKey ?? false,
-      // Callback function which stops select from being slided up if clicked on item (allows to click on multiple items without closing)
-      // dontCloseCallback returning true = dont close
-      dontCloseCallback: optionsPicked.dontCloseCallback ?? false,
-      // Boolean, otherwise same as above
-      dontClose: optionsPicked.dontClose ?? false
+        maxHeight: optionsPicked.maxHeight ?? 400,
+        maxWidth: optionsPicked.maxWidth ?? 600,
+        scrollOnKey: optionsPicked.scrollOnKey ?? false,
+        theme: optionsPicked.theme ?? "",
+        // Callback function which stops select from being slided up if clicked on item (allows to click on multiple items without closing)
+        // dontCloseCallback returning true = dont close
+        dontCloseCallback: optionsPicked.dontCloseCallback ?? false,
+        // Boolean, otherwise same as above
+        dontClose: optionsPicked.dontClose ?? false
+    }
+
+    if(options.theme){
+        document.documentElement.style.setProperty("--select-light", "var(--OFF)");
+        document.documentElement.style.setProperty("--select-" + options.theme, "var(--ON)");
     }
 
     let originalSelectChangedByThis = false;
     
-    $(selector).each(function(){
-      
-      let $selectOriginal = $(this);
+    if(elements instanceof Element){
+        elements = [elements];
+    }
 
-      if($selectOriginal.next().hasClass("custom-select-wrapper")){
-        $selectOriginal.next(".custom-select-wrapper").remove();
-      }
+    elements.forEach(function(element){
+        let selectOriginal = element;
+        selectOriginal.style.display = "none";
 
-      let headerSelect;
-            
-      let selectFull = "<div class=\"custom-select-wrapper " + $selectOriginal.attr("class") + "\">";
-      let items = "<div class=\"select-items-wrapper\">";
-
-      $selectOriginal.find("option").each(function(){
-        let selectClass = "";
-        if($(this).attr("selected") == "selected" || $(this).prop("selected") == true){
-          headerSelect = "<div class=\"custom-select-header\"><span>" + $(this).text() + "</span><span class=\"chevron\"></span></div>";
-          selectClass = "custom-selected";
+        if(selectOriginal.nextElementSibling?.classList.contains("custom-select-wrapper")){
+            selectOriginal.nextElementSibling.remove();
         }
-        items += "<div title=\"" + $(this).text() + "\" class=\"custom-select-item " + selectClass + "\">" + $(this).text() + "</div>";
-      });
-      if(!headerSelect){
-        let text = $selectOriginal.find("option").eq(0).text();
-        headerSelect = "<div class=\"custom-select-header\"><span>" + text + "</span><span class=\"chevron\"></span></div>";
-        items = items.replace("custom-select-item ", "custom-select-item custom-selected");
-      }
 
-      selectFull += headerSelect + items + "</div></div>";
-      $selectOriginal.after(selectFull);
+        let headerSelect;
+        let selectFull = "<div class=\"custom-select-wrapper " + (selectOriginal.getAttribute("class") ?? "") + "\">";
+        let items = "<div class=\"select-items-wrapper\">";
 
-      let $selectWrapper = $selectOriginal.next().find(".select-items-wrapper");
-      let $selectHeader = $selectOriginal.next().find(".custom-select-header");
-      let height = $selectWrapper.css("height");
-      // let width = (parseFloat($selectWrapper.width()) + 1 - 2*parseFloat($selectWrapper.find("div:first").css("padding-left"))).toString() + "px";
-
-      // $selectOriginal.next().find("span:first-of-type").css({minWidth: width});
-      $selectWrapper.css({maxHeight: "0px", minWidth: "100%", maxWidth: options.maxWidth});
-      $selectWrapper.parent().css({maxWidth: options.maxWidth});
-      $selectHeader.parent().css({maxWidth: options.maxWidth});
-
-      $selectWrapper.find(".custom-select-item").on("click", function(){
-        let index = $(this).index();
-        if(options.dontClose || (options.dontCloseCallback && options.dontCloseCallback())){
-          if($(this).hasClass("custom-selected-multi")){
-            $(this).removeClass("custom-selected-multi");
-          } else {
-            $(this).addClass("custom-selected-multi");
-          }
-        } else {
-          $(this).addClass("custom-selected").siblings().removeClass("custom-selected");
-          // Set original select
-          originalSelectChangedByThis = true;
-          $selectOriginal.next().find("span:first-of-type").text($(this).text());
-          $selectOriginal.find("option").eq(index).prop("selected", true);
-          $selectOriginal.change();
-        }
-      });
-
-      $selectHeader.on("click", function(){
-        if(!$selectWrapper.html())
-          return;
-
-        if(options.dontClose || (options.dontCloseCallback && options.dontCloseCallback())){
-          $selectWrapper.find(".custom-selected").removeClass("custom-selected");
-        } else {
-          $selectWrapper.find(".custom-selected-multi").removeClass("custom-selected-multi");
-        }
-        // Header
-        if($selectWrapper.css("max-height") == "0px"){
-          if(height == "0px"){
-            $selectWrapper.css({maxHeight: ""});
-            height = $selectWrapper.css("height");
-          }
-          if(height.replace("px", "") > options.maxHeight){
-            height = options.maxHeight + "px";
-            $selectWrapper.css({overflow: "auto"});
-          }
-
-          $selectWrapper.css({maxHeight: height});
-          $selectWrapper.addClass("show-select");
-          $selectOriginal.next().find(".chevron").addClass("rotate");
-
-          // Open to top if limited space
-          if($selectHeader[0].getBoundingClientRect().y + $selectHeader.outerHeight() + parseInt(height) > window.innerHeight){
-            $selectWrapper.css({bottom: "100%", top: "auto"});
-          } else {
-            $selectWrapper.css({bottom: "auto", top: "100%"});
-          }
-        } else {
-          $selectWrapper.css({maxHeight: "0px"});
-          $selectWrapper.removeClass("show-select");
-          $selectOriginal.next().find(".chevron").removeClass("rotate");
-        }
-      });
-
-      $selectOriginal.css({display: "none"});
-
-      $(window).on("click", function(e){
-        if(options.dontClose || (options.dontCloseCallback && options.dontCloseCallback() && e.target.classList.contains("custom-select-item")))
-          return;
-
-        if((!e.target || !e.target.parentNode) || (e.target.className != "custom-select-header" && e.target.parentNode.className != "custom-select-header")){
-          $selectWrapper.css({maxHeight: "0px"});
-          $selectWrapper.removeClass("show-select");
-          $selectOriginal.next().find(".chevron").removeClass("rotate");
-        }
-      });
-
-      // triggers same functions as LINE 60
-      $selectOriginal.on("change", function(){
-        if(originalSelectChangedByThis){
-          let selected = $(this).children(':selected').text();
-          if($selectWrapper.find(".custom-selected").text() != selected){
-            $selectWrapper.children().each(function(){
-              if($(this).text() == selected){
-                $selectOriginal.next().find("span:first-of-type").text(selected);
-                $(this).addClass("custom-selected").siblings().removeClass("custom-selected");
-              }
-            });
-          }
-        }
-        originalSelectChangedByThis = false;
-      });
-      
-      // Scrolling on keypress
-      if(options.scrollOnKey){
-        let $customSelect = $selectOriginal.next(".custom-select-wrapper");
-        // debugger;
-        $customSelect.attr("tabindex", "1").on("keydown", function(e){
-            if(e.keyCode == 27){
-                // Close on Esc
-                $customSelect.find(".select-items-wrapper").css({maxHeight: "0px"});
-                $customSelect.find(".select-items-wrapper").removeClass("show-select");
-                $customSelect.find(".custom-select-header").find(".chevron").removeClass("rotate");
+        selectOriginal.querySelectorAll("option").forEach(function(option){
+            let selectClass = "";
+            if(option.getAttribute("selected") == "selected" || option.getAttribute("selected")){
+                headerSelect = "<div class=\"custom-select-header\"><span>" + option.textContent + "</span><span class=\"chevron\"></span></div>";
+                selectClass = "custom-selected";
             }
 
-            let scrolled = false;
-            $customSelect.find(".select-items-wrapper div:not(:first)").each(function(){
-                if(!scrolled && $(this).text()[0].toLowerCase() == e.key){
-                    scrolled = true;
-                    let top = $(this).position().top + $(this).parent().scrollTop();
-                    $customSelect.find(".select-items-wrapper").animate({scrollTop: top}, 300);
+            items += "<div title=\"" + option.textContent + "\" class=\"custom-select-item " + selectClass + "\">" + option.textContent + "</div>";
+        });
+
+        if(!headerSelect){
+            let text = selectOriginal.querySelector("option").textContent;
+            headerSelect = "<div class=\"custom-select-header\"><span>" + text + "</span><span class=\"chevron\"></span></div>";
+            items = items.replace("custom-select-item ", "custom-select-item custom-selected");
+        }
+
+        selectFull += headerSelect + items + "</div></div>";
+        selectOriginal.insertAdjacentHTML("afterend", selectFull);
+
+        let selectFullWrapper = selectOriginal.nextElementSibling;
+        let selectWrapper = selectFullWrapper.querySelector(".select-items-wrapper");
+        let selectHeader = selectFullWrapper.querySelector(".custom-select-header");
+        let height = selectWrapper.offsetHeight;
+        
+        // Setup minWidth of header text same as width of longest item
+        let width = (parseFloat(selectWrapper.offsetWidth) - 2 * parseFloat(getComputedStyle(selectWrapper.querySelector("div")).padding)).toString() + "px";
+        selectFullWrapper.querySelector("span:first-of-type").style.width = width;
+
+        selectWrapper.style.maxHeight = "0px";
+        // selectWrapper.style.minWidth = "100%";
+        selectWrapper.style.maxWidth = options.maxWidth + "px";
+        selectFullWrapper.style.maxWidth = options.maxWidth + "px";
+
+        selectWrapper.querySelectorAll(".custom-select-item").forEach(function(item, index){
+            item.addEventListener("click", function(){
+                // let index = Array.from(item.parentNode.children).indexOf(item);
+                if(options.dontClose || (options.dontCloseCallback && options.dontCloseCallback())){
+                    if(item.classList.contains("custom-selected-multi")){
+                        item.classList.remove("custom-selected-multi");
+                    } else {
+                        item.classList.add("custom-selected-multi");
+                    }
+                } else {
+                    [...item.parentNode.children].forEach(el => el.classList.remove("custom-selected"));
+                    item.classList.add("custom-selected");
+
+                    originalSelectChangedByThis = true;
+                    // selectOriginal.nextElementSibling.querySelector("span:first-of-type").text($(this).text());
+                    selectOriginal.nextElementSibling.querySelector("span").textContent = this.textContent;
+                    // selectOriginal.find("option").eq(index).prop("selected", true);
+                    // selectOriginal.querySelector("option:nth-of-type(" + (index + 1) + ")").setAttribute("selected", true);
+                    [...selectOriginal.children].forEach(function(el, _index){
+                        if(index == _index){
+                            el.setAttribute("selected", true);
+                            selectOriginal.selectedIndex = index;
+                        } else {
+                            el.removeAttribute("selected");
+                        }
+                    });
+
+                    let changeE = new Event("change");
+                    selectOriginal.dispatchEvent(changeE);
                 }
             });
         });
-      }
+
+        selectHeader.addEventListener("click", function(){
+            if(!selectWrapper.innerHTML)
+                return;
+
+            if(options.dontClose || (options.dontCloseCallback && options.dontCloseCallback())){
+                selectWrapper.querySelector(".custom-selected").classList.remove("custom-selected");
+            } else {
+                selectWrapper.querySelectorAll(".custom-selected-multi").forEach(item => item.classList.remove("custom-selected-multi"));
+            }
+
+            // Header
+            if(selectWrapper.style.maxHeight == "0px"){
+                if(height == 0){
+                    selectWrapper.style.maxHeight = "";
+                    height = selectWrapper.offsetHeight;
+                }
+                if(height > options.maxHeight){
+                    height = options.maxHeight + "px";
+                    selectWrapper.style.overflow = "auto";
+                }
+
+                selectWrapper.style.maxHeight = height + "px";
+                selectFullWrapper.classList.add("select-open");
+
+                // Open to top if limited space
+                if(selectHeader.getBoundingClientRect().y + selectHeader.offsetHeight + parseInt(height) > window.innerHeight){
+                    selectWrapper.style.bottom = "100%";
+                    selectWrapper.style.top = "auto";
+                } else {
+                    selectWrapper.style.bottom = "auto";
+                    selectWrapper.style.top = "100%";
+                }
+            } else {
+                selectWrapper.style.maxHeight = "0px";
+                selectFullWrapper.classList.remove("select-open");
+            }
+        });
+
+        window.addEventListener("click", function(e){
+            if(options.dontClose || (options.dontCloseCallback && options.dontCloseCallback() && e.target.classList.contains("custom-select-item")))
+                return;
+
+            if((!e.target || !e.target.parentNode) || (e.target.className != "custom-select-header" && e.target.parentNode.className != "custom-select-header")){
+                selectWrapper.style.maxHeight = "0px";
+                selectFullWrapper.classList.remove("select-open");
+            }
+        });
+
+        // When original select is changed, update new one
+        selectOriginal.addEventListener("change", function(){
+            if(!originalSelectChangedByThis){
+                let selected = this.options[this.selectedIndex].textContent;
+
+                if(selectWrapper.querySelector(".custom-selected").textContent != selected){
+                    [...selectWrapper.children].forEach(function(child){
+                        if(child.textContent == selected){
+                            selectOriginal.nextElementSibling.querySelector("span").textContent = selected;
+                            [...child.parentNode.children].forEach(el => el.classList.remove("custom-selected"));
+                            selectFullWrapper.classList.add("custom-selected");
+                        }
+                    });
+                }
+            }
+
+            originalSelectChangedByThis = false;
+        });
+      
+        // Scrolling on keypress
+        if(options.scrollOnKey){
+            let customSelect = selectOriginal.nextElementSibling;
+
+            customSelect.setAttribute("tabindex", "1");
+            customSelect.addEventListener("keydown", function(e){
+                if(e.keyCode == 27){
+                    // Close on Esc
+                    customSelect.querySelector(".select-items-wrapper").style.maxHeight = "0px";
+                    selectFullWrapper.classList.remove("select-open");
+                }
+
+                let scrolled = false;
+                customSelect.querySelectorAll(".select-items-wrapper div:not(:first)").each(function(el){
+                    if(!scrolled && el.textContent[0].toLowerCase() == e.key){
+                        scrolled = true;
+
+                        // let top = $(this).position().top + $(this).parent().scrollTop();
+                        let top = el.offsetTop + el.parentNode.scrollTop;
+                        customSelect.querySelector(".select-items-wrapper").scrollTo({top: top, behavior: "smooth"});
+                    }
+                });
+            });
+        }
     });
 }
