@@ -1,3 +1,4 @@
+// --select-pride style is empty
 :root{
   --select-light: var(--ON);
   --select-dark: var(--OFF);
@@ -7,6 +8,10 @@
 
   --ON: initial;
   --OFF: ;
+
+  // Split theme
+  --split-color: crimson;
+  --split-text-color: #9b9b9b;
 
   --header-text-color:
     var(--select-light, #828485)
@@ -24,7 +29,7 @@
     var(--select-pride, green)
   ;
   --background-color-active:
-    var(--select-light, #f1f5f7)
+    var(--select-light, #e3edf1)
     var(--select-dark, -webkit-linear-gradient(bottom, #323538 0%, #3A3D40 100%))
     var(--select-pride, green)
   ;
@@ -39,7 +44,7 @@
     var(--select-pride, green)
 ;
   --dropdown-hover-background-color:
-    var(--select-light, #f1f5f7)
+    var(--select-light, #e3edf1)
     var(--select-dark, -webkit-linear-gradient(bottom, #323538 0%, #3A3D40 100%))
     var(--select-pride, green)
   ;
@@ -78,9 +83,9 @@
       opacity: 1;
     }
     .chevron{
-      border-color: var(--chevron-color-active) !important;
-      transform: rotate(135deg) !important;
-      margin-bottom: 0px !important;
+      border-color: var(--chevron-color-active);
+      transform: rotate(135deg);
+      margin-bottom: 0px;
       margin-top: 5px;
     }
   }
@@ -160,4 +165,46 @@
   border-color: var(--header-text-color);
   transition: 0.5s;
   margin-bottom: 5px;
+}
+
+.custom-select-wrapper.split{
+  border-radius: 0;
+  .custom-select-header{
+    border-radius: 0;
+    border:0;
+    color: var(--split-text-color);
+    span:first-of-type{
+      border-right: 1px solid #bcbcbc;
+    }
+  }
+  .select-items-wrapper{
+    border:0;
+    background: transparent;
+    border-radius: 0;
+    opacity: 1;
+    box-shadow: none;
+    transition: max-height 0.4s;
+  }
+  .custom-select-item{
+    margin-top: 3px;
+    border:0;
+    background: var(--background-color);
+    box-shadow: 0 1px 1px rgb(0 0 0 / 30%);
+    color: var(--split-text-color);
+    transition: 0.3s;
+    &:hover{
+      color:#fff;
+      background: var(--split-color);
+    }
+  }
+
+  &.select-open{
+    .custom-select-header{
+      color: var(--split-color);
+      background: var(--background-color);
+    }
+    .chevron{
+      border-color: var(--split-color) !important;
+    }
+  }
 }
