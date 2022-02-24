@@ -1,210 +1,211 @@
-// --select-pride style is empty
-:root{
-  --select-light: var(--ON);
-  --select-dark: var(--OFF);
-  --select-pride: var(--OFF);
+'use strict';
 
-  --padding-main: 0.4rem 0.5rem;
+// Themes: "light", "dark", "split"
+// Replaces already existing select
+// Accepts element or nodeList
+function customSelect(elements, optionsPicked = {}){
+    // Todo:    - 
+    
+    // Set base select display:none; in css
+    // Alternative chevron: ›   ˆ   ∟   ❯
+    // Use "vertical-align: top;" to stop vertical center
 
-  --ON: initial;
-  --OFF: ;
-
-  // Split theme
-  --split-color: crimson;
-  --split-text-color: #9b9b9b;
-
-  --header-text-color:
-    var(--select-light, #828485)
-    var(--select-dark, #a2a8ad)
-    var(--select-pride, green)
-  ;
-  --header-text-color-active:
-    var(--select-light, #828485)
-    var(--select-dark, #fff)
-    var(--select-pride, green)
-  ;
-  --background-color:
-    var(--select-light, #fff)
-    var(--select-dark, #313439)
-    var(--select-pride, green)
-  ;
-  --background-color-active:
-    var(--select-light, #e3edf1)
-    var(--select-dark, -webkit-linear-gradient(bottom, #323538 0%, #3A3D40 100%))
-    var(--select-pride, green)
-  ;
-  --border-color:
-    var(--select-light, #cfd4d6)
-    var(--select-dark, #45474b)
-    var(--select-pride, green)
-  ;
-  --border-color-active:
-    var(--select-light, #828485)
-    var(--select-dark, #525557)
-    var(--select-pride, green)
-;
-  --dropdown-hover-background-color:
-    var(--select-light, #e3edf1)
-    var(--select-dark, -webkit-linear-gradient(bottom, #323538 0%, #3A3D40 100%))
-    var(--select-pride, green)
-  ;
-  --dropdown-hover-text-color:
-    var(--select-light, #828485)
-    var(--select-dark, #fff)
-    var(--select-pride, green)
-  ;
-  --chevron-color-active:
-    var(--select-light, rgb(29, 183, 238))
-    var(--select-dark, #fff)
-    var(--select-pride, green)
-  ;
-}
-
-
-.custom-select-wrapper{
-  border-radius: 0.3rem;
-  min-width: 85px;
-  position: relative;
-  display: inline-block;
-  // box-shadow: 2px 2px 4px 0 rgba(0, 0, 0, 0.15);
-  &.select-open{
-    border-bottom-left-radius: 0;
-    border-bottom-right-radius: 0;
-    .custom-select-header{
-      border-bottom-left-radius: 0;
-      border-bottom-right-radius: 0;
-      border: 1px solid var(--border-color-active);
-      color: var(--header-text-color-active);
-      background: var(--background-color-active);
+    // Set defaults
+    let options = {
+        maxHeight: optionsPicked.maxHeight ?? 400,
+        maxWidth: optionsPicked.maxWidth ?? 600,
+        scrollOnKey: optionsPicked.scrollOnKey ?? false,
+        theme: optionsPicked.theme ?? "",                       // Themes: "light", "dark", "split"
+        // Callback function which stops select from being slided up if clicked on item (allows to click on multiple items without closing)
+        // dontCloseCallback must return true, returning flse resets select
+        dontCloseCallback: optionsPicked.dontCloseCallback ?? false,
+        // Boolean, otherwise same as above
+        dontClose: optionsPicked.dontClose ?? false
     }
-    .select-items-wrapper{
-      transition: opacity 0.5s, max-height 0.4s, border-color 0.3s;
-      border-color: var(--border-color-active);
-      opacity: 1;
-    }
-    .chevron{
-      border-color: var(--chevron-color-active);
-      transform: rotate(135deg);
-      margin-bottom: 0px;
-      margin-top: 5px;
-    }
-  }
-}
 
-.custom-select-header{
-  color:var(--header-text-color);
-  border: 1px solid var(--border-color);
-  background: var(--background-color);
-  border-radius: 0.3rem;
-  min-width: 100%;
-  padding: var(--padding-main);
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  overflow: hidden;
-  white-space: nowrap;
-  height: 100%;
-  transition: 0.3s;
-  box-sizing: border-box;
-  cursor: pointer;
-  span{
-    display:inline-block;
-    max-width: calc(100% - 24px);     /* - chevron width */
-    overflow: hidden;
-  }
-}
+    let originalSelectChangedByThis = false;
 
-.select-items-wrapper{
-  background: var(--background-color);
-  opacity: 0;
-  min-width: 100%;
-  transition: opacity 1s, max-height 0.4s, border-color 0.3s;
-  overflow: hidden;
-  position: absolute;
-  top: 100%;
-  z-index: 1045;
-  box-sizing: border-box;
-  box-shadow: 0 0.5rem 1rem rgba(0, 0, 0, 0.18);
-  border: 1px solid transparent;
-  border-top:0;
-  border-bottom-left-radius: 0.3rem;
-  border-bottom-right-radius: 0.3rem;
-  cursor: pointer;
-}
-.custom-select-item{
-  color: var(--header-text-color);
-  border-bottom: 1px solid var(--border-color);
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
-  padding: var(--padding-main);
-  transition: all 0.1s;
-  &:hover{
-    background: var(--dropdown-hover-background-color);
-    color: var(--dropdown-hover-text-color);
-  }
-  &:last-of-type{
-    border: none;
-  }
-}
-.custom-selected, .custom-selected-multi{
-  background: var(--dropdown-hover-background-color);
-  color:var(--dropdown-hover-text-color);
-}
+    if(options.theme){
+        let turnOn;
+        if(options.theme == "split"){
+            turnOn = "light";
+        } else {
+            turnOn = options.theme;
+        }
 
-.chevron{
-  display: inline-block;
-  transform: rotate(-45deg);
-  font-weight: 900;
-  height: 9px;
-  width: 9px;
-  margin-left: 10px;
-  margin-right: 2px;
-  border-left: 2px solid;
-  border-bottom: 2px solid;
-  border-color: var(--header-text-color);
-  transition: 0.5s;
-  margin-bottom: 5px;
-}
+        document.documentElement.style.setProperty("--select-light", "var(--OFF)");
+        document.documentElement.style.setProperty("--select-" + turnOn, "var(--ON)");
+    }
+    
+    if(elements instanceof Element){
+        elements = [elements];
+    }
 
-.custom-select-wrapper.split{
-  border-radius: 0;
-  .custom-select-header{
-    border-radius: 0;
-    border:0;
-    color: var(--split-text-color);
-    span:first-of-type{
-      border-right: 1px solid #bcbcbc;
-    }
-  }
-  .select-items-wrapper{
-    border:0;
-    background: transparent;
-    border-radius: 0;
-    opacity: 1;
-    box-shadow: none;
-    transition: max-height 0.4s;
-  }
-  .custom-select-item{
-    margin-top: 3px;
-    border:0;
-    background: var(--background-color);
-    box-shadow: 0 1px 1px rgb(0 0 0 / 30%);
-    color: var(--split-text-color);
-    transition: 0.3s;
-    &:hover{
-      color:#fff;
-      background: var(--split-color);
-    }
-  }
+    elements.forEach(function(element){
+        let selectOriginal = element;
+        selectOriginal.style.display = "none";
 
-  &.select-open{
-    .custom-select-header{
-      color: var(--split-color);
-      background: var(--background-color);
-    }
-    .chevron{
-      border-color: var(--split-color) !important;
-    }
-  }
+        if(selectOriginal.nextElementSibling?.classList.contains("custom-select-wrapper")){
+            selectOriginal.nextElementSibling.remove();
+        }
+
+        let headerSelect;
+        // let selectFull = "<div class=\"custom-select-wrapper " + (selectOriginal.getAttribute("class") ?? "") + "\">";
+        let selectFull = "<div class=\"custom-select-wrapper " + ((options.theme == "split") ? "split" : "") + "\">";
+        let items = "<div class=\"select-items-wrapper\">";
+
+        selectOriginal.querySelectorAll("option").forEach(function(option){
+            let selectClass = "";
+            if(option.getAttribute("selected") == "selected" || option.getAttribute("selected")){
+                headerSelect = "<div class=\"custom-select-header\"><span>" + option.textContent + "</span><span class=\"chevron\"></span></div>";
+                selectClass = "custom-selected";
+            }
+
+            items += "<div title=\"" + option.textContent + "\" class=\"custom-select-item " + selectClass + "\">" + option.textContent + "</div>";
+        });
+
+        if(!headerSelect){
+            let text = selectOriginal.querySelector("option").textContent;
+            headerSelect = "<div class=\"custom-select-header\"><span>" + text + "</span><span class=\"chevron\"></span></div>";
+            items = items.replace("custom-select-item ", "custom-select-item custom-selected");
+        }
+
+        selectFull += headerSelect + items + "</div></div>";
+        selectOriginal.insertAdjacentHTML("afterend", selectFull);
+
+        let selectFullWrapper = selectOriginal.nextElementSibling;
+        let selectWrapper = selectFullWrapper.querySelector(".select-items-wrapper");
+        let selectHeader = selectFullWrapper.querySelector(".custom-select-header");
+        let height = selectWrapper.offsetHeight;
+        
+        // Setup minWidth of header text same as width of longest item
+        let width = (parseFloat(selectWrapper.offsetWidth) - 2 * parseFloat(getComputedStyle(selectWrapper.querySelector("div")).padding)).toString() + "px";
+        selectFullWrapper.querySelector("span:first-of-type").style.width = width;
+
+        selectWrapper.style.maxHeight = "0px";
+        selectWrapper.style.maxWidth = options.maxWidth + "px";
+        selectFullWrapper.style.maxWidth = options.maxWidth + "px";
+
+        selectWrapper.querySelectorAll(".custom-select-item").forEach(function(item, index){
+            item.addEventListener("click", function(){
+                if(options.dontClose || (options.dontCloseCallback && options.dontCloseCallback())){
+                    if(item.classList.contains("custom-selected-multi")){
+                        item.classList.remove("custom-selected-multi");
+                    } else {
+                        item.classList.add("custom-selected-multi");
+                    }
+                } else {
+                    [...item.parentNode.children].forEach(el => el.classList.remove("custom-selected"));
+                    item.classList.add("custom-selected");
+
+                    originalSelectChangedByThis = true;
+                    selectOriginal.nextElementSibling.querySelector("span").textContent = this.textContent;
+
+                    [...selectOriginal.children].forEach(function(el, _index){
+                        if(index == _index){
+                            el.setAttribute("selected", true);
+                            selectOriginal.selectedIndex = index;
+                        } else {
+                            el.removeAttribute("selected");
+                        }
+                    });
+
+                    let changeE = new Event("change");
+                    selectOriginal.dispatchEvent(changeE);
+                }
+            });
+        });
+
+        selectHeader.addEventListener("click", function(){
+            if(!selectWrapper.innerHTML)
+                return;
+
+            if(options.dontClose || (options.dontCloseCallback && options.dontCloseCallback())){
+                selectWrapper.querySelector(".custom-selected")?.classList.remove("custom-selected");
+            } else {
+                selectWrapper.querySelectorAll(".custom-selected-multi").forEach(item => item.classList.remove("custom-selected-multi"));
+            }
+
+            // Header
+            if(selectWrapper.style.maxHeight == "0px"){
+                if(height == 0){
+                    selectWrapper.style.maxHeight = "";
+                    height = selectWrapper.offsetHeight;
+                }
+                if(height > options.maxHeight){
+                    height = options.maxHeight + "px";
+                    selectWrapper.style.overflow = "auto";
+                }
+
+                selectWrapper.style.maxHeight = height + "px";
+                selectFullWrapper.classList.add("select-open");
+
+                // Open to top if limited space
+                if(selectHeader.getBoundingClientRect().y + selectHeader.offsetHeight + parseInt(height) > window.innerHeight){
+                    selectWrapper.style.bottom = "100%";
+                    selectWrapper.style.top = "auto";
+                } else {
+                    selectWrapper.style.bottom = "auto";
+                    selectWrapper.style.top = "100%";
+                }
+            } else {
+                selectWrapper.style.maxHeight = "0px";
+                selectFullWrapper.classList.remove("select-open");
+            }
+        });
+
+        window.addEventListener("click", function(e){
+            if(options.dontClose || (options.dontCloseCallback && options.dontCloseCallback() && e.target.classList.contains("custom-select-item")))
+                return;
+
+            if((!e.target || !e.target.parentNode) || (e.target.className != "custom-select-header" && e.target.parentNode.className != "custom-select-header")){
+                selectWrapper.style.maxHeight = "0px";
+                selectFullWrapper.classList.remove("select-open");
+            }
+        });
+
+        // When original select is changed, update new one
+        selectOriginal.addEventListener("change", function(){
+            if(!originalSelectChangedByThis){
+                let selected = this.options[this.selectedIndex].textContent;
+
+                if(selectWrapper.querySelector(".custom-selected").textContent != selected){
+                    [...selectWrapper.children].forEach(function(child){
+                        if(child.textContent == selected){
+                            selectOriginal.nextElementSibling.querySelector("span").textContent = selected;
+                            [...child.parentNode.children].forEach(el => el.classList.remove("custom-selected"));
+                            selectFullWrapper.classList.add("custom-selected");
+                        }
+                    });
+                }
+            }
+
+            originalSelectChangedByThis = false;
+        });
+      
+        // Scrolling on keypress
+        if(options.scrollOnKey){
+            let customSelect = selectOriginal.nextElementSibling;
+
+            customSelect.setAttribute("tabindex", "1");
+            customSelect.addEventListener("keydown", function(e){
+                if(e.keyCode == 27){
+                    // Close on Esc
+                    customSelect.querySelector(".select-items-wrapper").style.maxHeight = "0px";
+                    selectFullWrapper.classList.remove("select-open");
+                }
+
+                let scrolled = false;
+                customSelect.querySelectorAll(".select-items-wrapper div:not(:first)").each(function(el){
+                    if(!scrolled && el.textContent[0].toLowerCase() == e.key){
+                        scrolled = true;
+
+                        // let top = $(this).position().top + $(this).parent().scrollTop();
+                        let top = el.offsetTop + el.parentNode.scrollTop;
+                        customSelect.querySelector(".select-items-wrapper").scrollTo({top: top, behavior: "smooth"});
+                    }
+                });
+            });
+        }
+    });
 }
