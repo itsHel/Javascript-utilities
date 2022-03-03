@@ -11,7 +11,6 @@
         line-height: 1.6;
         color: #4f4f4f;
         font-family: "Roboto",sans-serif;
-
         margin:60px auto;
         max-width:1100px;
         font-size:22px;
@@ -52,156 +51,72 @@
     #inputs{
         display: flex;
         justify-content: space-between;
+        flex-wrap: wrap;
+        gap: 8px;
     }
     #inputs > *{
-        margin-right:6px;
+        flex: 1 0 30%;
     }
     .material-icons-outlined{
         font-size:32px;
     }
+    .flex{
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
 </style>
 
 <script>
-    (function scrollHold(){
-        return;
-        "use strict";
-        const delay = 500;
-        const triggerMove = window.innerHeight;
-        const triggerTimeThreshold = 500;
-        // const triggerMove = 100;
-
-        let oldPos = window.scrollY, newPos;
-        let triggered = false;
-        let triggeredAt = 0;
-        let oldTime = 0;
-        let delta = 0;
-        let Timeout;
-        let holdX = 0, holdY = 0;
-        let highestDiff = 0;
-        
-
-        // Plus debounce ?
-        // Nesmi brzdit po tom co se pdf stranka nacetla?
-        // only large pdf
-        // ignore On home/end buttons + when directly paging?
-        //* Dont hold if scrolling is slow!          /s ?
-        // Hold scrollTo triggeruje myscroll        - check if e.timeStamp is too close to the last one?
-
-        window.addEventListener("scroll", detectScroll, {passive: true, once: true});
-
-        function detectScroll(e){
-            newPos = window.scrollY;
-            console.error("WINDOW Y: " + window.scrollY);
-            let now = Date.now();
-            
-            if(!triggered){
-                triggered = true;
-                oldTime = now;
-                triggeredAt = now;
-                window.addEventListener("scroll", detectScroll, {passive: true, once: true});
-                Timeout = setTimeout(function(){
-                    detectScroll();
-                }, delay + 50);
-                return;
-            }
-
-            if(oldTime > now - delay){
-                // Keep counting
-                let newDiff = newPos - oldPos;
-                
-                console.log("NEWPOS  " + newPos);
-                console.log("OLDPOS  " + oldPos);
-                console.log("-------------------------");
-                console.log("POS difference: " + newDiff);
-                console.log("-------------------------");
-                console.log("DELTA BEFORE " + delta);
-                // ONLY WORKS DOWNSCROLL
-                if(Math.abs(highestDiff) > Math.abs(newDiff)){
-                    console.log("highestDiff YES: " + highestDiff);
-                    delta += (highestDiff);
-                }
-
-                oldTime = now;
-                console.log("DELTA AFTER " + delta);
-                
-                highestDiff = newDiff;
-                
-                if(Math.abs(delta) > triggerMove){
-                    // Surpress scroll
-                    if(holdX || holdY){
-                        console.log("BEFORE:" + window.scrollY);
-                        window.scrollTo(holdX, holdY);
-                        console.log("AFTER: " + window.scrollY);
-                        // READD ONCE?
-                    } else {
-                        if(triggeredAt > now - triggerTimeThreshold){
-                            holdX = window.scrollX;
-                            holdY = window.scrollY;
-                        } else {
-                            console.warn("ELSEeeeeeeee");
-                            resetScroll();
-                        }
-                    }
-                }
-
-                window.addEventListener("scroll", detectScroll, {passive: true, once: true});
-                clearTimeout(Timeout);
-                Timeout = setTimeout(function(){
-                    detectScroll();
-                }, delay + 100);
-            } else {
-                resetScroll();
-            }
-
-            if(!(Math.abs(delta) > triggerMove))
-                oldPos = newPos;
-            else
-                oldPos = holdY;
-        }
-
-        function resetScroll(){
-            console.log("delta---------------------------------------------- " + delta);
-            delta = 0;
-            holdX = 0;
-            holdY = 0;
-            clearTimeout(Timeout);
-            triggered = false;
-            window.addEventListener("scroll", detectScroll, {passive: true, once: true});   
-        }
-    })();
-</script>
-
-<script>
     window.addEventListener("load", function(){
-        document.querySelectorAll(".ripple-button, .ripple-hollow-button").forEach(button => {
-            addRipple(button);
-        });
+        rippleButtons(document.querySelectorAll(".ripple-button, .ripple-hollow-button"));
     });
 
-    function addRipple(button){
-        button.addEventListener("click", function(e){
-            let x, y;
-            if((e.originalEvent || e).isTrusted){
-                x = e.offsetX;
-                y = e.offsetY;
-            } else {
-                x = e.target.clientWidth / 2;
-                y = e.target.clientHeight / 2;
-            }
-
-            let html = "<span class='ripple' style='left:" + x + "px;top:" + y + "px;'></span>";
-
-            button.insertAdjacentHTML("beforeend", html);
-        
-            setTimeout(function(){
-                button.querySelector(".ripple").remove();
-            }, 1000);
+    function rippleButtons(buttons){
+        buttons.forEach(button => {
+            button.addEventListener("click", function(e){
+                let x, y;
+                if((e.originalEvent || e).isTrusted){
+                    x = e.offsetX;
+                    y = e.offsetY;
+                } else {
+                    x = e.target.clientWidth / 2;
+                    y = e.target.clientHeight / 2;
+                }
+    
+                let html = "<span class='ripple' style='left:" + x + "px;top:" + y + "px;'></span>";
+    
+                button.insertAdjacentHTML("beforeend", html);
+            
+                setTimeout(function(){
+                    button.querySelector(".ripple").remove();
+                }, 1000);
+            });
         });
+
+        const style = ` <style> .ripple-button .ripple{position: absolute; border-radius: 50%; background-color: white; width: calc(100% / 4); padding-top: calc(100% / 4); margin-top: calc(100% / -8); margin-left: calc(100% / -8); animation: ripple 0.7s; animation-fill-mode: forwards; pointer-events: none; touch-action: none; opacity: 0.7;} @keyframes ripple {from { opacity: 0.7; transform: scale(1); } to { opacity: 0; transform: scale(10); }}
+                                .ripple-hollow-button .ripple{position: absolute; background-image: radial-gradient(circle, rgba(255, 255, 255, 0.3) 0px, rgba(255, 255, 255, 0.4) 30%, rgba(255, 255, 255, 0.6) 45%, rgba(255, 255, 255, 0.75) 60%, transparent 75%); border-radius: 50%; width: calc(100% / 4); padding-top: calc(100% / 4); margin-top: calc(100% / -8); margin-left: calc(100% / -8); z-index: 999; animation: ripple-hollow 0.7s; animation-fill-mode: forwards; pointer-events: none; touch-action: none;} @keyframes ripple-hollow{from { opacity: 1; transform: scale(1); } to { opacity: 0.25; transform: scale(8); }} </style>`;
+        document.querySelector("html").insertAdjacentHTML("beforeend", style);
     }
 
 </script>
 
-<body>
+<body style="background: #fff;">
+
+    <div style="background: rgba(127,127,127,0.5);padding:2rem;">
+        <div style="background: rgba(127,127,127,0.5);padding:2rem;">
+            <div style="background: rgba(222,222,222,0.5);padding:2rem;">
+                <div style="background: rgba(127,127,127,0.5);padding:2rem;">
+                    <div style="background: rgba(127,127,127,0.5);padding:2rem;">
+                        <div style="background: rgba(127,127,127,0.8);padding:2rem;">
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
     <!-- *************************************************** Db *************************************************** -->
     <div style="display:flex; justify-content: space-around;">
         <button id=db-add class="button-gradient bg-lightblue ripple-button">Test</button>
@@ -212,52 +127,40 @@
     </div>
 
     <script>
-        // *************************************************** Google notes ***************************************************
-        // TODO - Get and save data from idb or Localstorage
-        const style = "position:absolute; left:115%; top:0; padding-left:3px; color:#4d5156; max-width:250px; white-space: nowrap; text-overflow:ellipsis; border-left:3px solid #42464a;";
-        let links = document.querySelectorAll(".yuRUbf");
-        
-        // fsf search
-        let data = {
-            "www.root.cz": "THIS IS ROOT",
-            "twitter.com": "TWITTER -----",
-            "something": "somethhhhhh"
-        };
-        
-        // Add icons
-        const svgStyle = 'style="width:9px;height:9px;margin-bottom:1px;"';
-        const svgPac = '<svg id=mysvg viewBox="0 0 541.6 571.11" ' + svgStyle + '><path style="fill:#70757a" d="M535.441,412.339A280.868,280.868 0 1,1 536.186,161.733L284.493,286.29Z"/></svg>';
-        
-        document.querySelectorAll(".eFM0qc > span").forEach(linkNav => {
-            let div = "<div class='link-add-note' style='display: inline-block; visibility:visible; margin-right:6px;'>" + svgPac + "</div>";
+        // *************************************************** GotoTop ***************************************************
+        setTimeout(
+        (function setGotop(){
+            const buttonSelector = "#gotop";
+            const compareToSelector = "#inputs";
 
-            linkNav.insertAdjacentHTML('afterend', div);
-            linkNav.parentNode.querySelector(".link-add-note").addEventListener("click", addNote);
+            const thisStyle = `<style>${buttonSelector}{ position: fixed; bottom:5%; padding:0; right:3%; border-radius: 50%; opacity: 0.7; background: white; cursor:pointer; border:1px solid rgba(0,0,0,0.2); box-shadow: 0 1px 2px 0 rgb(60 64 67 / 30%), 0 2px 6px 2px rgb(60 64 67 / 15%); z-index:999999999; width:3rem; height:3rem; display: inline-flex; justify-content: center; align-items: center; transition: 0.3s; } ${buttonSelector}:hover{ opacity: 1; } ${buttonSelector}.hidden{ opacity: 0; pointer-events: none; }</style>`;
+            const thisHtml = `<div id=gotop class="hidden">
+                                <svg height="24px" viewBox="0 0 24 24" width="24px" fill="#414141"><path d="M0 0h24v24H0V0z" fill="none"/><path d="M4 12l1.41 1.41L11 7.83V20h2V7.83l5.58 5.59L20 12l-8-8-8 8z"/></svg></div>
+                            </div>`;
+            document.querySelector("html").insertAdjacentHTML("beforeend", thisHtml + thisStyle);
 
-            function addNote(){
-                // TODO - localstorage or idb ?
-            }
-        });
-
-        // Add data
-        links.forEach(link => {
-            let href = link.querySelector("a").href;
-            let match = href.match(/\/\/(.+?)(\/|$)/);
-            if(!match)
+            if(!("IntersectionObserver" in window))
                 return;
-            
-            let url = match[1];
+                
+            let topButton = document.querySelector(buttonSelector);
+            let nav = document.querySelector(compareToSelector);
 
-            if(!data.hasOwnProperty(url))
-                return;
+            topButton.addEventListener("click", function(){
+                window.scrollTo({top: 0, left: 0, behavior: "smooth"});
+            });
 
-            link.style.position = "relative";
+            let options = {root: null, rootMargin: window.innerHeight + "px", threshold: 1};
 
-            let text = data[url];
-            let div = "<div title='" + text + "' style='" + style + "'>" + text + "</div>";
+            let observer = new IntersectionObserver(function(entries){
+                if(entries[0].isIntersecting){
+                    topButton.classList.add("hidden");                
+                } else {
+                    topButton.classList.remove("hidden");
+                }
+            }, options);
 
-            link.insertAdjacentHTML('beforeend', div);
-        });
+            observer.observe(nav);
+        }), 1111);
 
         // *************************************************** indexedDB ***************************************************
         // https://javascript.info/indexeddb
@@ -399,7 +302,6 @@
                     };
                 })
             }
-
 
             // *************************************************** Inks ***************************************************
             
@@ -565,6 +467,7 @@
     </style>
 
     <!-- *************************************************** Inputs *************************************************** -->
+    <!-- Placeholder must be defined as anything -->
     <div id=inputs>
         <label class="input-placeholder">
             <input placeholder="Placeholder">
@@ -580,12 +483,15 @@
             <input placeholder="Placeholder">
             <span>Placeholder</span>
         </label>
+
+        <input class=myinput>
     </div>
 
     <style>
         :root{
             --input-font-size: 18px;
             --input-focus-color: crimson;
+            --padding-coefficient: 2          /* Higher value = smaller padding */
         }
         .input-placeholder{
             position:relative;
@@ -599,7 +505,7 @@
             font-size: var(--input-font-size);
             top:0;
             left:0;
-            margin: calc(var(--input-font-size) / 2.5) calc(var(--input-font-size) / 2.5 - 2px);
+            margin: calc(var(--input-font-size) / var(--padding-coefficient)) calc(var(--input-font-size) / var(--padding-coefficient) - 2px);
             padding:0 2px;
             transition: all 0.25s;
             pointer-events: none;
@@ -607,27 +513,28 @@
         .input-placeholder input{
             all:unset;
             cursor:text;
-            padding: calc(var(--input-font-size) / 2.5);
+            padding: calc(var(--input-font-size) / var(--padding-coefficient));
             font-size: var(--input-font-size);
             display: block;
             transition: all 0.25s;
+            width: 100%;
+            box-sizing: border-box;
         }
         .input-placeholder input::placeholder{
             opacity:0;
         }
         .input-placeholder:focus-within span, .input-placeholder input:not(:placeholder-shown) + span{
             font-size: calc(var(--input-font-size) - 2px);
-            top:-55%;
+            top:-56%;
             background:white;
         }
-    
         .input-placeholder-color:focus-within{
             border:2px solid var(--input-focus-color);
         }
         .input-placeholder-color:focus-within span{
             color: var(--input-focus-color);
         }
-    
+        /* Noborder input */
         .input-placeholder-noborder{
             border-radius:0;
             border:none;
@@ -639,6 +546,80 @@
         }
         .input-placeholder-noborder:focus-within span, .input-placeholder-noborder input:not(:placeholder-shown) + span{
             opacity:0.5;
+            top:-58%;
+        }
+        .input-placeholder-noborder input{
+            max-width: 100%;
+        }
+
+        .myinput {
+            font-size: 1rem;
+            padding-left: 7px;
+            height: 40px;
+            box-sizing: border-box;
+            background-color: #f5f8f9;
+            border: 1px solid #c7d6db;
+            color: #555;
+        }
+        .myinput::placeholder {
+            color: rgba(0, 0, 0, 0.4);
+        }
+        .myinput:focus {
+            outline: 0;
+            border-color: #2dccba;
+            box-shadow: 0 0 2px 1px rgba(45, 204, 186, 0.5);
+        }
+    </style>
+
+    <!-- *************************************************** Icons clicking *************************************************** -->
+    <div id=icons class=flex style="background-color: black;">
+        <i class="material-icons-outlined testico" tabindex="1">mood</i>
+        <i class="material-icons-outlined testico" tabindex="1">hot_tub</i>
+        <i class="material-icons-outlined testico" tabindex="1">bathtub</i>
+        <i class="material-icons-outlined testico" tabindex="1">cruelty_free</i>
+    </div>
+
+    <style>
+        .testico{
+            margin:10px;
+            position: relative;
+            transition: .8s;
+            cursor:pointer;
+        }
+        .testico:before{
+            content: '';
+            background-color: white;
+            border-radius: 50%;
+            display: block;
+            position: absolute;
+            top: 0;
+            right: 0;
+            bottom: 0;
+            left: 0;
+            transform: scale(0.001, 0.001);
+        }
+        .testico:focus{
+            /* color:white; */
+        }
+        .testico:focus:before{
+            animation: outside-ripple .5s ease-out;
+        }
+        @keyframes outside-ripple{
+            50%{
+                transform: scale(1.75, 1.75);
+            }
+            90% {
+                transform: scale(2.5, 2.5);
+                opacity: 0;
+            }
+            99% {
+                transform: scale(0.001, 0.001);
+                opacity: 0;
+            }
+            100% {
+                transform: scale(0.001, 0.001);
+                opacity: 1;
+            }
         }
     </style>
 
@@ -683,19 +664,11 @@
 
     <!-- *************************************************** Radio-line + Arrow hover *************************************************** -->
     <div>
+        <!-- Should be same line to prevent whitespaces -->
         <div id=radios>
-            <label>
-                <input class=radio type=radio name=myradio>
-                <span>First</span>
-            </label>
-            <label>
-                <input class=radio type=radio name=myradio>
-                <span>Second</span>
-            </label>
-            <label>
-                <input class=radio type=radio name=myradio>
-                <span>Third</span>
-            </label>
+            <label><input class=radio type=radio name=myradio><span>First</span></label>
+            <label><input class=radio type=radio name=myradio><span>Second</span></label>
+            <label><input class=radio type=radio name=myradio><span>Third</span></label>
             <div class=radio-line></div>
         </div>
 
@@ -777,9 +750,9 @@
     </style>
 
     <script>
-        myRadio(document.querySelector("#radios"));
+        myRadio(document.querySelector("#radios"), 1);
 
-        function myRadio(wrapper, shiftTime = 250){
+        function myRadio(wrapper, startIndex = -1, shiftTime = 250){
             let timeout;
             let line = wrapper.querySelector(".radio-line");
             line.style.transition = shiftTime + "ms";
@@ -789,12 +762,12 @@
                 let clickedEl = e.target.closest("label");
 
                 if(clickedEl){
-                    let thisWidth = clickedEl.offsetWidth;
-                    let thisLeft = clickedEl.offsetLeft;
-                    
                     if(line.style.width == "0" || line.style.width == ""){
                         // First click
-                        line.style.left = thisLeft;
+                        let thisWidth = clickedEl.offsetWidth;
+                        let thisLeft = clickedEl.offsetLeft;
+
+                        line.style.left = thisLeft + "px";
                         line.style.width = thisWidth + "px";
                     } else {
                         let lastIndex = Array.from(wrapper.children).indexOf(wrapper.querySelector(":checked").parentNode);
@@ -804,12 +777,11 @@
                             return;
 
                         clearTimeout(timeout);
-                        
+
                         if(newIndex > lastIndex){
                             // Left to right
-
                             let fullWidth = clickedEl.offsetLeft - line.offsetLeft + clickedEl.offsetWidth;
-                            
+
                             line.style.left = line.offsetLeft + "px";
                             line.style.right = "auto";
                             line.style.width = fullWidth + "px";
@@ -820,7 +792,6 @@
                             }, shiftTime);
                         } else {
                             // Right to left
-
                             let lineOffsetRight = line.offsetLeft + line.offsetWidth
                             let rightPos = clickedEl.parentNode.offsetWidth - lineOffsetRight;
                             let fullWidth = lineOffsetRight - clickedEl.offsetLeft;
@@ -837,6 +808,17 @@
                     }
                 }
             });
+
+            // Start on position if startIndex defined
+            if(startIndex > -1){
+                window.addEventListener("load", function(){
+                    let e = new Event("mousedown", {bubbles: true});
+                    let el = wrapper.querySelector("label:nth-of-type(" + (startIndex + 1) + ")");
+
+                    el.dispatchEvent(e);
+                    el.querySelector("input").checked = true;
+                });
+            }
         }
     </script>
 
@@ -846,7 +828,7 @@
     </div>
 
     <style>
-        /* .fill-button{
+        .fill-button{
             position: relative;
             padding:0.75rem 1rem;
             text-align:center;
@@ -878,26 +860,9 @@
         }
         .fill-button:hover text{
             color:black;
-        } */
+        }
     </style>
     <script>
-        // _fillButtons(document.querySelectorAll(".fill-button"));
-
-        // function _fillButtons(buttons){
-        //     buttons.forEach(button => {
-        //         let fill = button.querySelector("span");
-
-        //         button.addEventListener("mouseover", function(e){
-        //             fill.style.left = e.pageX - button.offsetLeft + "px";
-        //             fill.style.top = e.pageY - button.offsetTop + "px";
-        //         });
-        //         button.addEventListener("mouseout", function(e){
-        //             fill.style.left = e.pageX - button.offsetLeft + "px";
-        //             fill.style.top = e.pageY - button.offsetTop + "px";
-        //         });
-        //     });
-        // }
-
         fillButtons(document.querySelectorAll(".fill-button"));
 
         function fillButtons(buttons){
@@ -914,12 +879,6 @@
                     fill.style.top = e.pageY - button.offsetTop + "px";
                 });
             });
-
-            const style = `<style>.fill-button{ position: relative; padding:0.75rem 1rem; text-align:center; background:black; overflow:hidden; border: 1px solid #d3d8db; box-shadow: 0 1px 1px rgba(0,0,0,.05); cursor:pointer;} 
-                            .fill-button span{ background:white; transition: width 0.7s, padding-top 0.7s; width: 0; padding-top:0; position: absolute; border-radius:100%; transform: translate(-50%, -50%); z-index: 0; } 
-                            .fill-button text{ color:white; position: relative; z-index: 1; transition: color 0.7s; } .fill-button:hover span{ width:calc(105% * 2); padding-top:calc(105% * 2); } .fill-button:hover text{ color:black; }</style>`;
-
-            document.querySelector("html").insertAdjacentHTML("beforeend", style);
         }
     </script>
 
@@ -992,11 +951,30 @@
         }
         #tooltip1{
             transition-timing-function: cubic-bezier(0.375, 0.785, 0.32, 1.175);
+            border: 1px solid rgba(0,0,0,0.2);
+            box-shadow: 0px 1px 2px 0px rgb(60 64 67 / 30%), 0px 2px 6px 2px rgb(60 64 67 / 15%);
         }
         #tooltip2{
             transition-timing-function: cubic-bezier(.38,.33,.37,1.67);
         }
+
+        [class*=hint--]:after {
+            font-family: 'Comic Sans MS', 'Comic Sans' !important;
+            padding: 10px 14px;
+        }
     </style>
+
+    <!-- *************************************************** https://github.com/chinchang/hint.css *************************************************** -->
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/hint.css/2.7.0/hint.min.css" rel="stylesheet">
+    <div id=tooltip-lib-wrapper style="display:flex; justify-content:space-between;">
+        <div class="hint--top-right" aria-label="hint--top-right">Tooltip something</div>
+        <div class="hint--top-right hint--rounded" aria-label="hint--top-right hint--rounded">Tooltip something</div>
+        <div class="hint--bottom-left hint--rounded hint-no-arrow" aria-label="hint--bottom-left hint--rounded hint-no-arrow">Tooltip something</div>
+        <div class="hint--top-left hint--rounded hint--bounce" aria-label="hint--top-left hint--rounded hint--bounce">Tooltip something</div>
+        <div class="hint--top-right hint--always hint--rounded" aria-label="hint--top-right hint--always hint--rounded">Tooltip something</div>
+        <div class="hint--bottom hint--always hint--error" aria-label="hint--bottom hint--error hint--rounded">Tooltip something</div>
+        <div class="hint--top-right hint--rounded hint--no-animate" aria-label="hint--top-right hint--rounded hint--no-animate">Tooltip something</div>
+    </div>
 
     <!-- *************************************************** icons *************************************************** -->
     <!-- <style>
@@ -1018,7 +996,6 @@
     </div> -->
 
     <!-- *************************************************** Animated svg *************************************************** -->
-    
     <!-- pathLength=1 must be set, otherwise base stroke-dashoffset & stroke-dasharray on path.getTotalLength(); -->
     <style>
         #svg{
@@ -1150,6 +1127,8 @@
             position: relative;
             border-radius:20px;
             flex:1;
+            min-width: 550px;
+            box-sizing: border-box;
         }
         #info .ico{
             color:white;
@@ -1932,7 +1911,7 @@
     </div>
 
     <script>
-        (function setGotop(){
+        (function setGoTop(){
             if(!('IntersectionObserver' in window))
                 return;
                 
@@ -1942,10 +1921,8 @@
 
             let observer = new IntersectionObserver(function(entries){
                 if(entries[0].isIntersecting){
-                    console.log(entries[0]);
                     target.style.backgroundColor = "orange";                
                 } else {
-                    console.log(entries[0]);
                     target.style.backgroundColor = "crimson";                
                 }
             }, options);
@@ -2130,3 +2107,114 @@
             padding-right: 1px;
         }
     </style>
+
+<!-- *************************************************** Hold scroll, not entirely done? *************************************************** -->
+<script>
+    (function scrollHold(){
+        return;
+        "use strict";
+        const delay = 500;
+        const triggerMove = window.innerHeight;
+        const triggerTimeThreshold = 500;
+        // const triggerMove = 100;
+
+        let oldPos = window.scrollY, newPos;
+        let triggered = false;
+        let triggeredAt = 0;
+        let oldTime = 0;
+        let delta = 0;
+        let Timeout;
+        let holdX = 0, holdY = 0;
+        let highestDiff = 0;
+        
+
+        // Plus debounce ?
+        // Nesmi brzdit po tom co se pdf stranka nacetla?
+        // only large pdf
+        // ignore On home/end buttons + when directly paging?
+        //* Dont hold if scrolling is slow!          /s ?
+        // Hold scrollTo triggeruje myscroll        - check if e.timeStamp is too close to the last one?
+
+        window.addEventListener("scroll", detectScroll, {passive: true, once: true});
+
+        function detectScroll(e){
+            newPos = window.scrollY;
+            console.error("WINDOW Y: " + window.scrollY);
+            let now = Date.now();
+            
+            if(!triggered){
+                triggered = true;
+                oldTime = now;
+                triggeredAt = now;
+                window.addEventListener("scroll", detectScroll, {passive: true, once: true});
+                Timeout = setTimeout(function(){
+                    detectScroll();
+                }, delay + 50);
+                return;
+            }
+
+            if(oldTime > now - delay){
+                // Keep counting
+                let newDiff = newPos - oldPos;
+                
+                console.log("NEWPOS  " + newPos);
+                console.log("OLDPOS  " + oldPos);
+                console.log("-------------------------");
+                console.log("POS difference: " + newDiff);
+                console.log("-------------------------");
+                console.log("DELTA BEFORE " + delta);
+                // ONLY WORKS DOWNSCROLL
+                if(Math.abs(highestDiff) > Math.abs(newDiff)){
+                    console.log("highestDiff YES: " + highestDiff);
+                    delta += (highestDiff);
+                }
+
+                oldTime = now;
+                console.log("DELTA AFTER " + delta);
+                
+                highestDiff = newDiff;
+                
+                if(Math.abs(delta) > triggerMove){
+                    // Surpress scroll
+                    if(holdX || holdY){
+                        console.log("BEFORE:" + window.scrollY);
+                        window.scrollTo(holdX, holdY);
+                        console.log("AFTER: " + window.scrollY);
+                        // READD ONCE?
+                    } else {
+                        if(triggeredAt > now - triggerTimeThreshold){
+                            holdX = window.scrollX;
+                            holdY = window.scrollY;
+                        } else {
+                            console.warn("ELSEeeeeeeee");
+                            resetScroll();
+                        }
+                    }
+                }
+
+                window.addEventListener("scroll", detectScroll, {passive: true, once: true});
+                clearTimeout(Timeout);
+                Timeout = setTimeout(function(){
+                    detectScroll();
+                }, delay + 100);
+            } else {
+                resetScroll();
+            }
+
+            if(!(Math.abs(delta) > triggerMove))
+                oldPos = newPos;
+            else
+                oldPos = holdY;
+        }
+
+        function resetScroll(){
+            console.log("delta---------------------------------------------- " + delta);
+            delta = 0;
+            holdX = 0;
+            holdY = 0;
+            clearTimeout(Timeout);
+            triggered = false;
+            window.addEventListener("scroll", detectScroll, {passive: true, once: true});   
+        }
+    })();
+</script>
