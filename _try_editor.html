@@ -10,11 +10,11 @@
     body{
         line-height: 1.6;
         color: #4f4f4f;
-        font-family: "Roboto",sans-serif;
         margin:60px auto;
         max-width:1100px;
         font-size:22px;
         background:rgba(0,0,0,0.05);
+        font-family: "Roboto", sans-serif;
         font-family: 'Comic Sans MS', 'Comic Sans' !important;
     }
     button{
@@ -27,7 +27,7 @@
         padding:2rem;
         border-radius:0.5rem;
         border: 1px solid #d3d8db;
-        box-shadow: 0 1px 1px rgba(0,0,0,.05);
+        box-shadow: 0 1px 1px rgba(0,0,0,.1);
         background:white;
         margin-bottom:18px;
     }
@@ -101,7 +101,7 @@
 
 </script>
 
-<body style="background: #fff;">
+<body style="background: #fff;" bgcolor=chucknorris>
 
     <div style="background: rgba(127,127,127,0.5);padding:2rem;">
         <div style="background: rgba(127,127,127,0.5);padding:2rem;">
@@ -467,7 +467,7 @@
     </style>
 
     <!-- *************************************************** Inputs *************************************************** -->
-    <!-- Placeholder must be defined as anything -->
+    <!-- Placeholder must be defined (as anything) -->
     <div id=inputs>
         <label class="input-placeholder">
             <input placeholder="Placeholder">
@@ -581,10 +581,11 @@
 
     <style>
         .testico{
-            margin:10px;
+            color:#767676;
+            margin: 10px;
             position: relative;
             transition: .8s;
-            cursor:pointer;
+            cursor: pointer;
         }
         .testico:before{
             content: '';
@@ -969,11 +970,11 @@
     <div id=tooltip-lib-wrapper style="display:flex; justify-content:space-between;">
         <div class="hint--top-right" aria-label="hint--top-right">Tooltip something</div>
         <div class="hint--top-right hint--rounded" aria-label="hint--top-right hint--rounded">Tooltip something</div>
-        <div class="hint--bottom-left hint--rounded hint-no-arrow" aria-label="hint--bottom-left hint--rounded hint-no-arrow">Tooltip something</div>
+        <div class="hint--top-right hint--rounded hint--no-animate" aria-label="hint--top-right hint--rounded hint--no-animate">Tooltip something</div>
         <div class="hint--top-left hint--rounded hint--bounce" aria-label="hint--top-left hint--rounded hint--bounce">Tooltip something</div>
         <div class="hint--top-right hint--always hint--rounded" aria-label="hint--top-right hint--always hint--rounded">Tooltip something</div>
         <div class="hint--bottom hint--always hint--error" aria-label="hint--bottom hint--error hint--rounded">Tooltip something</div>
-        <div class="hint--top-right hint--rounded hint--no-animate" aria-label="hint--top-right hint--rounded hint--no-animate">Tooltip something</div>
+        <div class="hint--bottom-left hint--rounded hint-no-arrow" aria-label="hint--bottom-left hint--rounded hint-no-arrow">Tooltip something</div>
     </div>
 
     <!-- *************************************************** icons *************************************************** -->
@@ -1211,6 +1212,145 @@
             fill: rgba(0,0,0,0.8);
         }
     </style>
+
+    <!-- *************************************************** Sidemenu *************************************************** -->
+    <div id=sidemenu-wrapper class=side-hidden>
+        <div id=sidemenu-toggle>
+            <svg viewBox="0 0 24 24"><path d="M0 0h24v24H0V0z" fill="none"/><path d="M10 6L8.59 7.41 13.17 12l-4.58 4.59L10 18l6-6-6-6z"/></svg>
+        </div>
+        <div id=sidemenu>
+            Sidetext
+        </div>
+    </div>
+
+    <style>
+        :root{
+            --sidemenu-width: 40px;
+            --sidemenu-max-height: 600px;
+            --sidemenu-toggle-background: #AA1111;
+        }
+        #sidemenu-wrapper{
+            width:var(--sidemenu-width) !important;
+            position: fixed;
+            right:0;
+            top:400px;
+            min-height: 120px;
+            max-height: var(--sidemenu-max-height);
+            background-color: #fff;
+            z-index:10;
+            transition: 0.4s;
+            box-sizing: border-box;
+            box-shadow: 0 1px 1px rgb(0 0 0 / 10%);
+            display: flex; 
+            align-items: stretch;
+            border-radius:0;
+            padding:0;
+            border-top-left-radius: 6px;
+            border-bottom-left-radius: 6px;
+            border:1px solid rgba(0, 0, 0, 0.25);
+            border-right: 0;
+        }
+        #sidemenu{
+            width: 100%;
+            overflow: auto;
+            padding:0.5rem 1rem;
+            max-height: 100%;
+            overflow-x: hidden;
+            overflow-y: auto;
+        }
+        #sidemenu-wrapper.side-hidden{
+            right:calc(var(--sidemenu-width) * -1);
+            box-shadow: none;
+        }
+        #sidemenu-wrapper.side-hidden svg{
+            margin-left: 0px !important;
+            transform: rotate(180deg);
+        }
+        #sidemenu-toggle{
+            position: absolute;
+            background: var(--sidemenu-toggle-background);
+            top:60px;
+            right:100%;
+            height: 26px;
+            width: 16px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-bottom-left-radius: 5px;
+            border-top-left-radius: 5px;
+            cursor: pointer;
+            border:1px solid black;
+            border-right:0;
+
+        }
+        #sidemenu-toggle svg{
+            margin-left: 1px;
+            width:22px;
+            min-width: 22px;
+            fill:white;
+            transition: 0.6s;
+        }
+    </style>
+
+    <script>
+        document.querySelector("#sidemenu-toggle").addEventListener("click", function(){
+            let wrapper = this.closest("#sidemenu-wrapper");
+
+            if(wrapper.classList.contains("side-hidden")){
+                // Show
+                wrapper.classList.remove("side-hidden");
+            } else {
+                // Hide
+                wrapper.classList.add("side-hidden");
+            }
+        });
+    </script>
+
+    <!-- *************************************************** Login forms *************************************************** -->
+    <div style="display:flex; justify-content:space-between;">
+        
+    </div>
+
+    <div class=login-modal>
+        <div class=login-wrapper>
+            <div class=login-wrapper-under>
+                <div class=name-wrapper>
+                    <label class="">
+                        <input class="login-name" placeholder="Placeholder">
+                        <span>Placeholder</span>
+                    </label>
+                </div>
+                <div class=pass-wrapper>
+                    <label class="">
+                        <input class="login-pass" placeholder="Placeholder">
+                        <span>Placeholder</span>
+                    </label>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class=login-modal>
+        <div class=login-wrapper>
+            <div class=login-wrapper-under>
+                <div class=name-wrapper>
+                    <input class="login-name">
+                </div>
+                <div class=pass-wrapper>
+                    <input class="login-pass">
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <style>
+        
+    </style>
+
+    <script>
+
+    </script>
+
     <!-- *************************************************** Multi select - jQuery *************************************************** -->
     <div>
         <div id=link-XX>
@@ -1257,6 +1397,7 @@
                     transform: "",
                     opacity:1
                 });
+
                 return this;
             },
             myFadeOut: function(time = 400){
@@ -1271,6 +1412,7 @@
                     transform: "scale(0.9)",
                     opacity:0
                 });
+
                 return this;
             }
         });
