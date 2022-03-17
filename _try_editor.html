@@ -17,13 +17,7 @@
         font-family: "Roboto", sans-serif;
         font-family: 'Comic Sans MS', 'Comic Sans' !important;
     }
-    button{
-        font-family: inherit;
-        font-size: inherit;
-        line-height: inherit;
-    }
     #drop-wrapper, body > div{
-        font-family: unset;
         padding:2rem;
         border-radius:0.5rem;
         border: 1px solid #d3d8db;
@@ -99,22 +93,33 @@
         document.querySelector("html").insertAdjacentHTML("beforeend", style);
     }
 
+
+
 </script>
 
 <body style="background: #fff;" bgcolor=chucknorris>
+    <div id=test></div>
 
-    <div style="background: rgba(127,127,127,0.5);padding:2rem;">
-        <div style="background: rgba(127,127,127,0.5);padding:2rem;">
-            <div style="background: rgba(222,222,222,0.5);padding:2rem;">
-                <div style="background: rgba(127,127,127,0.5);padding:2rem;">
-                    <div style="background: rgba(127,127,127,0.5);padding:2rem;">
-                        <div style="background: rgba(127,127,127,0.8);padding:2rem;">
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
+    <div id=o style="position: relative; padding:0">
+        <div id=i style="transition: 0.7s;font-size:44px;width:60px;text-align: center;">11</div>
+        <div id=j style="transition: 0.7s;font-size:44px;position:absolute;opacity:0;left:0;top:0;width:60px;text-align: center;">22</div>
     </div>
+
+    <script>
+        let q = false;
+
+        document.querySelector("#o").addEventListener("click", function(){
+            if(q == false){
+                q = true;
+                document.querySelector("#i").style.opacity = 0;
+                document.querySelector("#j").style.opacity = 1;
+            } else {
+                q = false;
+                document.querySelector("#i").style.opacity = 1;
+                document.querySelector("#j").style.opacity = 0;
+            }
+        });
+    </script>
 
 
     <!-- *************************************************** Db *************************************************** -->
@@ -568,6 +573,115 @@
             outline: 0;
             border-color: #2dccba;
             box-shadow: 0 0 2px 1px rgba(45, 204, 186, 0.5);
+        }
+    </style>
+
+    <!-- *************************************************** Alerts *************************************************** -->
+    <div>
+        <div class="error-alert alert">
+            <div class="error-alert-text alert-text">
+                <div class="error-alert-heading alert-heading">Error:</div>
+                <div class="alert-info">something</div>
+            </div>
+            <div class="error-alert-ico alert-ico">
+                <svg viewBox="0 0 24 24"><path d="M0 0h24v24H0V0z" fill="none"/><path d="M15.73 3H8.27L3 8.27v7.46L8.27 21h7.46L21 15.73V8.27L15.73 3zM19 14.9L14.9 19H9.1L5 14.9V9.1L9.1 5h5.8L19 9.1v5.8z"/><circle cx="12" cy="16" r="1"/><path d="M11 7h2v7h-2z"/></svg>
+            </div>
+        </div>
+        <br>
+        <div class="error-alert alert alert-secondary">
+            <div class="error-alert-ico alert-ico">
+                <svg viewBox="0 0 24 24"><path d="M0 0h24v24H0V0z" fill="none"/><path d="M15.73 3H8.27L3 8.27v7.46L8.27 21h7.46L21 15.73V8.27L15.73 3zM19 14.9L14.9 19H9.1L5 14.9V9.1L9.1 5h5.8L19 9.1v5.8z"/><circle cx="12" cy="16" r="1"/><path d="M11 7h2v7h-2z"/></svg>
+            </div>
+            <div class="error-alert-text alert-text">
+                <div class="error-alert-heading alert-heading">Error:</div>
+                <div class="alert-info">something</div>
+            </div>
+        </div>
+
+        <br>
+
+        <div class="success-alert alert">
+            <div class="success-alert-text alert-text">
+                <div class="success-alert-heading alert-heading">Error:</div>
+                <div class="alert-info">something</div>
+            </div>
+            <div class="success-alert-ico alert-ico">
+                <svg viewBox="0 0 24 24"><path d="M0 0h24v24H0V0z" fill="none"/><path d="M15.73 3H8.27L3 8.27v7.46L8.27 21h7.46L21 15.73V8.27L15.73 3zM19 14.9L14.9 19H9.1L5 14.9V9.1L9.1 5h5.8L19 9.1v5.8z"/><circle cx="12" cy="16" r="1"/><path d="M11 7h2v7h-2z"/></svg>
+            </div>
+        </div>
+        <br>
+        <div class="success-alert alert alert-secondary">
+            <div class="success-alert-ico alert-ico">
+                <svg viewBox="0 0 24 24"><path d="M0 0h24v24H0V0z" fill="none"/><path d="M15.73 3H8.27L3 8.27v7.46L8.27 21h7.46L21 15.73V8.27L15.73 3zM19 14.9L14.9 19H9.1L5 14.9V9.1L9.1 5h5.8L19 9.1v5.8z"/><circle cx="12" cy="16" r="1"/><path d="M11 7h2v7h-2z"/></svg>
+            </div>
+            <div class="success-alert-text alert-text">
+                <div class="success-alert-heading alert-heading">Error:</div>
+                <div class="alert-info">something</div>
+            </div>
+        </div>
+    </div>
+
+    <style>
+        :root{
+            --error-alert-color: rgb(220, 20, 60);
+            --error-alert-color-light: linear-gradient(0deg, rgba(255,192,203,1) 0%, rgba(255,223,229,1) 100%);
+            --success-alert-color: rgb(7, 131, 11);
+            --success-alert-color-light: linear-gradient(0deg, rgba(144,238,144,1) 0%, rgba(208,255,208,1) 100%);
+            /* --success-alert-color-light: linear-gradient(0deg, rgb(133, 233, 133) 0%, rgba(201,255,201,1) 100%); */
+        }
+        .alert{
+            display: flex;
+            justify-content: space-between;
+            font-size: 18px;
+            padding: 10px 20px;
+            border-radius: 14px;
+        }
+        .alert div{
+            display: inline-block;
+        }
+        .alert-heading{
+            font-weight: bold;
+        }
+        .alert-ico{
+            width: 32px;
+        }
+        .alert-secondary{
+            justify-content: left;
+        }
+        .alert-secondary .alert-text{
+            padding-left: 10px;
+            margin-left: 9px;
+        }
+
+        .error-alert-ico{
+            fill: var(--error-alert-color);
+        }
+        .error-alert{
+            border:2px solid var(--error-alert-color);
+            background: var(--error-alert-color-light);
+        }
+        .error-alert-text{
+            color: var(--error-alert-color);
+        }
+        .alert-secondary .error-alert-text{
+            border-left: 1px solid rgba(220, 20, 60, 0.35);
+            padding-left: 10px;
+            margin-left: 9px;
+        }
+        .success-alert-ico{
+            fill: var(--success-alert-color);
+        }
+        .success-alert{
+            border:2px solid var(--success-alert-color);
+            background: var(--success-alert-color-light);
+        }
+        .success-alert-text{
+            color: var(--success-alert-color);
+        }
+        .alert-secondary .success-alert-text{
+            border-left: 1px solid rgba(7, 131, 11, 0.35);
+            padding-left: 10px;
+            margin-left: 9px;
         }
     </style>
 
@@ -1265,13 +1379,14 @@
         #sidemenu-wrapper.side-hidden svg{
             margin-left: 0px !important;
             transform: rotate(180deg);
+
         }
         #sidemenu-toggle{
             position: absolute;
             background: var(--sidemenu-toggle-background);
             top:60px;
             right:100%;
-            height: 26px;
+            height: 28px;
             width: 16px;
             display: flex;
             align-items: center;
@@ -1281,14 +1396,13 @@
             cursor: pointer;
             border:1px solid black;
             border-right:0;
-
         }
         #sidemenu-toggle svg{
             margin-left: 1px;
             width:22px;
             min-width: 22px;
             fill:white;
-            transition: 0.6s;
+            transition: transform 0.5s;
         }
     </style>
 
@@ -1307,48 +1421,524 @@
     </script>
 
     <!-- *************************************************** Login forms *************************************************** -->
-    <div style="display:flex; justify-content:space-between;">
-        
-    </div>
-
-    <div class=login-modal>
-        <div class=login-wrapper>
-            <div class=login-wrapper-under>
-                <div class=name-wrapper>
-                    <label class="">
-                        <input class="login-name" placeholder="Placeholder">
-                        <span>Placeholder</span>
-                    </label>
-                </div>
-                <div class=pass-wrapper>
-                    <label class="">
-                        <input class="login-pass" placeholder="Placeholder">
-                        <span>Placeholder</span>
-                    </label>
-                </div>
-            </div>
-        </div>
-    </div>
-
-    <div class=login-modal>
-        <div class=login-wrapper>
-            <div class=login-wrapper-under>
-                <div class=name-wrapper>
-                    <input class="login-name">
-                </div>
-                <div class=pass-wrapper>
-                    <input class="login-pass">
-                </div>
-            </div>
-        </div>
-    </div>
-
     <style>
-        
+        .login-modal{
+            opacity: 0;
+            pointer-events: none;
+            position: fixed;
+            top: 0;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            transition: opacity 0.5s;
+            background: rgba(0, 0, 0, 0.53);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            z-index: 99999999;
+            border-radius: 0;
+        }
+        .show-login-modal{
+            opacity: 1;
+            pointer-events: all;
+        }
+        .show-login-modal .login-wrapper{
+            transform: translateY(0);
+            transition: transform .35s ease-out;
+        }
+        .login-wrapper{
+            padding: 2rem;
+            transform: translateY(-60px);
+            transition: transform .5s ease-out;
+            cursor: default;
+            border:rgba(0, 0, 0, 0.3);
+            border-radius: 10px;
+            position: relative;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            color: #fff;
+            min-width: 300px;
+            box-shadow: 0px 6px 16px 0px rgb(0 0 0 / 20%);
+            background: #fff;
+        }
+        .login-wrapper-under{
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            gap: 1rem;
+        }
+
+        /* *************************************************** Dark *************************************************** */
+        :root{
+            --width-modal-dark: 400px;
+            --font-size-modal-dark: 30px;
+            --input-padding-vertical-dark: 5px;
+        }
+        #login-modal-dark .login-wrapper{
+            width: var(--width-modal-dark);
+            background: #000;
+            padding: 3rem 2rem;
+        }
+        #login-modal-dark .login-wrapper-under{
+            gap:2.5rem;
+        }
+        #login-modal-dark label{
+            text-align: center;
+            display: inline-block;
+            width: 100%;
+            position: relative;
+        }
+        #login-modal-dark .modal-label-text{
+            line-height: 1;
+            left:50%;
+            cursor: text;
+            position: absolute;
+            font-size: var(--font-size-modal-dark);
+            color: #9B9B9B;
+            transform: translate(-50%, calc( -1 * (2 * var(--input-padding-vertical-dark) + var(--font-size-modal-dark))));
+            transition: all 0.35s;
+            letter-spacing: 4px;
+        }
+        #login-modal-dark label:focus-within .modal-label-text, #login-modal-dark input:not(:placeholder-shown) + .modal-label-text{
+            font-size: 18px;
+            transform: translate(-50%, calc( -1 * (2 * var(--input-padding-vertical-dark) + var(--font-size-modal-dark) + 26px)));
+            letter-spacing: 1px;
+        }
+        #login-modal-dark label:focus-within .modal-label-text{
+            color:#fff;
+        }
+        #login-modal-dark input{
+            background-color: transparent;
+            border: 0;
+            border-bottom: 2px solid #4A4A4A;
+            color: white;
+            font-size: var(--font-size-modal-dark);
+            letter-spacing: -1px;
+            outline: 0;
+            padding: var(--input-padding-vertical-dark) 0;
+            text-align: center;
+            transition: all 0.35s;
+            width: 220px;
+        }
+        #login-modal-dark input::placeholder{
+            opacity: 0;
+        }
+        #login-modal-dark input:focus{
+            max-width: 100%;
+            width: 340px;
+            box-sizing: border-box;
+        }
+        #login-modal-dark button{
+            all:unset;
+            border: 1px solid white;
+            border-radius: 8px;
+            color: white;
+            cursor: pointer;
+            /* margin-top: -10px; */
+            transition: all 0.3s;
+            padding: 10px 28px;
+            line-height: 1;
+            min-width: 120px;
+            text-align: center;
+        }
+        #login-modal-dark button:hover{
+            background-color: #fff;
+            color:#000;
+        }
+        #login-buttons{
+            background: linear-gradient(to right, rgb(228 225 225), rgb(39, 64, 70));
+        }
+        #login-buttons > *{
+            cursor: pointer;
+        }
+        #login-buttons > *:nth-child(3), #login-buttons > *:nth-child(4){
+            color:#fff;
+        }
+
+        /* *************************************************** Simple *************************************************** */
+        :root{
+            --main-color-modal-simple: crimson;
+            --wrapper-background-simple: #f6f8fa;
+            --color-modal-simple: #333333;
+            --width-modal-simple: 330px;
+            --font-size-modal-simple: 16px;
+        }
+        #login-modal-simple .login-wrapper{
+            background: var(--wrapper-background-simple);
+            width: var(--width-modal-simple);
+            box-sizing: border-box;
+            padding: 1.25rem 2rem;
+        }
+        #login-modal-simple .login-wrapper-under *{
+            width: 100%;
+            box-sizing: border-box;
+        }
+        #login-modal-simple .modal-label-text{
+            color: var(--color-modal-simple);
+            margin-bottom:0.1rem;
+            font-size: var(--font-size-modal-simple);
+        }
+        #login-modal-simple input, #login-modal-simple button{
+            font-size: var(--font-size-modal-simple);
+            padding: 8px;
+            border-radius: 7px;
+            box-sizing: content-box;
+        }
+        #login-modal-simple input{
+            color: var(--color-modal-simple);
+            outline: none;
+            border:1px solid #d0d7de;
+            background: #fff;
+        }
+        #login-modal-simple input:focus{
+            border:1px solid var(--main-color-modal-simple);
+            outline:1px solid var(--main-color-modal-simple);
+        }
+        #login-modal-simple-confirm{
+            cursor: pointer;
+            color:#fff;
+            background: var(--main-color-modal-simple);
+            border: 1px solid var(--main-color-modal-simple);
+            transition: opacity 0.2s;
+        }
+        #login-modal-simple-confirm:hover{
+            opacity: 0.75;
+        }
+        .pass-text-wrapper{
+            display: flex;
+            align-items: center;
+        }
+        .pass-text-wrapper .modal-label-text{
+            flex-grow: 1;
+        }
+        #forgot-password{
+            width: auto !important;
+            white-space: nowrap;
+            font-size: calc(var(--font-size-modal-simple) * 0.8);
+        }
+        #submit-button-wrapper-simple{
+            margin-top: 1rem;
+        }
+
+        /* *************************************************** Classic *************************************************** */
+        :root{
+            --main-color-modal-classic: rgb(80, 163, 185);
+            --color-modal-classic: #333333;
+            --font-size-modal-classic: 16px;
+            --flexgap-modal-classic: 1rem;
+        }
+        #login-modal-classic .login-wrapper{
+            color: var(--color-modal-classic);
+            font-size: var(--font-size-modal-classic);
+        }
+        #login-modal-classic .login-wrapper-under{
+            gap: var(--flexgap-modal-classic);
+        }
+        #login-modal-classic .login-wrapper-under > *{
+            text-align: center;
+            width: 100%;
+        }
+        #login-modal-classic input{
+            width:100%;
+            padding:8px 10px;
+            border-radius: 0 !important;
+            border:1px solid rgba(0, 0, 0, 0.4);
+        }
+        #login-modal-classic input::placeholder{
+            color: rgba(0, 0, 0, 0.4);
+        }
+        .login-social{
+            display: flex;
+            flex-direction: column;
+            gap: 0.5rem;
+            margin-top: 0.5rem;
+        }
+        .login-social-note{
+            color: #777;
+        }
+        .login-heading{
+            margin-bottom: calc(2rem - var(--flexgap-modal-classic));
+            font-size:26px;
+        }
+        .login-social-icons{
+            display: flex;
+            justify-content: center;
+            gap:10px;
+        }
+        .login-social-icons > span{
+            cursor:pointer;
+            width:32px;
+            /* color: var(--color-modal-classic); */
+            color: #555;
+            transition: 0.2s;
+        }
+        .login-social-icons > span:hover{
+            color: var(--main-color-modal-classic);
+        }
+        #forgot-password{
+            float:right;
+            margin-top:2px;
+        }
+        .login-register{
+            margin-top: calc(20px - var(--flexgap-modal-classic));
+            border-top: 1px solid rgba(0, 0, 0, 0.2);
+            padding: 20px 0;
+        }
+        #submit-button-wrapper-classic{
+            margin-top: -8px;
+        }
+        #login-modal-classic-confirm{
+            cursor:pointer;
+            color: #fff;
+            background: var(--main-color-modal-classic);
+            padding:8px 12px;
+            width: 100%;
+            border-radius: 10px;
+            transition: opacity 0.2s;
+            border: 1px solid var(--main-color-modal-classic);
+        }
+        #login-modal-classic-confirm:hover{
+            opacity: 0.8;
+        }
+
+        /* *************************************************** Modern *************************************************** */
+        :root{
+            --main-color-modal-modern: linear-gradient(to right, #35c3c1, #00d6b7);
+            --wrapper-background-modern: rgb(74, 77, 91);
+            --color-modal-modern: #444;
+            --font-size-modal-modern: 16px;
+            --flexgap-modal-modern: 1.5rem;
+            --input-padding-modern: 12px;
+            --font-modal-modern: 'comic sans ms';
+        }
+        #login-modal-modern .login-wrapper{
+            font-family: var(--font-modal-modern);
+            color: var(--color-modal-modern);
+            font-size: var(--font-size-modal-modern);
+            border-radius: 0;
+            background: var(--wrapper-background-modern);
+        }
+        #login-modal-modern .login-wrapper-under{
+            gap: var(--flexgap-modal-modern);
+        }
+        #login-modal-modern .login-wrapper-under > *{
+            text-align: center;
+            width: 100%;
+        }
+        #login-modal-modern input{
+            flex-grow: 1;
+            border-radius: 0;
+            border: 0;
+            outline:none;
+            box-sizing: content-box;
+            color: var(--color-modal-modern);
+            padding:var(--input-padding-modern) 12px;
+            height: var(--font-size-modal-modern);
+            font-size: var(--font-size-modal-modern);
+            font-family: var(--font-modal-modern);
+        }
+        #login-modal-modern input:focus{
+            background: rgba(0,0,0,0.05);
+        }
+        #login-modal-modern input::placeholder{
+            color: rgba(0, 0, 0, 0.4);
+        }
+        #login-modal-modern label{
+            background: #fff;
+            display: flex;
+        }
+        .label-icon-modern{
+            width: calc(2 * var(--input-padding-modern) + var(--font-size-modal-modern));
+            height: calc(2 * var(--input-padding-modern) + var(--font-size-modal-modern));
+            background: rgba(0,0,0,0.05);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: text;
+        }
+        .label-icon-modern svg{
+            fill: #aaa;
+            width: 22px;
+        }
+        #forgot-password-modern{
+            font-size: 13px;
+            color: #35c3c1;
+            display: inline-block;
+            width: auto !important;
+        }
+        .login-register{
+            margin-top: calc(20px - var(--flexgap-modal-modern));
+            border-top: 1px solid rgba(0, 0, 0, 0.2);
+            padding: 20px 0;
+        }
+        #login-modal-modern-confirm{
+            cursor:pointer;
+            color: #fff;
+            width: 100%;
+            border-radius: 0;
+            transition: opacity 0.2s;
+            box-sizing: content-box;
+            background: var(--main-color-modal-modern);
+            border: 1px solid var(--main-color-modal-modern);
+            padding:var(--input-padding-modern) 0;
+            line-height: var(--font-size-modal-modern);
+            height: var(--font-size-modal-modern);
+            font-size: var(--font-size-modal-modern);
+            font-family: var(--font-modal-modern);
+        }
+        #login-modal-modern-confirm:hover{
+            opacity: 0.8;
+        }
     </style>
 
-    <script>
+    <div id=login-buttons style="display:flex; justify-content:space-between;">
+        <span class="material-icons-outlined"> sledding </span>
+        <span class="material-icons-outlined"> explore_off </span>
+        <span class="material-icons-outlined" style="transform: rotate(180deg);"> female </span>
+        <span class="material-icons-outlined"> groups </span>
+    </div>
 
+    <div id=login-modal-dark class=login-modal>
+        <div class=login-wrapper>
+            <div class=login-wrapper-under>
+                <div class=name-wrapper>
+                    <label>
+                        <input class="login-name" placeholder="_">
+                        <div class=modal-label-text>Userame</div>
+                    </label>
+                </div>
+                <div class=pass-wrapper>
+                    <label>
+                        <input class="login-pass" placeholder="_">
+                        <div class=modal-label-text>Password</div>
+                    </label>
+                </div>
+                <div class=submit-button-wrapper>
+                    <button id=login-modal-dark-confirm>Ok</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div id=login-modal-simple class=login-modal>
+        <div class=login-wrapper>
+            <div class=login-wrapper-under>
+                <div class=name-wrapper>
+                    <label>
+                        <div class=modal-label-text>Username</div>
+                        <input class="login-name">
+                    </label>
+                </div>
+                <div class=pass-wrapper>
+                    <label>
+                        <div class=pass-text-wrapper>
+                            <div class=modal-label-text>Password</div>
+                            <a id=forgot-password href=#>Forgot password?</a>
+                        </div>
+                        <input class="login-pass">
+                    </label>
+                </div>
+                <div class=submit-button-wrapper-simple>
+                    <button id=login-modal-simple-confirm>Ok</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div id=login-modal-classic class=login-modal>
+        <div class=login-wrapper>
+            <div class=login-wrapper-under>
+                <div class=login-heading>Login</div>
+                <div class=name-wrapper>
+                    <input class="login-name" placeholder=Username>
+                </div>
+                <div class=pass-wrapper>
+                    <input class="login-pass" placeholder=Password>
+                    <a id=forgot-password href=#>Forgot password?</a>
+                </div>
+                <div class=submit-button-wrapper-classic>
+                    <button id=login-modal-classic-confirm>Confirm</button>
+                </div>
+                <div class=login-social>
+                    <div class=login-social-note>or use a social network</div>
+                    <div class=login-social-icons>
+                        <span class="material-icons-outlined">sports_kabaddi</span>
+                        <span class="material-icons-outlined">catching_pokemon</span>
+                        <span class="material-icons-outlined">sentiment_very_satisfied</span>
+                    </div>
+                </div>
+                <div class=login-register>
+                    Not a member yet? <a href=#>Sign up</a>.
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div id=login-modal-modern class=login-modal>
+        <div class=login-wrapper>
+            <div class=login-wrapper-under>
+                <div class=name-wrapper>
+                    <label>
+                        <div class=label-icon-modern>
+                            <svg viewBox="0 0 24 24"><path d="M0 0h24v24H0V0z" fill="none"/><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zM7.07 18.28c.43-.9 3.05-1.78 4.93-1.78s4.51.88 4.93 1.78C15.57 19.36 13.86 20 12 20s-3.57-.64-4.93-1.72zm11.29-1.45c-1.43-1.74-4.9-2.33-6.36-2.33s-4.93.59-6.36 2.33C4.62 15.49 4 13.82 4 12c0-4.41 3.59-8 8-8s8 3.59 8 8c0 1.82-.62 3.49-1.64 4.83zM12 6c-1.94 0-3.5 1.56-3.5 3.5S10.06 13 12 13s3.5-1.56 3.5-3.5S13.94 6 12 6zm0 5c-.83 0-1.5-.67-1.5-1.5S11.17 8 12 8s1.5.67 1.5 1.5S12.83 11 12 11z"/></svg>
+                        </div>
+                        <input class="login-name" placeholder=Username>
+                    </label>
+                </div>
+                <div class=pass-wrapper>
+                    <label>
+                        <div class=label-icon-modern>
+                            <svg viewBox="0 0 24 24"><g fill="none"><path d="M0 0h24v24H0V0z"/><path d="M0 0h24v24H0V0z" opacity=".87"/></g><path d="M18 8h-1V6c0-2.76-2.24-5-5-5S7 3.24 7 6v2H6c-1.1 0-2 .9-2 2v10c0 1.1.9 2 2 2h12c1.1 0 2-.9 2-2V10c0-1.1-.9-2-2-2zM9 6c0-1.66 1.34-3 3-3s3 1.34 3 3v2H9V6zm9 14H6V10h12v10zm-6-3c1.1 0 2-.9 2-2s-.9-2-2-2-2 .9-2 2 .9 2 2 2z"/></svg>
+                        </div>
+                        <input class="login-pass" placeholder=Password>
+                    </label>
+                </div>
+                <div class=submit-button-wrapper>
+                    <button id=login-modal-modern-confirm>LOGIN</button>
+                </div>
+                <a id=forgot-password-modern href=#>Forgot password?</a>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Confirm on enter
+        document.querySelectorAll(".login-name, .login-pass").forEach(function(input){
+            input.addEventListener("keypress", (e) => {
+                if(e.key == "Enter"){
+                    input.closest(".login-wrapper").querySelector(".submit-button-wrapper button").click();
+                }
+            });
+        });
+        document.querySelectorAll(".login-modal").forEach(modal => {
+            // Hide on background click
+            modal.addEventListener("click", function(e){
+                if(e.target.classList.contains("login-modal")){
+                    e.target.classList.remove("show-login-modal");
+                }
+            });
+            
+            // Add focus on transition end
+            modal.addEventListener("transitionend", function(e){
+                if(e.propertyName == "opacity" && e.target.classList.contains("login-modal") && modal.classList.contains("show-login-modal")){
+                    let input = modal.querySelector("input");
+                    
+                    if(input){
+                        input.focus();
+                    }
+                }
+            });
+        });
+
+        // Test
+        $("#login-buttons > *").on("click", function(){
+            let index = $(this).index();
+
+            $(".login-modal").eq(index).addClass("show-login-modal");
+        });
     </script>
 
     <!-- *************************************************** Multi select - jQuery *************************************************** -->
@@ -1603,15 +2193,12 @@
             margin-right: 5px;
             cursor: pointer;
         }
-
         #create-link-options {
             padding: 0.75rem 0 0.5rem 0;
         }
-
         #user-select + div:before {
             content: "Uživatel";
         }
-
         #link-XX-input, #modal-XX {
             font-size: 1rem;
             padding-left: 7px;
@@ -1628,15 +2215,12 @@
             outline: 1px solid black;
             border-radius: 4px;
         }
-
         #user-list {
             padding: 1rem 0;
         }
-
         .link-blank {
             cursor: alias;
         }
-
         #link-XX {
             font-size: 1rem;
             box-sizing: border-box;
@@ -1656,7 +2240,6 @@
             border-color: #2dccba;
             box-shadow: 0 0 2px 1px rgba(45, 204, 186, 0.5);
         }
-
         #link-XX-items-wrapper {
             min-height: 46px;
             gap: 6px;
@@ -1670,7 +2253,6 @@
             box-sizing: border-box;
             background-color: #f5f8f9;
         }
-
         .link-XX-item, .link-XX-item-input {
             cursor: pointer;
             height: 100%;
@@ -1680,11 +2262,9 @@
             outline: 1px solid #2dccba;
             background-color: #e2fffc;
         }
-
         .link-XX-item:hover:after {
             color: #212529;
         }
-
         .link-XX-item:after {
             content: "\00d7";
             font-weight: bold;
@@ -1696,7 +2276,6 @@
             font-size: 1.5rem;
             vertical-align: text-top;
         }
-
         .link-XX-item-input {
             padding: 0;
             flex-grow: 1;
@@ -1705,7 +2284,6 @@
             outline: 0 !important;
             background-color: #f5f8f9;
         }
-
         #link-XX-input {
             all: unset;
             padding: 5px;
@@ -1717,7 +2295,6 @@
         #link-XX-input:focus {
             outline: 0 !important;
         }
-
         #XX-picked-items {
             position: absolute;
             top: 0;
@@ -1739,7 +2316,6 @@
         #XX-picked-items div:first-of-type {
             margin-left: 7px;
         }
-
         #XX-autocomplete-items {
             box-sizing: border-box;
             position: absolute;
@@ -1753,7 +2329,6 @@
             overflow: auto !important;
             scrollbar-width: thin;
         }
-
         .autocomplete-item {
             box-sizing: border-box;
             width: 100%;
@@ -1777,7 +2352,6 @@
             transition: 0.3s;
             border: 1px solid rgba(0, 0, 0, 0.4);
         }
-
         .autocomplete-item.item-checked {
             background: #e2fffc !important;
             border-bottom: 1px solid #2dccba !important;
@@ -1788,17 +2362,101 @@
         }
     </style>
 
-    <!-- *************************************************** Hover outside buttons *************************************************** -->
-    <div id=hover-close>
+    <!-- *************************************************** Hover outside buttons & hover-spread *************************************************** -->
+    <div id=hover-close class=flex>
         <div class=added-text>
             <div class=text>Some texttttttt<br>...and more</div>
             <div class=close-wrapper>
                 <span class=ico>X</span>
             </div>
         </div>
+
+        <div class=hover-spread-wrapper style="margin-left:auto; margin-right:300px;">
+            <div class=hover-spread>
+                <div class="hover-spread-base hover-spread-base-text">Head</div>
+                <div class=hover-spread-content>
+                    <div>Content something</div>
+                    <div class=info-text>content under</div>
+                </div>
+            </div>
+        </div>
+        <div class=hover-spread-wrapper style="margin-right:300px;">
+            <div class=hover-spread>
+                <div class="hover-spread-base hover-spread-base-ico"></div>
+                <div class=hover-spread-content>
+                    <div>Content something</div>
+                    <div class=info-text>content under</div>
+                </div>
+            </div>
+        </div>
     </div>
 
     <style>
+        :root{
+            --hover-spread-size: 100px;
+            --hover-spread-padding: 14px;
+        }
+        .hover-spread-wrapper{
+            overflow: visible;
+            width: var(--hover-spread-size);
+            height: var(--hover-spread-size);
+        }
+        .hover-spread{
+            width: var(--hover-spread-size);
+            height: var(--hover-spread-size);
+            position: relative;
+            padding: var(--hover-spread-padding);
+            transition: all 275ms cubic-bezier(0.8, 0, 0.2, 1);
+            border:1px solid rgba(0, 0, 0, 0.25);
+            overflow: hidden;
+            box-sizing: border-box;
+        }
+        .hover-spread:hover{
+            width: 320px;
+        }
+        .hover-spread:hover .hover-spread-content{
+            animation: slideUp 0.4s forwards;
+        }
+        .hover-spread-base-text{
+            color: crimson;
+            text-align: center;
+        }
+        .hover-spread-content .info-text{
+            color: #909DBA;
+        }
+        .hover-spread-base{
+            width: calc(var(--hover-spread-size) - 2 * var(--hover-spread-padding));
+            height: 100%;
+        }
+        .hover-spread-content{
+            opacity: 0;
+            line-height: 1.3;
+            position: absolute;
+            top: var(--hover-spread-padding);
+            left: calc(var(--hover-spread-size));
+        }
+        .hover-spread-base-ico{
+            width: calc(var(--hover-spread-size) - 2 * var(--hover-spread-padding));
+            background: linear-gradient(to right, rgb(237, 33, 58), rgb(147, 41, 30));
+        }
+        @keyframes slideUp{
+            0% {
+                opacity: 0;
+                -webkit-transform: translateY(10px);
+                transform: translateY(10px);
+            }
+            50% {
+                opacity: 0;
+                -webkit-transform: translateY(10px);
+                transform: translateY(10px);
+            }
+            100% {
+                opacity: 1;
+                -webkit-transform: translateY(0px);
+                transform: translateY(0px);
+            }
+        }
+
         .added-text{
             position: relative;
             border: 2px solid black;
@@ -1806,8 +2464,6 @@
             transition: box-shadow 0.2s;
             display: inline-block;
             transform-origin: top left;
-            /* backface-visibility: hidden;
-            -webkit-backface-visibility: hidden; */
             -webkit-transform: translateZ(0) scale(1.0, 1.0);
             transform: translateZ(0);
         }
@@ -1818,6 +2474,7 @@
             padding:1rem 1rem;
             white-space: pre-line;
             z-index:1000;
+            color: #909DBA;
         }
         .added-text:focus-within{
             box-shadow: 0 0 12px #000000;
@@ -1827,15 +2484,15 @@
             top:25%;
             right:25%;
             border-radius: 50%;
-            border:none;
+            border: none;
             cursor: pointer;
             transition: all 0.25s;
             color:black;
             opacity:0;
         }
         .added-text:hover .close-wrapper, .added-text:focus-within .close-wrapper{
-            width: 10rem;
-            height: 10rem;
+            width: 8rem;
+            height: 8rem;
         }
         .added-text:hover .ico, .added-text:focus-within .ico{
             opacity: 1;
@@ -1850,8 +2507,6 @@
             z-index:999;
             transition: 0.25s cubic-bezier(0.25, 0, 0, 1);
             transform: translate(50%, -50%) translateZ(0);
-            /* backface-visibility: hidden;
-            -webkit-backface-visibility: hidden; */
         }
     </style>
 
@@ -2269,7 +2924,6 @@
         let holdX = 0, holdY = 0;
         let highestDiff = 0;
         
-
         // Plus debounce ?
         // Nesmi brzdit po tom co se pdf stranka nacetla?
         // only large pdf
