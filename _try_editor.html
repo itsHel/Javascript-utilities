@@ -17,7 +17,7 @@
         font-family: "Roboto", sans-serif;
         font-family: 'Comic Sans MS', 'Comic Sans' !important;
     }
-    #drop-wrapper, body > div{
+    body > div{
         padding:2rem;
         border-radius:0.5rem;
         border: 1px solid #d3d8db;
@@ -25,19 +25,7 @@
         background:white;
         margin-bottom:18px;
     }
-    #drop-wrapper{
-        height:250px;
-        position:relative;
-    }
-    .highlight{
-        border:2px dashed red !important;
-    }
-    #movable{
-        height:100px;
-        width:100px;
-        background: orange;
-        position:absolute;
-    }
+
     label{
         font-size: 16px;
         min-width: 0;
@@ -98,8 +86,6 @@
 </script>
 
 <body style="background: #fff;" bgcolor=chucknorris>
-    <div id=test></div>
-
     <div id=o style="position: relative; padding:0">
         <div id=i style="transition: 0.7s;font-size:44px;width:60px;text-align: center;">11</div>
         <div id=j style="transition: 0.7s;font-size:44px;position:absolute;opacity:0;left:0;top:0;width:60px;text-align: center;">22</div>
@@ -134,38 +120,39 @@
     <script>
         // *************************************************** GotoTop ***************************************************
         setTimeout(
-        (function setGotop(){
-            const buttonSelector = "#gotop";
-            const compareToSelector = "#inputs";
+            (function setGotop(){
+                const buttonSelector = "#gotop";
+                const compareToSelector = "#inputs";
 
-            const thisStyle = `<style>${buttonSelector}{ position: fixed; bottom:5%; padding:0; right:3%; border-radius: 50%; opacity: 0.7; background: white; cursor:pointer; border:1px solid rgba(0,0,0,0.2); box-shadow: 0 1px 2px 0 rgb(60 64 67 / 30%), 0 2px 6px 2px rgb(60 64 67 / 15%); z-index:999999999; width:3rem; height:3rem; display: inline-flex; justify-content: center; align-items: center; transition: 0.3s; } ${buttonSelector}:hover{ opacity: 1; } ${buttonSelector}.hidden{ opacity: 0; pointer-events: none; }</style>`;
-            const thisHtml = `<div id=gotop class="hidden">
-                                <svg height="24px" viewBox="0 0 24 24" width="24px" fill="#414141"><path d="M0 0h24v24H0V0z" fill="none"/><path d="M4 12l1.41 1.41L11 7.83V20h2V7.83l5.58 5.59L20 12l-8-8-8 8z"/></svg></div>
-                            </div>`;
-            document.querySelector("html").insertAdjacentHTML("beforeend", thisHtml + thisStyle);
+                const thisStyle = `<style>${buttonSelector}{ position: fixed; bottom:5%; padding:0; right:3%; border-radius: 50%; opacity: 0.7; background: white; cursor:pointer; border:1px solid rgba(0,0,0,0.2); box-shadow: 0 1px 2px 0 rgb(60 64 67 / 30%), 0 2px 6px 2px rgb(60 64 67 / 15%); z-index:999999999; width:3rem; height:3rem; display: inline-flex; justify-content: center; align-items: center; transition: 0.3s; } ${buttonSelector}:hover{ opacity: 1; } ${buttonSelector}.hidden{ opacity: 0; pointer-events: none; }</style>`;
+                const thisHtml = `<div id=gotop class="hidden">
+                                    <svg height="24px" viewBox="0 0 24 24" width="24px" fill="#414141"><path d="M0 0h24v24H0V0z" fill="none"/><path d="M4 12l1.41 1.41L11 7.83V20h2V7.83l5.58 5.59L20 12l-8-8-8 8z"/></svg></div>
+                                </div>`;
+                document.querySelector("html").insertAdjacentHTML("beforeend", thisHtml + thisStyle);
 
-            if(!("IntersectionObserver" in window))
-                return;
-                
-            let topButton = document.querySelector(buttonSelector);
-            let nav = document.querySelector(compareToSelector);
+                if(!("IntersectionObserver" in window))
+                    return;
+                    
+                let topButton = document.querySelector(buttonSelector);
+                let nav = document.querySelector(compareToSelector);
 
-            topButton.addEventListener("click", function(){
-                window.scrollTo({top: 0, left: 0, behavior: "smooth"});
-            });
+                topButton.addEventListener("click", function(){
+                    window.scrollTo({top: 0, left: 0, behavior: "smooth"});
+                });
 
-            let options = {root: null, rootMargin: window.innerHeight + "px", threshold: 1};
+                let options = {root: null, rootMargin: window.innerHeight + "px", threshold: 1};
 
-            let observer = new IntersectionObserver(function(entries){
-                if(entries[0].isIntersecting){
-                    topButton.classList.add("hidden");                
-                } else {
-                    topButton.classList.remove("hidden");
-                }
-            }, options);
+                let observer = new IntersectionObserver(function(entries){
+                    if(entries[0].isIntersecting){
+                        topButton.classList.add("hidden");                
+                    } else {
+                        topButton.classList.remove("hidden");
+                    }
+                }, options);
 
-            observer.observe(nav);
-        }), 1111);
+                observer.observe(nav);
+            }), 
+        1111);
 
         // *************************************************** indexedDB ***************************************************
         // https://javascript.info/indexeddb
@@ -493,12 +480,11 @@
     </div>
 
     <style>
-        :root{
+        .input-placeholder{
             --input-font-size: 18px;
             --input-focus-color: crimson;
-            --padding-coefficient: 2          /* Higher value = smaller padding */
-        }
-        .input-placeholder{
+            --padding-coefficient: 2;                /* Higher value = smaller padding */
+            
             position:relative;
             border:2px solid black;
             border-radius:4px;
@@ -576,6 +562,91 @@
         }
     </style>
 
+    <!-- *************************************************** Inputs validation *************************************************** -->
+    <div>
+        <label class="input-validated error">
+            <input placeholder="Placeholder">
+            <span class=input-error>
+                <svg viewBox="0 0 24 24"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 15h-2v-2h2v2zm0-4h-2V7h2v6z"/></svg>
+                <span class=input-error-text>Your answer cannot have more than two repeating characters.</span>
+            </span>
+        </label>
+
+        <label class="input-validated">
+            <input placeholder="Placeholder">
+            <span class=input-error>
+                <svg viewBox="0 0 24 24"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 15h-2v-2h2v2zm0-4h-2V7h2v6z"/></svg>
+                <span class=input-error-text></span>    
+            </span>
+        </label>
+    </div>
+
+    <style>
+        .input-validated{
+            --input-validate-size: 16px;
+            --input-error-color: crimson;
+            --input-validate-maxwidth: 260px;
+
+            position: relative;
+            transition: all 0.25s;
+            display: inline-flex;
+            flex-direction: column;
+            border-radius: 2px;
+            max-width: var(--input-validate-maxwidth);
+        }
+        .input-validated input{
+            border-radius: 4px !important;
+            border: 2px solid black !important;
+            all: unset;
+            cursor: text;
+            padding: calc(var(--input-validate-size) / 2);
+            font-size: var(--input-validate-size);
+            display: block;
+            transition: all 0.25s;
+            width: 100%;
+            box-sizing: border-box;
+        }
+
+        .input-validated .input-error{
+            display:none;
+            position: relative;
+            overflow: hidden;
+            gap: calc(var(--input-validate-size) / 2);
+            padding: calc(var(--input-validate-size) / 2);
+            padding-right: var(--input-validate-size);
+            font-size: var(--input-validate-size);
+            border-bottom-left-radius: 4px;
+            border-bottom-right-radius: 4px;
+            color: #555;
+            background-image: linear-gradient(135deg, #ffdbdb 25%, #ffffff 25%, #ffffff 50%, #ffdbdb 50%, #ffdbdb 75%, #ffffff 75%, #ffffff 100%);
+            background-size: 5.66px 5.66px;
+        }
+        .input-validated .input-error svg{
+            margin-top:3px;
+            width: calc(var(--input-validate-size) * 1.5);
+            min-width: calc(var(--input-validate-size) * 1.5);
+            height: calc(var(--input-validate-size) * 1.5);
+            fill: var(--input-error-color);
+        }
+        .input-validated .input-error:before{
+            content: "";
+            width: calc(var(--input-validate-size) * 0.75);
+            height: calc(var(--input-validate-size) * 0.75);
+            transform: rotate(45deg);
+            position: absolute;
+            left: calc((var(--input-validate-size) * 1.75) / 2);             /* 1.75 is relative to svg width */
+            top: calc(-1 * (var(--input-validate-size) / 1.75));
+            background-color: var(--input-error-color);
+        }
+
+        .input-validated.error .input-error{
+            display: inline-flex;
+        }
+        .input-validated.error input{
+            border: 2px solid var(--input-error-color) !important;
+        }
+    </style>
+
     <!-- *************************************************** Alerts *************************************************** -->
     <div>
         <div class="error-alert alert">
@@ -622,14 +693,13 @@
     </div>
 
     <style>
-        :root{
+        .alert{
             --error-alert-color: rgb(220, 20, 60);
             --error-alert-color-light: linear-gradient(0deg, rgba(255,192,203,1) 0%, rgba(255,223,229,1) 100%);
             --success-alert-color: rgb(7, 131, 11);
             --success-alert-color-light: linear-gradient(0deg, rgba(144,238,144,1) 0%, rgba(208,255,208,1) 100%);
             /* --success-alert-color-light: linear-gradient(0deg, rgb(133, 233, 133) 0%, rgba(201,255,201,1) 100%); */
-        }
-        .alert{
+            
             display: flex;
             justify-content: space-between;
             font-size: 18px;
@@ -712,9 +782,6 @@
             bottom: 0;
             left: 0;
             transform: scale(0.001, 0.001);
-        }
-        .testico:focus{
-            /* color:white; */
         }
         .testico:focus:before{
             animation: outside-ripple .5s ease-out;
@@ -804,8 +871,16 @@
     </div>
 
     <style>
-        :root{
+        .radio-line{
             --line-color: crimson;
+
+            position: absolute;
+            width:100%;
+            height:2px;
+            background: var(--line-color);
+            left:0;
+            top:115%;
+            width:0;
         }
         .radio{
             padding:4px;
@@ -827,16 +902,7 @@
             cursor:pointer;
             padding:5px;
             margin:10px;
-        }
-        .radio-line{
-            position: absolute;
-            width:100%;
-            height:2px;
-            background: var(--line-color);
-            left:0;
-            top:115%;
-            width:0;
-        }
+        } 
 
         #link-hover-arrow{
             display: inline-flex;
@@ -1139,16 +1205,16 @@
         document.querySelector("#svg").addEventListener("click", function(){
             let path = this.querySelector("path");
 
+            // strokeDashoffset = how much of svg is removed, 1 = 100%
             path.style.strokeDashoffset = Number(!Number(path.style.strokeDashoffset));
         });
     </script>
     
     <!-- *************************************************** Trapdoor *************************************************** -->
     <style>
-        :root{
-            --door-font-size: 30px;
-        }
         .trapdoor {
+            --door-font-size: 30px;
+
             transform: translateZ(0px);
             -webkit-font-smoothing: antialiased;
             width: 200px;
@@ -1327,23 +1393,169 @@
         }
     </style>
 
+    <!-- *************************************************** Loadings *************************************************** -->
+    <div style="display:flex; justify-content:space-between; align-items: center;">
+        <div id="loading">
+            <div class="circle one"></div>
+            <div class="circle two"></div>
+            <div class="circle three"></div>
+        </div>
+
+        <div class="clock-loader"></div>
+
+        <div class="dot-loader">
+            <span class="dot"></span>
+            <span class="dot"></span>
+            <span class="dot"></span>
+            <span class="dot"></span>
+        </div>
+    </div>
+
+    <style>
+        /* *************************************************** First *************************************************** */
+        #loading{
+            width: 156px;
+            height: 156px;
+            position: relative;
+        }  
+        .circle{
+            position: absolute;
+            border: 3px solid transparent;
+            border-top-color: #000;
+            border-radius: 50%;
+            animation: rotate linear infinite;
+        }
+        .circle.one{
+            height: 50px;
+            width: 50px;
+            left: 50px;
+            top: 50px;
+            animation-duration: 0.85s;
+        }
+        .circle.two{
+            height: 75px;
+            width: 75px;
+            top: 38px;
+            left: 38px;
+            animation-duration: 0.95s;
+        }
+        .circle.three{
+            height: 100px;
+            width: 100px;
+            top: 25px;
+            left: 25px;
+            animation-duration: 1.05s;
+        }
+        @keyframes rotate{
+            from {transform: rotateZ(360deg)}
+            to {transform: rotateZ(0deg)}
+        }
+
+        /* *************************************************** Dots *************************************************** */
+        .dot-loader {
+            height: 15px;
+            width: 105px;
+            display: flex;
+            position: relative;
+        }
+        .dot-loader .dot {
+            width: 15px;
+            height: 15px;
+            border-radius: 50%;
+            background-color: #000;
+            animation: move 500ms linear 0ms infinite;
+            margin-right: 30px;
+            box-sizing: border-box;
+        }
+        .dot-loader .dot:first-child {
+            position: absolute;
+            top: 0;
+            left: 0;
+            animation: grow 500ms linear 0ms infinite;
+        }
+        .dot-loader .dot:last-child {
+            position: absolute;
+            top: 0;
+            right: 0;
+            margin-right: 0;
+            animation: grow 500ms linear 0s infinite reverse;
+        }
+        @keyframes grow {
+            from {
+                transform: scale(0, 0);
+                opacity: 0;
+            }
+            to {
+                transform: scale(1, 1);
+                opacity: 1;
+            }
+        }
+        @keyframes move {
+            from { transform: translateX(0px); }
+            to { transform: translateX(45px); }
+        }
+
+        /* *************************************************** Clock *************************************************** */
+        .clock-loader {
+            --clock-color: #000;
+            --clock-width: 4rem;
+            --clock-radius: calc(var(--clock-width) / 2);
+            --clock-minute-length: calc(var(--clock-width) * 0.4);
+            --clock-hour-length: calc(var(--clock-width) * 0.2);
+            --clock-thickness: 0.2rem;
+
+            /* Rotate hides pixelated edges */
+            transform: rotate(45deg);
+
+            position: relative;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: var(--clock-width);
+            height: var(--clock-width);
+            border: 2px solid var(--clock-color);
+            border-radius: 50%;
+        }
+        .clock-loader::before, .clock-loader::after {
+            content: "";
+            position: absolute;
+            top: calc(var(--clock-radius) * 0.25);
+            width: var(--clock-thickness);
+            background: var(--clock-color);
+            border-radius: 10px;
+            transform-origin: center calc(100% - calc(var(--clock-thickness) / 2));
+            animation: spin infinite linear;
+        }
+        .clock-loader::before {
+            height: var(--clock-minute-length);
+            animation-duration: 2s;
+        }
+        .clock-loader::after {
+            top: calc(var(--clock-radius) * 0.25 + var(--clock-hour-length));
+            height: var(--clock-hour-length);
+            animation-duration: 15s;
+        }
+        @keyframes spin {
+            to { transform: rotate(1turn); }
+        }
+    </style>
+
     <!-- *************************************************** Sidemenu *************************************************** -->
-    <div id=sidemenu-wrapper class=side-hidden>
-        <div id=sidemenu-toggle>
+    <div class="sidemenu-wrapper side-hidden">
+        <div class=sidemenu-toggle>
             <svg viewBox="0 0 24 24"><path d="M0 0h24v24H0V0z" fill="none"/><path d="M10 6L8.59 7.41 13.17 12l-4.58 4.59L10 18l6-6-6-6z"/></svg>
         </div>
-        <div id=sidemenu>
+        <div class=sidemenu>
             Sidetext
         </div>
     </div>
 
     <style>
-        :root{
+        .sidemenu-wrapper{
             --sidemenu-width: 40px;
             --sidemenu-max-height: 600px;
             --sidemenu-toggle-background: #AA1111;
-        }
-        #sidemenu-wrapper{
+
             width:var(--sidemenu-width) !important;
             position: fixed;
             right:0;
@@ -1364,7 +1576,7 @@
             border:1px solid rgba(0, 0, 0, 0.25);
             border-right: 0;
         }
-        #sidemenu{
+        .sidemenu{
             width: 100%;
             overflow: auto;
             padding:0.5rem 1rem;
@@ -1372,16 +1584,16 @@
             overflow-x: hidden;
             overflow-y: auto;
         }
-        #sidemenu-wrapper.side-hidden{
+        .sidemenu-wrapper.side-hidden{
             right:calc(var(--sidemenu-width) * -1);
             box-shadow: none;
         }
-        #sidemenu-wrapper.side-hidden svg{
+        .sidemenu-wrapper.side-hidden svg{
             margin-left: 0px !important;
             transform: rotate(180deg);
 
         }
-        #sidemenu-toggle{
+        .sidemenu-toggle{
             position: absolute;
             background: var(--sidemenu-toggle-background);
             top:60px;
@@ -1397,7 +1609,7 @@
             border:1px solid black;
             border-right:0;
         }
-        #sidemenu-toggle svg{
+        .sidemenu-toggle svg{
             margin-left: 1px;
             width:22px;
             min-width: 22px;
@@ -1407,8 +1619,8 @@
     </style>
 
     <script>
-        document.querySelector("#sidemenu-toggle").addEventListener("click", function(){
-            let wrapper = this.closest("#sidemenu-wrapper");
+        document.querySelector(".sidemenu-toggle").addEventListener("click", function(){
+            let wrapper = this.closest(".sidemenu-wrapper");
 
             if(wrapper.classList.contains("side-hidden")){
                 // Show
@@ -1472,7 +1684,7 @@
         }
 
         /* *************************************************** Dark *************************************************** */
-        :root{
+        #login-modal-dark{
             --width-modal-dark: 400px;
             --font-size-modal-dark: 30px;
             --input-padding-vertical-dark: 5px;
@@ -1537,7 +1749,6 @@
             border-radius: 8px;
             color: white;
             cursor: pointer;
-            /* margin-top: -10px; */
             transition: all 0.3s;
             padding: 10px 28px;
             line-height: 1;
@@ -1559,7 +1770,7 @@
         }
 
         /* *************************************************** Simple *************************************************** */
-        :root{
+        #login-modal-simple{
             --main-color-modal-simple: crimson;
             --wrapper-background-simple: #f6f8fa;
             --color-modal-simple: #333333;
@@ -1624,7 +1835,7 @@
         }
 
         /* *************************************************** Classic *************************************************** */
-        :root{
+        #login-modal-classic{
             --main-color-modal-classic: rgb(80, 163, 185);
             --color-modal-classic: #333333;
             --font-size-modal-classic: 16px;
@@ -1705,7 +1916,7 @@
         }
 
         /* *************************************************** Modern *************************************************** */
-        :root{
+        #login-modal-modern{
             --main-color-modal-modern: linear-gradient(to right, #35c3c1, #00d6b7);
             --wrapper-background-modern: rgb(74, 77, 91);
             --color-modal-modern: #444;
@@ -2392,11 +2603,10 @@
     </div>
 
     <style>
-        :root{
+        .hover-spread-wrapper{
             --hover-spread-size: 100px;
             --hover-spread-padding: 14px;
-        }
-        .hover-spread-wrapper{
+
             overflow: visible;
             width: var(--hover-spread-size);
             height: var(--hover-spread-size);
@@ -2510,6 +2720,322 @@
         }
     </style>
 
+    <!-- *************************************************** Img gallery *************************************************** -->
+    <div id=imgs>
+        <img src="pdf\4c4577d57cee1604f158b497a913b11e20304472364b2a9fcc332b99d54c\1_768.png">
+        <img src="pdf\4c4577d57cee1604f158b497a913b11e20304472364b2a9fcc332b99d54c\2_768.png">
+        <img src="pdf\4c4577d57cee1604f158b497a913b11e20304472364b2a9fcc332b99d54c\3_768.png">
+        <img src="pdf\4c4577d57cee1604f158b497a913b11e20304472364b2a9fcc332b99d54c\4_768.png">
+        <img src="pdf\4c4577d57cee1604f158b497a913b11e20304472364b2a9fcc332b99d54c\5_768.png">
+        <img src="pdf\4c4577d57cee1604f158b497a913b11e20304472364b2a9fcc332b99d54c\6_768.png">
+        <img src="pdf\4c4577d57cee1604f158b497a913b11e20304472364b2a9fcc332b99d54c\7_768.png">
+        <img src="pdf\4c4577d57cee1604f158b497a913b11e20304472364b2a9fcc332b99d54c\8_768.png">
+        <img src="pdf\4c4577d57cee1604f158b497a913b11e20304472364b2a9fcc332b99d54c\9_768.png">
+    </div>
+
+    <style>
+        #imgs{
+            display: flex;
+            gap:16px;
+        }
+        #imgs > *{
+            min-width: 0;
+            cursor: pointer;
+        }
+        .gallery-modal-full *{
+            border:1px solid crimson;
+        }
+
+
+        .gallery-modal-full{
+            --header-height: 40px;
+
+            padding:0;
+            pointer-events: none;
+            position: fixed;
+            border-radius:0;
+            left: 0;
+            top: 0;
+            right:0;
+            bottom:0;
+            height:100%;
+            width: 100%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            background:rgba(0, 0, 0, 0.4);
+            transition: opacity 0.33s;
+            opacity: 0;
+            z-index: 2147483647;
+            cursor: pointer;
+        }
+        .gallery-modal-wrapper{
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            box-sizing: border-box;
+            margin:0.5rem 1rem;
+            cursor:default;
+        }
+        .gallery-modal-full.show{
+            opacity: 1;
+            pointer-events: all;
+        }
+        .gallery-modal-images, .gallery-modal-images-inside{
+            position: relative;
+            /* overflow: hidden; */
+        }
+        .gallery-modal-images-inside{
+            transition: 0.5s;
+        }
+        .gallery-modal-images img{
+            position: absolute;
+            top:0;
+            left:0;
+            max-height: calc(100vh - 1rem - (2 * var(--header-height)));
+            max-width: calc(100vw - 2rem);
+            cursor: pointer;
+            transition: 0.5s;
+            opacity: 0;
+        }
+        .gallery-modal-images img:nth-of-type(2){
+            opacity: 1;
+        }
+        .gallery-modal-images .dummy{
+            position: relative;
+        }
+        .gallery-modal-head, .gallery-modal-footer{
+            color: #fff;
+            display: inline-block;
+            height:var(--header-height);
+            display: flex;
+            align-items: center;
+        }
+        .gallery-modal-head{
+            gap: 5px;
+        }
+        .gallery-modal-footer svg{
+            width: 30px;
+            cursor: pointer;
+            fill: white;
+            animation-duration: 0.3s;
+        }
+        .gallery-modal-images img.slide{
+            opacity: 1;
+        }
+        @keyframes chevronClick{
+            0%      { transform: scale(1); }
+            50%     { transform: scale(1.2); }
+            100%    { transform: scale(1); }
+        }
+    </style>
+
+    <script defer>
+        gallery(document.querySelectorAll("#imgs > *"), {slide: true});
+
+        function gallery(images, options = {}){
+            // img.src.replaceAll(/.+\/|\..+/g, ""); // get name
+            const slideSideBonusImageCount = 1;
+
+            this.index = 0;
+            this.modal = null;
+            this.galleryImages = null;
+
+            options.slide = options.slide || false;
+
+            this.createHtml = function(){
+                let html = `<div class=gallery-modal-full tabindex=0>
+                                <div class=gallery-modal-wrapper>
+                                    <div class=gallery-modal-head><span class=index>1</span><span>/</span><span class=length>${images.length}</span></div>
+                                    <div class=gallery-modal-images>
+                                        <div class="gallery-modal-images-inside">
+                                            <img style="visibility:hidden; pointer-events:none" class="dummy" src='${images[0].src}'>`;
+
+                if(options.slide){
+                    for(let i = slideSideBonusImageCount; i > 0; i--){
+                        html += "<img " + ((options.slide) ? "class=slide" : "") + " data-index='" + (images.length - (i)) + "' src='" + images[images.length - (i)].src + "'>";
+                    }
+                }
+
+                images.forEach((img, index) => {
+                    html += "<img " + ((options.slide) ? "class=slide" : "") + " data-index='" + index + "' src='" + img.src + "'>";
+                });
+
+                if(options.slide){
+                    for(let i = 0; i < slideSideBonusImageCount; i++){
+                        html += "<img " + ((options.slide) ? "class=slide" : "") + " data-index='" + (i) + "' src='" + images[i].src + "'>";
+                    }
+                }
+
+                html +=            `    </div>
+                                    </div>
+                                    <div class=gallery-modal-footer>
+                                        <svg class=move-chevron viewBox="0 0 24 24"><path d="M0 0h24v24H0V0z" fill="none" opacity=".87"/><path d="M17.51 3.87L15.73 2.1 5.84 12l9.9 9.9 1.77-1.77L9.38 12l8.13-8.13z"/></svg>
+                                        <svg class=move-chevron viewBox="0 0 24 24"><g><path d="M0,0h24v24H0V0z" fill="none"/></g><g><polygon points="6.23,20.23 8,22 18,12 8,2 6.23,3.77 14.46,12"/></g></svg>
+                                    </div>
+                                </div>
+                            </div>`;
+
+                document.querySelector("body").insertAdjacentHTML("beforeend", html);
+                this.modal = document.querySelector(".gallery-modal-full:last-of-type");
+                this.galleryImages = modal.querySelectorAll(".gallery-modal-images img:not(.dummy)");
+
+                if(options.slide){
+                    // On load of last non-duplicate img
+                    this.galleryImages[galleryImages.length - (slideSideBonusImageCount + 1)].addEventListener("load", () => {
+                        let leftTotal = 0;
+                        
+                        for(let i = 0; i < slideSideBonusImageCount; i++){
+                            leftTotal -= galleryImages[i].offsetWidth;
+                        }
+
+                        for(let i = 0; i < galleryImages.length; i++){
+
+                            if(i != 0){
+                                console.log(galleryImages[i - 1].offsetWidth);
+                                leftTotal += galleryImages[i - 1].offsetWidth;
+                            }
+
+                            galleryImages[i].style.left = leftTotal + "px";
+                        }
+                    });
+                }
+            }
+   
+            this.setListeners = function(){
+                this.modal.addEventListener("keydown", (e) => {
+                    if(e.key == "Escape"){
+                        modal.classList.remove("show");
+                    }
+
+                    if(e.key == "ArrowLeft" || e.key == "ArrowRight"){
+                        let prevIndex = this.index;
+
+                        if(e.key == "ArrowLeft"){
+                            --this.index;
+                        } else {
+                            ++this.index;
+                        }
+
+                        this.moveImg(prevIndex);
+                    }
+                });
+
+                images.forEach((img, i) => {
+                    img.addEventListener("click", () => {
+                        let prevIndex = this.index;
+
+                        this.index = i;
+
+                        this.moveImg(prevIndex, true);
+                        modal.classList.add("show");
+                        modal.focus();
+                    });
+                });
+
+                // Chevrons
+                this.modal.querySelectorAll(".move-chevron").forEach((chevron, i) => {
+                    chevron.addEventListener("click", () => {
+                        let prevIndex = this.index;
+
+                        if(i == 0){
+                            --this.index;
+                        } else {
+                            ++this.index;
+                        }
+
+                        this.moveImg(prevIndex);
+                    });
+                });
+
+                this.modal.addEventListener("click", (e) => {
+                    // Close modal on background click
+                    if(e.target.classList.contains("gallery-modal-full") || e.target.classList.contains("gallery-modal-dismiss")){
+                        modal.classList.remove("show");
+                        return;
+                    }
+
+                    if(e.target.nodeName == "IMG"){
+                        let img = e.target;
+                        let prevIndex = this.index;
+
+                        // Check if click was on left or right side
+                        if(e.offsetX < e.target.offsetWidth / 2){
+                            --this.index;
+                        } else {
+                            ++this.index;
+                        }
+
+                        this.moveImg(prevIndex);
+                    }
+                });
+            }
+
+            this.moveImg = function(prevIndex, preventAnimation = false){
+                if(options.slide){
+                    var slideIndex = this.index + slideSideBonusImageCount;
+
+                    this.galleryImages[0].parentNode.style.left = (parseInt(this.galleryImages[slideIndex].style.left) * -1) + "px";
+
+                    console.log("slideindex - " + slideIndex);
+                } else {
+                }
+
+                if(this.index == images.length){
+                    this.index = 0;
+                }
+                
+                if(this.index < 0){
+                    this.index = images.length - 1;
+                }
+                console.log("Real index - " + this.index);
+
+                if(options.slide){
+                    // Left transition
+                    // Reset left pre-overflow
+                    if(slideIndex == images.length + 1 || slideIndex == 0){
+                        this.galleryImages[0].parentNode.addEventListener("transitionend", (e) => {
+                            console.log(e);
+                            this.galleryImages[0].parentNode.style.transition = "0s";
+                            this.galleryImages[0].parentNode.style.left = (parseInt(this.galleryImages[this.index + 1].style.left) * -1) + "px";
+                            this.galleryImages[0].parentNode.clientWidth;
+                            this.galleryImages[0].parentNode.style.transition = "";
+                        }, {once: true});
+                    }
+                } else {
+                    // Opacity transition
+                    if(preventAnimation){
+                        this.galleryImages[prevIndex].style.transition = "0s";
+                        this.galleryImages[this.index].style.transition = "0s";
+                    }
+
+                    this.galleryImages[prevIndex].style.opacity = 0;
+                    this.galleryImages[this.index].style.opacity = 1;
+                }
+
+                let chevron;
+                if((prevIndex < this.index && (prevIndex != 0 || index == 1)) || (prevIndex == images.length - 1 && this.index == 0)){
+                    chevron = this.modal.querySelector(".move-chevron:last-of-type");
+                } else {
+                    chevron = this.modal.querySelector(".move-chevron:first-of-type");
+                }
+                chevron.style.animationName = "none";
+                chevron.clientWidth;
+                chevron.style.animationName = "chevronClick";
+                
+                this.modal.querySelector(".index").textContent = this.index + 1;
+
+                if(preventAnimation){
+                    this.galleryImages[prevIndex].style.transition = "";
+                    this.galleryImages[this.index].style.transition = "";
+                }
+            }
+
+            this.createHtml();
+            this.setListeners();
+        }
+    </script>
+
     <!-- *************************************************** Movable cube + canvas *************************************************** -->
     <div id=drop-wrapper>
         <div id=movable draggable=true></div>
@@ -2517,11 +3043,29 @@
 
     <div id=canvas-wrapper>
         <canvas id=canvas style="border:2px dashed DeepSkyBlue"></canvas>
-     </div>
+    </div>
  
-     <div>
-         <img id=reflect-canvas>
-     </div>
+    <div>
+        <img id=reflect-canvas>
+    </div>
+
+    <style>
+        #drop-wrapper{
+            height:250px;
+            position:relative;
+            border: 2px solid #d3d8db;
+        }
+        .highlight{
+            border:2px dashed red !important;
+        }
+        #movable{
+            height:120px;
+            width:120px;
+            background: rebeccapurple;
+            position:absolute;
+            cursor: move;
+        }
+    </style>
     
     <script>        
         // Text
@@ -2539,11 +3083,11 @@
         
         canvas.width = $(canvas.parentNode).width() - 4;        // - border
         canvas.height = 240;
+        var ctx = canvas.getContext("2d");
         let coord = { x: 0, y: 0 };
         let outOfCanvas = false;
-        var ctx = canvas.getContext("2d");
 
-        $(window).on("mousedown", start);
+        $("#canvas-wrapper").on("mousedown", start);
         $(window).on("mouseup", stop);
 
         function start(e){
@@ -2557,7 +3101,6 @@
 
         function draw(e){
             if(e.target.nodeName.toLowerCase() != "canvas"){
-                // $(window).off("mousemove");
                 outOfCanvas = true;
                 coord.x = e.offsetX;
                 coord.y = e.offsetY;
