@@ -71,6 +71,7 @@
   min-width: 85px;
   position: relative;
   display: inline-block;
+  user-select: none;
   &.select-open{
     border-bottom-left-radius: 0;
     border-bottom-right-radius: 0;
