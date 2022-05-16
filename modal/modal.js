@@ -45,6 +45,7 @@ class Modal{
                     if(!callback || e.target.id != "modal-confirm"){
                         modal.classList.remove("z-modal-show");
                     }
+                    
                     sessionStorage["modalshown"] = 1;
                 }
             });
@@ -65,6 +66,7 @@ class Modal{
                     if(e.key == "Escape"){
                         e.preventDefault();
                         modal.classList.remove("z-modal-show");
+
                         sessionStorage["modalshown"] = 1;
                     }
                 }
@@ -103,7 +105,7 @@ class Modal{
                         <div class=modal-text>${text}</div>
                         <div class=modal-buttons>
                             <button id=modal-confirm class="button">Ok</button>
-                            <button id=modal-dismiss class="button">Zavřít</button>
+                            <button id=modal-dismiss class="button">Close</button>
                         </div>
                         <button id=dummy style="position:absolute;pointer-events:none;opacity:0;" onfocus="document.querySelector('#z-modal-full button').focus();"></button>
                     </div>

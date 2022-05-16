@@ -1,33 +1,26 @@
-:root {
+#z-modal-full{
     --modal-succ-color: #1fb9c0;
     --modal-warn-color: #dc3545;
     --modal-notify-color: #212529;
     --modal-dismiss-color: rgba(0,0,0,0.6);
 }
 
-.z-modal-show{
-    pointer-events: all !important;
-    opacity:1 !important;
-    #z-modal-wrapper{
-        top:5%;
-    }
-}
-
 #z-modal-full{
+    position: fixed;
     pointer-events: none;
     left:0;
     top:0;
-    position: fixed;
     height:100%;
     width:100%;
     display:flex;
     justify-content: center;
     align-items:flex-start;
     background:rgba(0, 0, 0, 0.33);
-    cursor:pointer;
     transition: opacity 0.33s;
     opacity:0;
     z-index:99999999;
+    border-radius: 0;
+    cursor:pointer;
 }
 #z-modal-wrapper{
     border-radius: 4px;
@@ -38,11 +31,11 @@
     flex-direction: column;
     justify-content: space-between;
     background:white;
-    cursor:default;
     height:auto;
     font-size:1.5rem;
     min-width:350px;
     box-shadow: 0px 6px 16px 0px rgba(0,0,0, .2);
+    cursor:default;
 }
 #z-modal-wrapper{
     max-width:600px;
@@ -50,6 +43,15 @@
         padding:1.25rem;
     }
 }
+
+.z-modal-show{
+    pointer-events: all !important;
+    opacity:1 !important;
+    #z-modal-wrapper{
+        top:5%;
+    }
+}
+
 .modal-text{
     font-size:1rem;
     color:rgba(0,0,0,0.7);
@@ -145,8 +147,8 @@
         color: var(--modal-warn-color);
     }
 }
-@media (max-width: 600px) {
-    #z-modal-wrapper {
+@media (max-width: 600px){
+    #z-modal-wrapper{
         max-width: 90%;
     } 
 }
