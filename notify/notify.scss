@@ -1,10 +1,10 @@
-:root {
+#z-notify{
   --notify-succ-color: #1fb9c0;
   --notify-warn-color: #dc3545;
   --notify-loading-color: #000000;
 }
 
-#z-notify {
+#z-notify{
   position: fixed;
   justify-content: center;
   align-items: center;
@@ -15,7 +15,6 @@
   left: 50%;
   transition: opacity 0.4s, transform 0.55s cubic-bezier(.54,1.5,.38,1.025);
   transform: translate(-50%, 80%) scaleX(0);
-  cursor: pointer;
   min-width: 150px;
   pointer-events: none;
   flex-direction: column;
@@ -26,27 +25,28 @@
   box-shadow: 1px 7px 14px -5px rgba(0, 0, 0, 0.2);
   border-radius: 8px;
   background: white;
+  cursor: pointer;
 }
 
-#z-notify .notify-icons {
+#z-notify .notify-icons{
   width:32px;
   height:32px;
 }
 
-#z-notify > div {
+#z-notify > div{
   width: 100%;
 }
 
-#z-notify.notify-warn {
+#z-notify.notify-warn{
   border-left: 4px solid var(--notify-warn-color);
-  .notify-icons {
+  .notify-icons{
     fill: var(--notify-warn-color);
   }
 }
 
-#z-notify.notify-succ {
+#z-notify.notify-succ{
   border-left: 4px solid var(--notify-succ-color);
-  .notify-icons {
+  .notify-icons{
     fill: var(--notify-succ-color);
     margin-right:5px;
   }
@@ -68,7 +68,7 @@
   }
 }
 
-.notify-header {
+.notify-header{
   display: flex;
   align-items: center;
   margin-bottom: 0.75rem;
@@ -76,13 +76,13 @@
   justify-content: center;
 }
 
-#z-notify.notify-visible {
+#z-notify.notify-visible{
   opacity: 1;
   transform: translate(-50%, 0%) scaleX(1) rotate(0.05deg);     // Rotate stops pixel-shift on scale
   pointer-events: all;
 }
 
-.notify-text {
+.notify-text{
   position: relative;
   text-align: center;
   color: rgba(0, 0, 0, 0.55);
