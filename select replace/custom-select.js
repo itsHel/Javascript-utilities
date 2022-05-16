@@ -15,7 +15,8 @@ function customSelect(elements, optionsPicked = {}){
         maxHeight: optionsPicked.maxHeight ?? 400,
         maxWidth: optionsPicked.maxWidth ?? 600,
         scrollOnKey: optionsPicked.scrollOnKey ?? false,
-        theme: optionsPicked.theme ?? "",                       // Themes: "light", "dark", "split"
+        // Themes: "light", "dark", "split"
+        theme: optionsPicked.theme ?? "",
         // Callback function which stops select from being slided up if clicked on item (allows to click on multiple items without closing)
         // dontCloseCallback must return true, returning flse resets select
         dontCloseCallback: optionsPicked.dontCloseCallback ?? false,
@@ -27,6 +28,7 @@ function customSelect(elements, optionsPicked = {}){
 
     if(options.theme){
         let turnOn;
+
         if(options.theme == "split"){
             turnOn = "light";
         } else {
@@ -50,7 +52,6 @@ function customSelect(elements, optionsPicked = {}){
         }
 
         let headerSelect;
-        // let selectFull = "<div class=\"custom-select-wrapper " + (selectOriginal.getAttribute("class") ?? "") + "\">";
         let selectFull = "<div class=\"custom-select-wrapper " + ((options.theme == "split") ? "split" : "") + "\">";
         let items = "<div class=\"select-items-wrapper\">";
 
@@ -66,6 +67,7 @@ function customSelect(elements, optionsPicked = {}){
 
         if(!headerSelect){
             let text = selectOriginal.querySelector("option").textContent;
+
             headerSelect = "<div class=\"custom-select-header\"><span>" + text + "</span><span class=\"chevron\"></span></div>";
             items = items.replace("custom-select-item ", "custom-select-item custom-selected");
         }
@@ -189,20 +191,20 @@ function customSelect(elements, optionsPicked = {}){
 
             customSelect.setAttribute("tabindex", "1");
             customSelect.addEventListener("keydown", function(e){
-                if(e.keyCode == 27){
+                if(e.key == "Escape"){
                     // Close on Esc
                     customSelect.querySelector(".select-items-wrapper").style.maxHeight = "0px";
                     selectFullWrapper.classList.remove("select-open");
                 }
 
                 let scrolled = false;
+
                 customSelect.querySelectorAll(".select-items-wrapper div:not(:first)").each(function(el){
                     if(!scrolled && el.textContent[0].toLowerCase() == e.key){
-                        scrolled = true;
-
-                        // let top = $(this).position().top + $(this).parent().scrollTop();
                         let top = el.offsetTop + el.parentNode.scrollTop;
+                        
                         customSelect.querySelector(".select-items-wrapper").scrollTo({top: top, behavior: "smooth"});
+                        scrolled = true;
                     }
                 });
             });
