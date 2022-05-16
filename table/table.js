@@ -42,6 +42,7 @@ function Table(data, nav, parentDiv, createRows, options = {}){
             if(activeFilters.length){
                 renderData = renderData.filter(row => {
                     let keep = true;
+
                     for(let i = 0; i < activeFilters.length; i++){
                         if(!parseInt(row[activeFilters[i]])){
                             keep = false;
@@ -80,10 +81,11 @@ function Table(data, nav, parentDiv, createRows, options = {}){
                         }
                     } else {
                         // Number sorting
-                        if(!order.reverse)
+                        if(!order.reverse){
                             return b[order.column] - a[order.column]; 
-                        else
+                        } else {
                             return a[order.column] - b[order.column];
+                        }
                     }
                 });
             }
@@ -242,6 +244,7 @@ function Table(data, nav, parentDiv, createRows, options = {}){
     
                 tableEl.querySelectorAll("tbody tr").forEach(row => {
                     let hide = true;
+
                     row.querySelectorAll("td:not(.search-ignore)").forEach(td => {
                         if(td.textContent.match(query)){
                             hide = false;
@@ -249,17 +252,19 @@ function Table(data, nav, parentDiv, createRows, options = {}){
                         }
                     });
     
-                    if(hide)
+                    if(hide){
                         toHide.push(1);
-                    else
+                    } else {
                         toHide.push(0);
+                    }
                 });
     
                 tableEl.querySelectorAll("tbody tr").forEach((row, index) => {
-                    if(toHide[index])
+                    if(toHide[index]){
                         row.style.display = "none";
-                    else
+                    } else {
                         row.style.display = "table-row";
+                    }
                 });
             }
         }
@@ -267,6 +272,7 @@ function Table(data, nav, parentDiv, createRows, options = {}){
         function getUniqueId(){
             let i = 0;
             let id = "table-";
+
             do {
                 id += i;
                 i++;
@@ -277,6 +283,7 @@ function Table(data, nav, parentDiv, createRows, options = {}){
     
         function appendToOptions(addHtml){
             let tableOptions = document.querySelector("#table-options-" + options.id);
+
             if(tableOptions){
                 tableOptions.insertAdjacentHTML("beforeend", addHtml);
             } else {

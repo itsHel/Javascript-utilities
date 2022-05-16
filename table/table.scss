@@ -1,4 +1,4 @@
-:root {
+:root{
     --table-main-color: rgb(29, 183, 238);
     --table-link-hover-color: rgb(29, 130, 177);
 }
@@ -69,9 +69,6 @@
             overflow: hidden;
             width: 100%;
             text-underline-offset: 3px;
-            // &:hover{
-            //     color:var(--table-link-hover-color);
-            // }
         }
     }
     tbody tr{
@@ -105,7 +102,6 @@
         box-sizing: border-box;
         background: transparent;
         border-radius: 15px;
-        cursor: pointer;
         padding: 12px 16px;
         transition: all 0.3s ease;
         border: 1px solid rgba(0, 0, 0, 0.25);
@@ -114,6 +110,7 @@
         border-color: rgba(0, 0, 0, 0.1);
         box-shadow:none;
         font-size: 1rem;
+        cursor: pointer;
     }
 }
 
@@ -147,8 +144,8 @@
         &::-webkit-search-cancel-button{
             font-size: 1.2rem;
             transform: translateY(-2px);
-            cursor: pointer;
             margin-left:0.5rem;
+            cursor: pointer;
         }
     }
     .btn-search{
