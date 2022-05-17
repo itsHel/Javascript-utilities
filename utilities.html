@@ -1,0 +1,473 @@
+<head>
+    <style>
+        body{
+            color: #4f4f4f;
+            margin:60px auto;
+            max-width:1200px;
+            font-size:20px;
+            background:rgba(0,0,0,0.05);
+            font-family: "Roboto", sans-serif;
+            font-family: 'Comic Sans MS', 'Comic Sans' !important;
+        }
+        body > div{
+            padding:2rem;
+            border-radius:0.5rem;
+            border: 1px solid #d3d8db;
+            box-shadow: 0 1px 1px rgba(0,0,0,.1);
+            background:white;
+            margin-bottom:18px;
+        }
+        ::-webkit-scrollbar{
+            width: 10px;
+            height: 10px;
+            background-color: rgb(241,241,241);
+        }
+        ::-webkit-scrollbar-thumb{
+            width: 8px;
+            height: 8px;
+            background-color: rgb(199,199,199);
+            border-radius: 8px;
+        }
+    </style>
+</head>
+
+<body>
+    <!-- *************************************************** Ripples *************************************************** -->
+
+    <div>
+        <div class="btn-group">
+            <button type="button" class="testbtn ripple-button">Ripple</button>
+            <button type="button" class="testbtn ripple-hollow-button">Ripple h</button>
+            <button type="button" class="testbtn ripple-hollow-mdb">Ripple mdb</button>
+            <button type="button" class="testbtn-white ripple-hollow-mdb classic">Ripple dark</button>
+            <button type="button" class="testbtn-white ripple-hollow-mdb dark">Mdb Dark</button>
+        </div>
+    </div>
+
+    <script>
+        rippleButtons(document.querySelectorAll(".ripple-button, .ripple-hollow-button, .ripple-hollow-mdb"));
+
+        function rippleButtons(buttons){
+            buttons.forEach(button => {
+                button.addEventListener("mousedown", function(e){
+                    let x, y;
+
+                    if((e.originalEvent || e).isTrusted){
+                        x = e.offsetX;
+                        y = e.offsetY;
+                    } else {
+                        // Non-user click
+                        x = e.target.clientWidth / 2;
+                        y = e.target.clientHeight / 2;
+                    }
+        
+                    let html = "<span class='ripple' style='left:" + x + "px;top:" + y + "px;'></span>";
+        
+                    button.insertAdjacentHTML("beforeend", html);
+                
+                    setTimeout(function(){
+                        button.querySelector(".ripple").remove();
+                    }, 1000);
+                });
+            });
+        }
+    </script>
+
+    <style>
+        .testbtn{
+            all:unset;
+            padding: 10px 14px;
+            color:white;
+            background: #555;
+        }
+        .testbtn-white{
+            all:unset;
+            padding: 10px 14px;
+            border:1px solid #555;
+            color: black;
+            background: white;
+        }
+
+        .ripple-button, .ripple-hollow-button, .ripple-hollow-mdb{
+            overflow: hidden;
+            position: relative;
+        }
+        .ripple-button .ripple{
+            position: absolute;
+            border-radius: 50%;
+            background-color: white;
+            width: calc(100% / 4);
+            padding-top: calc(100% / 4);
+            margin-top: calc(100% / -8);
+            margin-left: calc(100% / -8);
+            animation: ripple 0.8s forwards;
+            pointer-events: none;
+            touch-action: none;
+            opacity: 0.8;
+        }
+        @keyframes ripple{
+            from {
+                opacity: 0.8;
+                transform: scale(1);
+            }
+            to {
+                opacity: 0.1;
+                transform: scale(10);
+            }
+        }
+
+        .ripple-hollow-button .ripple{
+            position: absolute;
+            background-image: radial-gradient(circle, rgba(255, 255, 255, 0.3) 0px, rgba(255, 255, 255, 0.4) 30%, rgba(255, 255, 255, 0.6) 45%, rgba(255, 255, 255, 0.75) 60%, transparent 75%);
+            border-radius: 50%;
+            width: calc(100% / 4);
+            padding-top: calc(100% / 4);
+            margin-top: calc(100% / -8);
+            margin-left: calc(100% / -8);
+            z-index: 999;
+            animation: ripple-hollow 0.7s forwards;
+            pointer-events: none;
+            touch-action: none;
+        }
+        @keyframes ripple-hollow{
+            from {
+                opacity: 1;
+                transform: scale(1);
+            }
+            to {
+                opacity: 0.25;
+                transform: scale(8);
+            }
+        }
+
+        .ripple-hollow-mdb .ripple{
+            position: absolute;
+            width: 100px;
+            height: 100px;
+            margin-top: -50px;
+            margin-left: -50px;
+            background: rgba(255, 255, 255, 0.4);
+            background: radial-gradient(rgba(255, 255, 255, 0.2) 0, rgba(255, 255, 255, 0.3) 40%, rgba(255, 255, 255, 0.4) 50%, rgba(255, 255, 255, 0.5) 60%, rgba(255, 255, 255, 0) 70%);
+            border-radius: 50%;
+            transform: scale(0) translate(0, 0);
+            animation: ripple-hollow-mdb 0.7s forwards ease;
+            pointer-events: none;
+            touch-action: none;            
+        }
+        .ripple-hollow-mdb.classic .ripple{
+            background: rgba(0, 0, 0, 0.4);
+        }
+        .ripple-hollow-mdb.dark .ripple{
+            background: rgba(0, 0, 0, 0.2);
+            background: radial-gradient(rgba(0, 0, 0, 0.2) 0, rgba(0, 0, 0, 0.3) 40%, rgba(0, 0, 0, 0.4) 50%, rgba(0, 0, 0, 0.5) 60%, rgba(255, 255, 255, 0) 70%); 
+
+        }
+        @keyframes ripple-hollow-mdb{
+            from { opacity: 1; transform: scale(0.5); }
+            to { opacity: 0; transform: scale(2.3); }
+        }
+    </style>
+
+    <!-- *************************************************** Radio-line *************************************************** -->
+    <!-- myRadio(wrapperElement, startIndex = -1, shiftTime = 250) -->
+
+    <div>
+        <!-- Should be same line to prevent whitespaces -->
+        <div id=radios>
+            <label><input class=radio type=radio name=myradio><span>First</span></label>
+            <label><input class=radio type=radio name=myradio><span>Second</span></label>
+            <label><input class=radio type=radio name=myradio><span>Third</span></label>
+            <div class=radio-line></div>
+        </div>
+    </div>
+
+    <script>
+        myRadio(document.querySelector("#radios"), 1);
+
+        function myRadio(wrapper, startIndex = -1, shiftTime = 250){
+            let timeout;
+            let line = wrapper.querySelector(".radio-line");
+            line.style.transition = shiftTime + "ms";
+
+            // Must be mousedown to get :checked element before its changed
+            wrapper.addEventListener("mousedown", function(e){
+                let clickedEl = e.target.closest("label");
+
+                if(clickedEl){
+                    if(line.style.width == "0" || line.style.width == ""){
+                        // First click
+                        let thisWidth = clickedEl.offsetWidth;
+                        let thisLeft = clickedEl.offsetLeft;
+
+                        line.style.left = thisLeft + "px";
+                        line.style.width = thisWidth + "px";
+                    } else {
+                        let lastIndex = Array.from(wrapper.children).indexOf(wrapper.querySelector(":checked").parentNode);
+                        let newIndex = Array.from(wrapper.children).indexOf(clickedEl);
+
+                        if(newIndex == lastIndex)
+                            return;
+
+                        clearTimeout(timeout);
+
+                        if(newIndex > lastIndex){
+                            // Left to right
+                            let fullWidth = clickedEl.offsetLeft - line.offsetLeft + clickedEl.offsetWidth;
+
+                            line.style.left = line.offsetLeft + "px";
+                            line.style.right = "auto";
+                            line.style.width = fullWidth + "px";
+
+                            timeout = setTimeout(function(){
+                                line.style.width = clickedEl.offsetWidth + "px";
+                                line.style.left = clickedEl.offsetLeft + "px"
+                            }, shiftTime);
+                        } else {
+                            // Right to left
+                            let lineOffsetRight = line.offsetLeft + line.offsetWidth
+                            let rightPos = clickedEl.parentNode.offsetWidth - lineOffsetRight;
+                            let fullWidth = lineOffsetRight - clickedEl.offsetLeft;
+
+                            line.style.right = (rightPos) + "px";
+                            line.style.left = "auto";
+                            line.style.width = fullWidth + "px";
+
+                            timeout = setTimeout(function(){
+                                line.style.width = clickedEl.offsetWidth + "px";
+                                line.style.right = (clickedEl.parentNode.offsetWidth - (clickedEl.offsetLeft + clickedEl.offsetWidth)) + "px"
+                            }, shiftTime);
+                        }
+                    }
+                }
+            });
+
+            // Start on position if startIndex defined
+            if(startIndex > -1){
+                window.addEventListener("load", function(){
+                    let e = new Event("mousedown", {bubbles: true});
+                    let el = wrapper.querySelector("label:nth-of-type(" + (startIndex + 1) + ")");
+
+                    el.dispatchEvent(e);
+                    el.querySelector("input").checked = true;
+                });
+            }
+        }
+    </script>
+
+    <style>
+        .radio-line{
+            --line-color: crimson;
+
+            position: absolute;
+            width:100%;
+            height:2px;
+            background: var(--line-color);
+            left:0;
+            top:115%;
+            width:0;
+        }
+        .radio{
+            padding:4px;
+            position: relative;
+            display: inline-block;
+            text-align: center;
+            display: none;
+        }
+        .radio input:checked + span:after{
+            transition-delay: 0s;
+            left:0;
+            width:100%;
+        }
+        #radios{
+            position: relative;
+            display: inline-block;
+        }
+        #radios label{
+            cursor:pointer;
+            padding:5px;
+            margin:10px;
+        } 
+    </style>
+
+    <!-- *************************************************** Fill button *************************************************** -->
+    <div>
+        <div class=fill-button>text</div>
+    </div>
+
+    <script>
+        fillButtons(document.querySelectorAll(".fill-button"));
+
+        function fillButtons(buttons){
+            buttons.forEach(button => {
+                button.innerHTML = "<span></span><text>" + button.textContent + "</text>";
+                let fill = button.querySelector("span");
+
+                button.addEventListener("mouseover", function(e){
+                    fill.style.left = e.pageX - button.offsetLeft + "px";
+                    fill.style.top = e.pageY - button.offsetTop + "px";
+                });
+                button.addEventListener("mouseout", function(e){
+                    fill.style.left = e.pageX - button.offsetLeft + "px";
+                    fill.style.top = e.pageY - button.offsetTop + "px";
+                });
+            });
+        }
+    </script>
+
+    <style>
+        .fill-button{
+            position: relative;
+            padding:0.75rem 1rem;
+            text-align:center;
+            background:black;
+            overflow:hidden;
+            border: 1px solid #d3d8db; 
+            box-shadow: 0 1px 1px rgba(0,0,0,.05); 
+            cursor:pointer;
+        }
+        .fill-button span{
+            background:white;
+            transition: width 0.7s, padding-top 0.7s;
+            width: 0;
+            padding-top:0;
+            position: absolute;
+            border-radius:100%;
+            transform: translate(-50%, -50%);
+            z-index: 0;
+        }
+        .fill-button text{
+            color:white;
+            position: relative;
+            z-index: 1;
+            transition: color 0.7s;
+        }
+        .fill-button:hover span{
+            width:calc(105% * 2);
+            padding-top:calc(105% * 2);
+        }
+        .fill-button:hover text{
+            color:black;
+        }
+    </style>
+
+    <!-- *************************************************** Grab *************************************************** -->
+    <!-- mouseGrab(grabElement, dragMultiplier = 2) -->
+
+    <div id=grabdiv style="max-height:250px;overflow:auto; user-select:none;">
+        <div style="height:500px;border:2px solid crimson;margin:10px 0;"></div>
+        <div style="height:500px;border:2px solid crimson;margin:10px 0;"></div>
+        <div style="height:500px;border:2px solid crimson;margin:10px 0;"></div>
+        <div style="height:500px;border:2px solid crimson;margin:10px 0;"></div>
+    </div>
+
+    <script>
+        mouseGrab(document.querySelector("#grabdiv"));
+
+        function mouseGrab(grabElement, dragMultiplier = 2){
+            let pos = {
+                clickX: 0,
+                clickY: 0,
+                clickScrollX: 0,
+                clickScrollY: 0
+            };
+
+            grabElement.addEventListener("mousedown", function(e){
+                window.addEventListener("mousemove", mouseMoveGrab);
+                document.body.classList.add("grabbed");
+                
+                let coords = grabElement.getBoundingClientRect();
+                
+                pos.clickX = e.clientX - coords.left;
+                pos.clickY = e.clientY - coords.top;
+                pos.clickScrollX = grabElement.scrollLeft;
+                pos.clickScrollY = grabElement.scrollTop;
+            });
+            
+            window.addEventListener("mouseup", function(){
+                window.removeEventListener("mousemove", mouseMoveGrab);
+                document.body.classList.remove("grabbed");
+            });
+            
+            function mouseMoveGrab(e){
+                let coords = grabElement.getBoundingClientRect();
+
+                let newX = - pos.clickX + e.clientX - coords.left;
+                let newY = - pos.clickY + e.clientY - coords.top;
+
+                grabElement.scrollTo(pos.clickScrollX - newX * dragMultiplier, pos.clickScrollY - newY * dragMultiplier);
+            }
+
+            if(!document.querySelector("#grab-style")){
+                let grabStyle = "<style id=grab-style>body.grabbed *{cursor:grab !important}</style>";
+                document.body.insertAdjacentHTML("afterend", grabStyle);
+            }
+        }
+    </script>
+
+    <!-- *************************************************** GotoTop *************************************************** -->
+
+    <style>
+        #go-top-button{
+           position: fixed; 
+           bottom:5%; 
+           padding:0; 
+           right:3%; 
+           border-radius: 50%; 
+           opacity: 0.65; 
+           background: white; 
+           cursor:pointer; 
+           border:1px solid rgba(0,0,0,0.2); 
+           box-shadow: 0 1px 2px 0 rgb(60 64 67 / 30%), 0 2px 6px 2px rgb(60 64 67 / 15%); 
+           z-index:99999999; 
+           width:3rem; 
+           height:3rem; 
+           display: inline-flex; 
+           justify-content: center; 
+           align-items: center; 
+           transition: 0.35s;  
+        }
+        #go-top-button:hover{ 
+            opacity: 1; 
+        } 
+        #go-top-button.hidden{ 
+            opacity: 0; 
+            pointer-events: none; 
+        }
+    </style>
+    
+    <script>
+        setGotop();
+
+        function setGotop(){
+            if(!("IntersectionObserver" in window))
+                return;
+
+            const buttonSelector = "#go-top-button";
+            const compareToSelector = "body > div";
+
+            const thisHtml = `<div id=go-top-button class="hidden">
+                                <svg height="24px" viewBox="0 0 24 24" width="24px" fill="#414141"><path d="M0 0h24v24H0V0z" fill="none"/><path d="M4 12l1.41 1.41L11 7.83V20h2V7.83l5.58 5.59L20 12l-8-8-8 8z"/></svg></div>
+                            </div>`;
+            document.body.insertAdjacentHTML("afterend", thisHtml);
+
+            let topButton = document.querySelector(buttonSelector);
+            let nav = document.querySelector(compareToSelector);
+
+            topButton.addEventListener("click", function(){
+                window.scrollTo({top: 0, left: 0, behavior: "smooth"});
+            });
+
+            let options = {root: null, rootMargin: window.innerHeight + "px", threshold: 1};
+
+            let observer = new IntersectionObserver(function(entries){
+                if(entries[0].isIntersecting){
+                    topButton.classList.add("hidden");                
+                } else {
+                    topButton.classList.remove("hidden");
+                }
+            }, options);
+
+            observer.observe(nav);
+        }
+    </script>
+</body>
