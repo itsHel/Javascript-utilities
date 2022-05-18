@@ -368,7 +368,9 @@
                 clickX: 0,
                 clickY: 0,
                 clickScrollX: 0,
-                clickScrollY: 0
+                clickScrollY: 0,
+                coordsLeft: 0,
+                coordsTop: 0
             };
 
             grabElement.addEventListener("mousedown", function(e){
@@ -381,21 +383,23 @@
                 pos.clickY = e.clientY - coords.top;
                 pos.clickScrollX = grabElement.scrollLeft;
                 pos.clickScrollY = grabElement.scrollTop;
-            });
-            
-            window.addEventListener("mouseup", function(){
-                window.removeEventListener("mousemove", mouseMoveGrab);
-                document.body.classList.remove("grabbed");
+                pos.coordsLeft = coords.left;
+                pos.coordsTop = coords.top;
+                
+                window.addEventListener("mouseup", function(){
+                    window.removeEventListener("mousemove", mouseMoveGrab);
+                    document.body.classList.remove("grabbed");
+                }, {once: true});
             });
             
             function mouseMoveGrab(e){
-                let coords = grabElement.getBoundingClientRect();
-
-                let newX = - pos.clickX + e.clientX - coords.left;
-                let newY = - pos.clickY + e.clientY - coords.top;
+                let newX = - pos.clickX + e.clientX - pos.coordsLeft;
+                let newY = - pos.clickY + e.clientY - pos.coordsTop;
 
                 grabElement.scrollTo(pos.clickScrollX - newX * dragMultiplier, pos.clickScrollY - newY * dragMultiplier);
             }
+
+            grabElement.style.userDrag = "none";
 
             if(!document.querySelector("#grab-style")){
                 let grabStyle = "<style id=grab-style>body.grabbed *{cursor:grab !important}</style>";
