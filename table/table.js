@@ -1,4 +1,4 @@
-function Table(data, nav, parentDiv, createRows, options = {}){
+function Table(data, nav, parentEl, createRows, options = {}){
         // TH data-column = name of sort property for row       Example: <th data-column='date'...      = Sorted by row.date, Should be in ''   Leave empty to ignore for sort
         // TH must have <span class="table-chevron"></span>     - replaced by chevron
         // TD with class .search-ignore will be ignored on search
@@ -12,7 +12,7 @@ function Table(data, nav, parentDiv, createRows, options = {}){
         options.tableListeners = options.tableListeners ?? false;               // Callback, receives table element as parameter
         options.filter = options.filter ?? false;
         options.search = options.search ?? false;
-        options.saveFilters = options.saveFilters ?? true;                      // false = active filters are saved to localStorage 
+        options.saveFilters = options.saveFilters ?? true;                      // true = active filters are saved to localStorage 
         options.orderCaseSensitive = options.orderCaseSensitive ?? false;
     
         var self = this;
@@ -94,10 +94,10 @@ function Table(data, nav, parentDiv, createRows, options = {}){
     
             if(firstRender){
                 nav = nav.replaceAll('<ico>', '<span class="table-chevron">' + chevron + '</span>');
-                parentDiv.insertAdjacentHTML("beforeend", "<table id='" + options.id + "' class='z-table'>" + "<thead><tr>" + nav + "</tr></thead><tbody>" + tableBody + "</tbody></div>");
-                tableEl = parentDiv.querySelector("#" + options.id);
+                parentEl.insertAdjacentHTML("beforeend", "<table id='" + options.id + "' class='z-table'>" + "<thead><tr>" + nav + "</tr></thead><tbody>" + tableBody + "</tbody></div>");
+                tableEl = parentEl.querySelector("#" + options.id);
             } else {
-                parentDiv.querySelector("#" + options.id + " tbody").innerHTML = tableBody;
+                parentEl.querySelector("#" + options.id + " tbody").innerHTML = tableBody;
             }
     
             if(options.tableListeners)
