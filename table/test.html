@@ -36,17 +36,17 @@
                 id: "file-table",
                 tableListeners: mytableListeners,
                 search: {
-                    // id: "search-wrapper"         // id of search, optional
-                    // icon: true,                  // true is default
+                    id: "search-wrapper",           // id of search, optional
+                    icon: true,                     // true is default
                     placeholder: "Hello..."
                 },
                 filter: {
-                    // id: "myfilter"               // id of parent, optional
+                    id: "myfilter",                 // id of parent, optional
                     filters: ["active"],
                     nicknames: ["Active"]
                 },
-                // saveFilters: true                // true is default          // saves active filters to localStorage
-                // orderCaseSensitive: false        // false is default    
+                saveFilters: true,                  // true is default          // saves active filters to localStorage
+                orderCaseSensitive: false           // false is default    
             }
         );
 
