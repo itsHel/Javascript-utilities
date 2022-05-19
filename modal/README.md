@@ -1,3 +1,5 @@
+# Modal
+
 ```js
 Modal.show(text, type = "", callback = false, once = false)
 ```
@@ -14,7 +16,9 @@ Modal.show(text, type = "", callback = false, once = false)
 - notify
 
 ### Example
-`Modal.show("Warning text", "warn", () => { console.log("confirmed") }, true);`
+```js
+Modal.show("Warning text", "warn", () => { console.log("confirmed") }, true);
+```
 
 ## Notes
 - If callback is set modal acts as confirm - on yes will execute callback
