@@ -44,7 +44,7 @@ function Table(data, nav, parentEl, createRows, options = {}){
                     let keep = true;
 
                     for(let i = 0; i < activeFilters.length; i++){
-                        if(!parseInt(row[activeFilters[i]])){
+                        if(!(row[activeFilters[i]] && row[activeFilters[i]] != "0")){
                             keep = false;
                             break;
                         }

@@ -20,7 +20,7 @@
     <script>
         "use strict;"
             
-        const data = [ { "id": "13", "filename": "pdf_10.1.1.148.349.pdf", "pages": "14", "uploaded": "2021-08-26 13:14:56", "active": 1 }, { "id": "16", "filename": "cheat.pdf", "pages": "10", "uploaded": "2021-08-26 13:24:28", "active": 0 }, { "id": "20", "filename": "License.pdf", "pages": "5", "uploaded": "2021-09-14 08:48:47", "active": 0 }, { "id": "21", "filename": "K 2021 template web style guide.pdf", "pages": "398", "uploaded": "2021-09-14 08:49:22", "active": 1 }, { "id": "22", "filename": "compressed.tracemonkey-pldi-09.pdf", "pages": "14", "uploaded": "2021-09-16 13:40:27", "active": 0 }, { "id": "23", "filename": "example (1).pdf", "pages": "1", "uploaded": "2021-09-16 13:40:34", "active": 1 } ];
+        const data = [ { "id": "13", "filename": "pdf_10.1.1.148.349.pdf", "pages": "14", "uploaded": "2021-08-26 13:14:56", "active": 1 }, { "id": "16", "filename": "cheat.pdf", "pages": "10", "uploaded": "2021-08-26 13:24:28", "active": 0 }, { "id": "20", "filename": "License.pdf", "pages": "5", "uploaded": "2021-09-14 08:48:47", "active": 0 }, { "id": "21", "filename": "", "pages": "398", "uploaded": "2021-09-14 08:49:22", "active": 1 }, { "id": "22", "filename": "compressed.tracemonkey-pldi-09.pdf", "pages": "14", "uploaded": "2021-09-16 13:40:27", "active": 0 }, { "id": "23", "filename": "example (1).pdf", "pages": "1", "uploaded": "2021-09-16 13:40:34", "active": 1 } ];
 
         const tableNav =`   <th data-column='filename'><span>Filename<ico></span></th> 
                             <th data-column='pages'><span>Pages<ico></span></th> 
@@ -36,14 +36,14 @@
                 id: "file-table",
                 tableListeners: mytableListeners,
                 search: {
-                    id: "search-wrapper",           // id of search, optional
+                    // id: "search-wrapper",           // id of search, optional
                     icon: true,                     // true is default
                     placeholder: "Hello..."
                 },
                 filter: {
-                    id: "myfilter",                 // id of parent, optional
-                    filters: ["active"],
-                    nicknames: ["Active"]
+                    // id: "myfilter",                 // id of parent, optional
+                    filters: ["active", "filename"],
+                    nicknames: ["Active", "Filename"]
                 },
                 saveFilters: true,                  // true is default          // saves active filters to localStorage
                 orderCaseSensitive: false           // false is default    
