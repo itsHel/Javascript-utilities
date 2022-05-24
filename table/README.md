@@ -31,8 +31,38 @@ Adds search, all properties are optional, passing empty object is enough for act
 Default: __false__
 
 ### filter _object_
-Enables table to by filtered by keywords
+Enables table to by filtered by keywords 
 - `filter.id`           - id attribute of filter, optional
-- `filter.filters`
-- `filter.nicknames`    - placeholder text of keywords, optional
+- `filter.filters`      - _array_ of row properties, property passes filter if it has truthy value && is not equal to "0"
+- `filter.nicknames`    - _array_ of placeholder texts of keywords, optional
 Default: __false__
+
+### filter _function_
+Function to be executed once table has finished rendering
+
+## Example
+```js
+new Table(
+    data,
+    tableNav,
+    document.querySelector("body"),
+    mycreateRows,
+    {
+        id: "file-table",
+        tableListeners: mytableListeners,
+        search: {
+            id: "search-wrapper",
+            icon: false,
+            placeholder: "Hello..."
+        },
+        filter: {
+            id: "myfilter",
+            filters: ["active", "filename"],
+            nicknames: ["Active", "Filename"]
+        },
+        saveFilters: false, 
+        orderCaseSensitive: true   
+    }
+);
+```
+Full example in `test.html`
