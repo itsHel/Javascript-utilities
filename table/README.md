@@ -16,11 +16,11 @@ function Table(data, nav, parentEl, createRows, options = {})
 id attribute of table
 
 ### saveFilters _boolean_
-Enables saving of active filters to localStorage
+Enables saving of active filters to localStorage  
 Default: __true__
 
 ### orderCaseSensitive _boolean_
-Enables case sensitive sorting
+Enables case sensitive sorting  
 Default: __false__
 
 ### search _object_
