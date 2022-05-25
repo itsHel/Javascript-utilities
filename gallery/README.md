@@ -10,34 +10,34 @@ function gallery(baseImages, options = {})
 
 ## Options
 ### slide _boolean_
-Enables slide effect (opacity effect is default), ignored if `stopAnimation == true`
+Enables slide effect (opacity effect is default), ignored if `stopAnimation == true`  
 Default: __false__
 
 ### showName _boolean_
-Shows filename of images
+Shows filename of images  
 Default: __false__
 
 ### showHeader _boolean_
-Shows header
+Shows header  
 Default: __true__
 
 ### showChevron _boolean_
-Shows chevrons
+Shows chevrons  
 Default: __true__
 
 ### stopAnimation _boolean_
-Disables animation
+Disables animation  
 Default: __false__
 
 ### chevronsOnSide _boolean_
-Puts chevrons on image sides
+Puts chevrons on image sides  
 Default: __false__
 
 ## Example
 ```js
 gallery(
     document.querySelectorAll("img"), 
-    { 
+    {
         chevronsOnSide: false, 
         stopAnimation: false, 
         showChevron: true, 
@@ -46,3 +46,4 @@ gallery(
         slide: true
     }
 );
+```
