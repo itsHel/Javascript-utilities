@@ -24,18 +24,18 @@ Enables case sensitive sorting
 Default: __false__
 
 ### search _object_
-Adds search, all properties are optional, passing empty object is enough for activation
+Adds search, all properties are optional, passing empty object is enough for activation  
+Default: __false__
 - `search.id_`          - id attribute of search
 - `search.icon`         - shows magnifier icon, default: __true__
-- `search.placeholder`  - placeholder text, default: __Search...__  
-Default: __false__
+- `search.placeholder`  - placeholder text, default: __Search...__
 
 ### filter _object_
-Enables table to by filtered by keywords 
+Enables table to by filtered by keywords  
+Default: __false__
 - `filter.id`           - id attribute of filter, optional
 - `filter.filters`      - _array_ of row properties, property passes filter if it has truthy value && is not equal to "0"
-- `filter.nicknames`    - _array_ of placeholder texts of keywords, optional  
-Default: __false__
+- `filter.nicknames`    - _array_ of placeholder texts of keywords, optional
 
 ### filter _function_
 Function to be executed once table has finished rendering
