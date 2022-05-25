@@ -1,10 +1,10 @@
 function gallery(baseImages, options = {}){
+    options.chevronsOnSide = options.chevronsOnSide ?? false;
     options.stopAnimation = options.stopAnimation ?? false;
     options.showChevron = options.showChevron ?? true;
     options.showHeader = options.showHeader ?? true;
     options.showName = options.showName ?? false;
     options.slide = (options.slide ?? false) && !options.stopAnimation;             // Ignores slides if stopAnimation
-    options.chevronOdSide = options.chevronOdSide ?? false;
 
     this.index = 0;
     this.slideIndex = 0;
@@ -40,7 +40,7 @@ function gallery(baseImages, options = {}){
         }
 
         if(options.showChevron){
-            html += `<div class="gallery-chevron-wrapper ${(options.chevronOdSide) ? " on-side" : ""}"><svg class=gallery-chevron viewBox="0 0 24 24"><path d="M0 0h24v24H0V0z" fill="none" opacity=".87"/><path d="M17.51 3.87L15.73 2.1 5.84 12l9.9 9.9 1.77-1.77L9.38 12l8.13-8.13z"/></svg>
+            html += `<div class="gallery-chevron-wrapper ${(options.chevronsOnSide) ? " on-side" : ""}"><svg class=gallery-chevron viewBox="0 0 24 24"><path d="M0 0h24v24H0V0z" fill="none" opacity=".87"/><path d="M17.51 3.87L15.73 2.1 5.84 12l9.9 9.9 1.77-1.77L9.38 12l8.13-8.13z"/></svg>
                         <svg class=gallery-chevron viewBox="0 0 24 24"><g><path d="M0,0h24v24H0V0z" fill="none"/></g><g><polygon points="6.23,20.23 8,22 18,12 8,2 6.23,3.77 14.46,12"/></g></svg></div>`;
         }
 
@@ -199,13 +199,13 @@ function gallery(baseImages, options = {}){
             modal.style.setProperty('--header-height', "32px");
         }
 
-        if(options.showChevron && options.showName && options.chevronOdSide){
+        if(options.showChevron && options.showName && options.chevronsOnSide){
             modal.style.setProperty('--footer-height', "22px");
             modal.style.setProperty('--chevrons-side-width', "74px");
             return;
         }
 
-        if(options.showChevron && options.chevronOdSide){
+        if(options.showChevron && options.chevronsOnSide){
             modal.style.setProperty('--footer-height', "0px");
             modal.style.setProperty('--chevrons-side-width', "74px");
             return;
