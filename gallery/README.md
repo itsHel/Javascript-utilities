@@ -35,5 +35,14 @@ Default: __false__
 
 ## Example
 ```js
-gallery(document.querySelectorAll("img"), { chevronsOnSide: false, stopAnimation: false, showChevron: true, showHeader: true, showName: true, slide: true});
-```
+gallery(
+    document.querySelectorAll("img"), 
+    { 
+        chevronsOnSide: false, 
+        stopAnimation: false, 
+        showChevron: true, 
+        showHeader: true, 
+        showName: true, 
+        slide: true
+    }
+);
