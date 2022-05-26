@@ -1,3 +1,6 @@
+// TODO
+//  - thumbnails
+
 function gallery(baseImages, options = {}){
     options.chevronsOnSide = options.chevronsOnSide ?? false;
     options.stopAnimation = options.stopAnimation ?? false;
