@@ -14,6 +14,7 @@ function Table(data, nav, parentEl, createRows, options = {}){
         options.search = options.search ?? false;
         options.saveFilters = options.saveFilters ?? true;                      // true = active filters are saved to localStorage 
         options.orderCaseSensitive = options.orderCaseSensitive ?? false;
+        options.defaultOrder = options.defaultOrder ?? false;
     
         var self = this;
         var tableEl;
@@ -24,8 +25,12 @@ function Table(data, nav, parentEl, createRows, options = {}){
             column: ""
         };
     
-        // Default order is first row
-        try { order.column = nav.match(/<th\sdata\-column='(.*?)'/)[1] } catch(e){}
+        if(options.defaultOrder){
+            order.column = options.defaultOrder;
+        } else {
+            // Default order is first row
+            try { order.column = nav.match(/<th\sdata\-column='(.*?)'/)[1] } catch(e){}
+        }
 
         if(options.saveFilters){
             activeFilters = JSON.parse(localStorage["filters-" + options.id] ?? "[]");
@@ -105,8 +110,12 @@ function Table(data, nav, parentEl, createRows, options = {}){
     
             // Do only once
             if(firstRender){
-                tableEl.querySelector("thead th").classList.add("th-active");
-                order.column = tableEl.querySelector("thead th").dataset.column;
+                if(order.column){
+                    tableEl.querySelector("th[data-column='" + order.column + "']").classList.add("th-active");
+                } else {
+                    tableEl.querySelector("thead th").classList.add("th-active");
+                    order.column = tableEl.querySelector("thead th").dataset.column;
+                }
     
                 self.addNavListeners();
     
