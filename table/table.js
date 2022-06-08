@@ -16,8 +16,9 @@ function Table(data, nav, parentEl, createRows, options = {}){
         options.orderCaseSensitive = options.orderCaseSensitive ?? false;
         options.defaultOrder = options.defaultOrder ?? false;
     
+        this.element = null;
+
         var self = this;
-        var tableEl;
         var firstRender = true;
         var activeFilters = [];
         var order = {
@@ -100,21 +101,21 @@ function Table(data, nav, parentEl, createRows, options = {}){
             if(firstRender){
                 nav = nav.replaceAll('<ico>', '<span class="table-chevron">' + chevron + '</span>');
                 parentEl.insertAdjacentHTML("beforeend", "<table id='" + options.id + "' class='z-table'>" + "<thead><tr>" + nav + "</tr></thead><tbody>" + tableBody + "</tbody></div>");
-                tableEl = parentEl.querySelector("#" + options.id);
+                this.element = parentEl.querySelector("#" + options.id);
             } else {
                 parentEl.querySelector("#" + options.id + " tbody").innerHTML = tableBody;
             }
     
             if(options.tableListeners)
-                options.tableListeners(tableEl);
+                options.tableListeners(this.element);
     
             // Do only once
             if(firstRender){
                 if(order.column){
-                    tableEl.querySelector("th[data-column='" + order.column + "']").classList.add("th-active");
+                    this.element.querySelector("th[data-column='" + order.column + "']").classList.add("th-active");
                 } else {
-                    tableEl.querySelector("thead th").classList.add("th-active");
-                    order.column = tableEl.querySelector("thead th").dataset.column;
+                    this.element.querySelector("thead th").classList.add("th-active");
+                    order.column = this.element.querySelector("thead th").dataset.column;
                 }
     
                 self.addNavListeners();
@@ -132,7 +133,7 @@ function Table(data, nav, parentEl, createRows, options = {}){
         }
     
         this.addNavListeners = function(){
-            tableEl.querySelectorAll("th").forEach(el => {
+            this.element.querySelectorAll("th").forEach(el => {
                 if(!el.dataset.column){
                     el.style.pointerEvents = "none";
                     return;
@@ -243,7 +244,7 @@ function Table(data, nav, parentEl, createRows, options = {}){
     
             function searchFilter(query){
                 if(!query){
-                    tableEl.querySelectorAll("tbody tr").forEach(row => {
+                    this.element.querySelectorAll("tbody tr").forEach(row => {
                         row.style.display = "table-row";
                     });
                     return;
@@ -251,7 +252,7 @@ function Table(data, nav, parentEl, createRows, options = {}){
         
                 let toHide = [];
     
-                tableEl.querySelectorAll("tbody tr").forEach(row => {
+                this.element.querySelectorAll("tbody tr").forEach(row => {
                     let hide = true;
 
                     row.querySelectorAll("td:not(.search-ignore)").forEach(td => {
@@ -268,7 +269,7 @@ function Table(data, nav, parentEl, createRows, options = {}){
                     }
                 });
     
-                tableEl.querySelectorAll("tbody tr").forEach((row, index) => {
+                this.element.querySelectorAll("tbody tr").forEach((row, index) => {
                     if(toHide[index]){
                         row.style.display = "none";
                     } else {
@@ -297,7 +298,7 @@ function Table(data, nav, parentEl, createRows, options = {}){
                 tableOptions.insertAdjacentHTML("beforeend", addHtml);
             } else {
                 let tableOptionsHtml = "<div id='table-options-" + options.id + "' class=table-options>" + addHtml + "</div>";
-                tableEl.insertAdjacentHTML("beforebegin", tableOptionsHtml);
+                this.element.insertAdjacentHTML("beforebegin", tableOptionsHtml);
             }
         }
     
