@@ -40,6 +40,10 @@ Default: __false__
 ### filter _function_
 Function to be executed once table has finished rendering
 
+### defaultOrder _string_
+Name of column which orders table on load  
+Default is first column
+
 ## Example
 ```js
 new Table(
@@ -61,7 +65,8 @@ new Table(
             nicknames: ["Active", "Filename"]
         },
         saveFilters: false, 
-        orderCaseSensitive: true   
+        orderCaseSensitive: true,
+        defaultOrder: "count"
     }
 );
 ```
