@@ -101,6 +101,7 @@ function Table(data, nav, parentEl, createRows, options = {}){
             if(firstRender){
                 nav = nav.replaceAll('<ico>', '<span class="table-chevron">' + chevron + '</span>');
                 parentEl.insertAdjacentHTML("beforeend", "<table id='" + options.id + "' class='z-table'>" + "<thead><tr>" + nav + "</tr></thead><tbody>" + tableBody + "</tbody></div>");
+                
                 this.element = parentEl.querySelector("#" + options.id);
             } else {
                 parentEl.querySelector("#" + options.id + " tbody").innerHTML = tableBody;
