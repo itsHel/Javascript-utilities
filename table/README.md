@@ -49,7 +49,7 @@ Disables sorting table by clicking on head
 Default: __false__
 
 ### reverseOrder _array_
-Array of columns which will be sorted in reversed order  
+Array of columns(_string_) which will be sorted in reversed order  
 Default: __false__
 
 ## Example
