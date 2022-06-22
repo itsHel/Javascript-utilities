@@ -34,15 +34,23 @@ Default: __false__
 Enables table to by filtered by keywords  
 Default: __false__
 - `filter.id`           - id attribute of filter, optional
-- `filter.filters`      - _array_ of row properties, property passes filter if it has truthy value && is not equal to "0"
-- `filter.nicknames`    - _array_ of placeholder texts of keywords, optional
+- `filter.filters`      - __array__ of row properties, property passes filter if it has truthy value && is not equal to "0"
+- `filter.nicknames`    - __array__ of placeholder texts of keywords, optional
 
 ### filter _function_
 Function to be executed once table has finished rendering
 
 ### defaultOrder _string_
 Name of column which orders table on load  
-Default is first column
+Default is _first column_
+
+### disableNavSorting _boolean_
+Disables sorting table by clicking on head  
+Default: __false__
+
+### reverseOrder _array_
+Array of columns which will be sorted in reversed order  
+Default: __false__
 
 ## Example
 ```js
@@ -66,7 +74,9 @@ new Table(
         },
         saveFilters: false, 
         orderCaseSensitive: true,
-        defaultOrder: "count"
+        defaultOrder: "count",
+        disableNavSorting: false,
+        reverseOrder: ["pages"]
     }
 );
 ```
