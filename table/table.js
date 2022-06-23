@@ -23,6 +23,7 @@ function Table(data, nav, parentEl, createRows, options = {}){
     var self = this;
     var firstRender = true;
     var activeFilters = [];
+    var columnTypes = {};
     var order = {
         reverse: false,
         column: ""
@@ -44,9 +45,34 @@ function Table(data, nav, parentEl, createRows, options = {}){
         }
     }
 
-    this.render = function(renderData){
-        data = renderData;
+    this.render = function(renderData = null){
+        if(firstRender || renderData){
+            if(renderData){
+                data = renderData;
+            }
 
+            // Check values of all columns and assign them with types - int/string
+            let temp = {};
+
+            for(const property in data[0]){
+                columnTypes[property] = "int";
+                temp[property] = "";
+            }
+            
+            for(let i = 0; i < data.length; i++){
+                for(const property in temp){
+                    if(isNaN(data[i][property])){
+                        columnTypes[property] = "string";
+                        delete temp[property];
+                    }
+                }
+            }
+        }
+
+        if(!renderData){
+            renderData = data;
+        }
+ 
         if(activeFilters.length){
             renderData = renderData.filter(row => {
                 let keep = true;
@@ -66,7 +92,7 @@ function Table(data, nav, parentEl, createRows, options = {}){
             let reverseOrder = options.reverseOrder.includes(order.column);
 
             renderData.sort((a, b) => {
-                if(isNaN(a[order.column]) || a[order.column] === ""){
+                if(columnTypes[order.column] == "string"){
                     // String sorting
                     if(options.orderCaseSensitive ^ reverseOrder){
                         if(!order.reverse){
@@ -92,8 +118,12 @@ function Table(data, nav, parentEl, createRows, options = {}){
                 } else {
                     // Number sorting
                     if(!order.reverse ^ reverseOrder){
+                        if(a[order.column] === "") return 1;
+                        if(b[order.column] === "") return -1;
                         return b[order.column] - a[order.column]; 
                     } else {
+                        if(a[order.column] === "") return -1;
+                        if(b[order.column] === "") return 1;
                         return a[order.column] - b[order.column];
                     }
                 }
@@ -111,8 +141,9 @@ function Table(data, nav, parentEl, createRows, options = {}){
             parentEl.querySelector("#" + options.id + " tbody").innerHTML = tableBody;
         }
 
-        if(options.tableListeners)
+        if(options.tableListeners){
             options.tableListeners(this.element);
+        }
 
         // Do only once
         if(firstRender){
@@ -167,7 +198,7 @@ function Table(data, nav, parentEl, createRows, options = {}){
                 this.classList.add("th-active");
 
                 if(!options.disableNavSorting){
-                    self.render(data);
+                    self.render();
                 }
             });
         });
@@ -204,7 +235,7 @@ function Table(data, nav, parentEl, createRows, options = {}){
 
                 localStorage["filters-" + options.id] = JSON.stringify(activeFilters);
         
-                self.render(data);
+                self.render();
             });
         });
 
@@ -249,6 +280,7 @@ function Table(data, nav, parentEl, createRows, options = {}){
                 this.element.querySelectorAll("tbody tr").forEach(row => {
                     row.style.display = "table-row";
                 });
+
                 return;
             }
     
@@ -260,6 +292,7 @@ function Table(data, nav, parentEl, createRows, options = {}){
                 row.querySelectorAll("td:not(.search-ignore)").forEach(td => {
                     if(td.textContent.match(query)){
                         hide = false;
+
                         return false;
                     }
                 });
@@ -304,5 +337,5 @@ function Table(data, nav, parentEl, createRows, options = {}){
         return id;
     }
 
-    this.render(data);
+    this.render();
 }
