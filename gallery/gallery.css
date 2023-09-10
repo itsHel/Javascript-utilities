@@ -1,87 +1,83 @@
-.gallery-modal-full {
-    --header-height: 0px; /* Changed by setNavSizes() */
-    --footer-height: 0px; /* Changed by setNavSizes() */
-    --chevrons-side-width: 0px; /* Cahnged by setNavSizes() */
+.gallery-modal-full{
+    --header-height: 0px;               /* Changed by setNavSizes() */
+    --footer-height: 0px;               /* Changed by setNavSizes() */
+    --chevrons-side-width: 0px;         /* Cahnged by setNavSizes() */
     --wrapper-padding: 0.75rem;
 
-    padding: 0;
+    padding:0;
     pointer-events: none;
     position: fixed;
-    border-radius: 0;
+    border-radius:0;
     left: 0;
     top: 0;
-    right: 0;
-    bottom: 0;
-    height: 100%;
+    right:0;
+    bottom:0;
+    height:100%;
     width: 100%;
     display: flex;
     justify-content: center;
     align-items: center;
-    background: rgba(0, 0, 0, 0.5);
+    background:rgba(0, 0, 0, 0.5);
     transition: opacity 0.33s;
     opacity: 0;
     z-index: 2147483647;
     cursor: pointer;
 }
-.gallery-modal-wrapper {
+.gallery-modal-wrapper{
     display: flex;
     flex-direction: column;
     align-items: center;
     box-sizing: border-box;
-    margin: var(--wrapper-padding) 1rem;
-    cursor: default;
+    margin:var(--wrapper-padding) 1rem;
+    cursor:default;
     position: relative;
 }
-.gallery-modal-full.gallery-show {
+.gallery-modal-full.gallery-show{
     opacity: 1;
     pointer-events: all;
 }
-.gallery-modal-images {
+.gallery-modal-images{
     position: relative;
     overflow: hidden;
     z-index: 11;
 }
-.gallery-modal-images-inside {
+.gallery-modal-images-inside{
     position: relative;
     transition: 0.5s;
 }
-.gallery-modal-images img {
+.gallery-modal-images img{
     position: absolute;
-    top: 0;
-    left: 0;
-    max-height: calc(
-        100vh - (2 * var(--wrapper-padding)) -
-            (var(--header-height) + var(--footer-height))
-    );
+    top:0;
+    left:0;
+    max-height: calc(100vh - (2 * var(--wrapper-padding)) - (var(--header-height) + var(--footer-height)));
     max-width: calc(100vw - 2rem - var(--chevrons-side-width));
     cursor: pointer;
     transition: opacity 0.5s;
     opacity: 0;
 }
-.gallery-modal-images img:nth-of-type(2) {
+.gallery-modal-images img:nth-of-type(2){
     opacity: 1;
 }
-.gallery-modal-images .dummy {
+.gallery-modal-images .dummy{
     position: relative;
 }
-.gallery-modal-head,
-.gallery-modal-footer {
+.gallery-modal-head, .gallery-modal-footer{
     color: #fff;
     display: inline-block;
     display: flex;
     align-items: center;
-    background: rgba(0, 0, 0, 0.3);
+    background:rgba(0, 0, 0, 0.3);
 }
-.gallery-modal-head {
-    height: var(--header-height);
-    font-size: 18px;
+.gallery-modal-head{
+    height:var(--header-height);
+    font-size:18px;
     gap: 3px;
     padding: 0 8px;
     border-top-left-radius: 5px;
     border-top-right-radius: 5px;
 }
-.gallery-modal-footer {
-    height: var(--footer-height);
+.gallery-modal-footer{
+    height:var(--footer-height);
     font-size: 12px;
     flex-direction: column;
     align-items: center;
@@ -89,52 +85,46 @@
     border-bottom-right-radius: 5px;
     z-index: 10;
 }
-.gallery-modal-footer svg {
+.gallery-modal-footer svg{
     width: 28px;
     cursor: pointer;
     fill: white;
     animation-duration: 0.3s;
     padding: 5px 4px;
 }
-.gallery-modal-images img.slide {
+.gallery-modal-images img.slide{
     opacity: 1;
 }
-.gallery-img-name {
+.gallery-img-name{
     overflow: hidden;
     text-overflow: ellipsis;
     max-width: 85vw;
     white-space: nowrap;
     padding: 0 8px;
 }
-.gallery-chevron-wrapper {
-    margin-top: auto;
+.gallery-chevron-wrapper{
+    margin-top:auto;
     display: flex;
 }
-.gallery-chevron-wrapper.on-side {
+.gallery-chevron-wrapper.on-side{
     position: absolute;
     width: calc(100% + var(--chevrons-side-width));
     top: 50%;
     transform: translateY(-50%);
     justify-content: space-between;
 }
-.gallery-chevron-wrapper.on-side svg:first-of-type {
+.gallery-chevron-wrapper.on-side svg:first-of-type{
     background: rgba(0, 0, 0, 0.3);
     border-top-left-radius: 5px;
     border-bottom-left-radius: 5px;
 }
-.gallery-chevron-wrapper.on-side svg:last-of-type {
+.gallery-chevron-wrapper.on-side svg:last-of-type{
     background: rgba(0, 0, 0, 0.3);
     border-top-right-radius: 5px;
     border-bottom-right-radius: 5px;
 }
-@keyframes chevronClick {
-    0% {
-        transform: scale(1);
-    }
-    50% {
-        transform: scale(1.15);
-    }
-    100% {
-        transform: scale(1);
-    }
+@keyframes chevronClick{
+    0%      { transform: scale(1); }
+    50%     { transform: scale(1.15); }
+    100%    { transform: scale(1); }
 }

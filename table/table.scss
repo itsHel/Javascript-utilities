@@ -1,20 +1,19 @@
-:root {
+:root{
     --table-main-color: rgb(29, 183, 238);
     --table-nav-hover-color: rgb(29, 183, 238);
     --table-link-hover-color: rgb(29, 130, 177);
 }
 
-.z-table {
+.z-table{
     font-family: "Open Sans";
     width: 100%;
     border-collapse: collapse;
-    th,
-    td {
+    th, td{
         transition: all 0.3s;
         white-space: nowrap;
         text-align: center;
     }
-    th {
+    th{
         top: 0;
         position: sticky;
         font-size: 1.1rem;
@@ -23,48 +22,48 @@
         box-sizing: border-box;
         user-select: none;
         padding: 1rem 0.25rem;
-        z-index: 10;
+        z-index:10;
         cursor: pointer;
-        div {
-            display: flex;
+        div{
+            display:flex;
             justify-content: center;
         }
-        > span {
-            margin: 0 14px;
+        > span{
+            margin:0 14px;
             position: relative;
         }
-        .table-chevron {
-            width: 24px;
-            height: 24px;
-            fill: var(--table-nav-hover-color);
+        .table-chevron{
+            width:24px;
+            height:24px;
+            fill:var(--table-nav-hover-color);
             transition: all 0.5s;
             opacity: 0;
-            left: 104%;
+            left:104%;
             position: absolute;
             transition: all 0.5s ease-out;
         }
-        &:hover {
-            color: var(--table-nav-hover-color);
+        &:hover{
+            color:var(--table-nav-hover-color);
         }
     }
-    .th-active {
-        z-index: 11;
+    .th-active{
+        z-index:11;
         color: var(--table-nav-hover-color);
-        .table-chevron {
+        .table-chevron{
             opacity: 1;
         }
     }
-    .th-reverse {
-        .table-chevron {
+    .th-reverse{
+        .table-chevron{
             transform: rotate(540deg);
         }
     }
-    td {
-        max-width: 200px;
+    td{
+        max-width:200px;
         overflow: hidden;
         text-overflow: ellipsis;
-        font-size: 1rem;
-        a {
+        font-size:1rem;
+        a{
             // padding:0.6rem 0rem;
             display: inline-block;
             // color:var(--table-main-color);
@@ -73,40 +72,40 @@
             overflow: hidden;
             width: 100%;
             text-underline-offset: 3px;
-            &:hover {
+            &:hover{
                 color: var(--table-link-hover-color);
             }
         }
     }
-    tbody tr {
+    tbody tr{
         height: 40px;
         border-top: 1px solid #dfe3e7;
     }
-    tr:nth-of-type(1) {
+    tr:nth-of-type(1){
         border-top: none;
     }
 }
 
-.table-options {
+.table-options{
     display: flex;
     align-items: center;
     justify-content: space-between;
     margin-bottom: 1rem;
 }
 
-.table-filters {
-    .filter-active {
+.table-filters{
+    .filter-active{
         border: 1px solid rgba(0, 0, 0, 0.25);
-        box-shadow: 0px 10px 15px -5px rgba(0, 0, 0, 0.3);
+        box-shadow: 0px 10px 15px -5px rgba(0,0,0, .3);
         color: rgba(0, 0, 0, 1);
         background: transparent;
-        &:hover {
+        &:hover{
             color: rgba(0, 0, 0, 0.4);
-            box-shadow: none;
+            box-shadow:none;
         }
     }
-    button {
-        margin: 0 0.5rem;
+    button{
+        margin:0 0.5rem;
         box-sizing: border-box;
         background: transparent;
         border-radius: 15px;
@@ -116,21 +115,20 @@
         font-weight: 500;
         color: rgba(0, 0, 0, 0.4);
         border-color: rgba(0, 0, 0, 0.1);
-        box-shadow: none;
+        box-shadow:none;
         font-size: 1rem;
         cursor: pointer;
     }
 }
 
-.table-filters,
-.table-search-wrapper {
+.table-filters, .table-search-wrapper{
     font-family: "Open Sans";
     display: inline-flex;
     justify-content: flex-end;
     vertical-align: top;
 }
 
-.table-search-wrapper {
+.table-search-wrapper{
     font-family: "Open Sans";
     border: 1px solid rgba(0, 0, 0, 0.1);
     justify-content: center;
@@ -138,102 +136,101 @@
     box-sizing: border-box;
     width: max-content;
     transition: all 0.3s;
-    .table-search {
-        // Input
-        font-size: 1rem;
+    .table-search{                 // Input
+        font-size:1rem;
         box-sizing: content-box;
-        padding: 12px 12px 12px 0px;
+        padding:12px 12px 12px 0px;
         transition: all 0.3s;
         outline: none;
-        width: 225px;
-        border: none;
+        width:225px;
+        border:none;
         background: transparent;
-        &::placeholder {
-            color: rgba(0, 0, 0, 0.4);
+        &::placeholder{
+            color:rgba(0,0,0,.4);
         }
-        &::-webkit-search-cancel-button {
+        &::-webkit-search-cancel-button{
             font-size: 1.2rem;
             transform: translateY(-2px);
-            margin-left: 0.5rem;
+            margin-left:0.5rem;
             cursor: pointer;
         }
     }
-    .btn-search {
-        fill: rgba(0, 0, 0, 0.4);
+    .btn-search{
+        fill: rgba(0,0,0,0.4);
         box-sizing: content-box;
         font-size: 1rem;
         padding: 10px 12px;
         display: flex;
         align-items: center;
         left: 0;
-        border: none;
+        border:none;
         height: 100%;
         display: flex;
         justify-content: center;
         align-items: center;
-        margin: 0;
+        margin:0;
         cursor: default;
-        svg {
+        svg{
             transition: all 0.3s;
             width: 20px;
             height: 20px;
         }
     }
-    &:focus-within {
+    &:focus-within{
         outline: none;
         box-shadow: 0px 5px 15px -5px rgba(0, 0, 0, 0.3);
         border-color: rgba(0, 0, 0, 0.25);
-        .table-search {
-            width: 300px;
-            &::placeholder {
-                color: rgba(0, 0, 0, 0.6);
+        .table-search{
+            width:300px;
+            &::placeholder{
+                color:rgba(0,0,0,.6);
             }
         }
-        .btn-search {
-            fill: rgba(0, 0, 0, 0.6);
+        .btn-search{
+            fill: rgba(0,0,0,.6);
         }
     }
 }
 
-@media screen and (max-width: 760px) {
-    .table-search-wrapper {
-        .table-search {
+@media screen and (max-width: 760px){
+    .table-search-wrapper{
+        .table-search{
             font-size: 1.4rem;
             height: 1.5rem;
             padding: 14px 14px 14px 0;
         }
-        .btn-search {
-            padding: 14px;
-            svg {
+        .btn-search{
+            padding:14px;
+            svg{
                 width: 1.4rem;
                 height: 1.4rem;
             }
         }
     }
-    .table-options {
+    .table-options{
         flex-direction: column;
         border-bottom: 2px solid var(--table-main-color);
-        > * {
+        > *{
             width: auto;
             margin-bottom: 2rem;
         }
     }
-    .z-table {
-        thead {
-            display: none;
+    .z-table{
+        thead{
+            display:none;
         }
-        td {
+        td{
             display: flex;
             min-width: 100%;
             padding: 0.2rem 0;
-            a {
+            a{
                 text-align: left;
                 // padding:0;
                 max-width: 350px;
                 width: auto;
             }
         }
-        td::before {
+        td::before{
             content: attr(data-label);
             font-weight: bold;
             min-width: 14rem;
@@ -241,26 +238,26 @@
             text-align: right;
             margin-right: 2rem;
         }
-        tr {
+        tr{
             border-bottom: 1px solid rgba(0, 0, 0, 0.25);
-            &:before {
-                content: "";
-                margin-left: 1rem;
+            &:before{
+                content:"";
+                margin-left:1rem;
             }
-            &:after {
-                content: "";
-                margin-left: 1rem;
+            &:after{
+                content:"";
+                margin-left:1rem;
             }
         }
-        tr:last-of-type {
+        tr:last-of-type{
             border-bottom: none;
         }
     }
 }
-@media screen and (max-width: 540px) {
-    .z-table {
-        td::before {
-            min-width: 5rem;
+@media screen and (max-width: 540px){
+    .z-table{
+        td::before{
+            min-width:5rem;
         }
     }
 }
