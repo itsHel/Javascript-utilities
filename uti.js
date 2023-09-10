@@ -1,4 +1,4 @@
-// Return match or specified match or false
+// Return match or match on specified positon or false
 // Example: let result = "qwertz".getMatch(/qw(.+)/)        // returns "ertz"
 String.prototype.getMatch = function (regex, index = 1) {
     let match = this.match(regex);
